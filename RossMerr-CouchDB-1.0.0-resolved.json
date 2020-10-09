@@ -67,7 +67,12 @@
               "$ref": "#/definitions/Error"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
       },
       "head": {
         "tags": [
@@ -103,7 +108,12 @@
               "$ref": "#/definitions/Error"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -181,7 +191,12 @@
               "$ref": "#/definitions/Error"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -261,7 +276,12 @@
               "$ref": "#/definitions/Error"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -318,7 +338,12 @@
               "$ref": "#/definitions/Error"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
       }
     },
     "/{db}/{docid}": {
@@ -487,7 +512,12 @@
               "$ref": "#/definitions/Error"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
       },
       "head": {
         "tags": [
@@ -549,7 +579,12 @@
               "$ref": "#/definitions/Error"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -667,7 +702,12 @@
               "$ref": "#/definitions/Error"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -770,7 +810,12 @@
               "$ref": "#/definitions/Error"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
       }
     },
     "/{db}/_all_docs": {
@@ -809,7 +854,12 @@
               "$ref": "#/definitions/Error"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -854,8 +904,18 @@
               "$ref": "#/definitions/Error"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
       }
+    }
+  },
+  "securityDefinitions": {
+    "basicAuth": {
+      "type": "basic"
     }
   },
   "definitions": {
