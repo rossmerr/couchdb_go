@@ -1,0 +1,1088 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "The CouchDB API is the primary method of interfacing to a CouchDB instance. Requests are made using HTTP and requests are used to request information from the database, store new data, and perform views and formatting of the information stored within the documents.",
+    "version": "1.0.0",
+    "title": "CouchDB API",
+    "contact": {
+      "email": "you@your-company.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "virtserver.swaggerhub.com",
+  "basePath": "/RossMerr/CouchDB/1.0.0",
+  "tags": [
+    {
+      "name": "database",
+      "description": "The Database endpoint provides an interface to an entire database with in CouchDB. These are database-level, rather than document-level requests."
+    },
+    {
+      "name": "document",
+      "description": "Details on how to create, read, update and delete documents within a database."
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/{db}": {
+      "get": {
+        "tags": [
+          "database"
+        ],
+        "summary": "Gets information about the specified database.",
+        "description": "By passing in the appropriate options, you can search for\navailable inventory in the system\n",
+        "operationId": "dbGet",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "schema": {
+              "$ref": "#/definitions/Database"
+            }
+          },
+          "404": {
+            "description": "Requested database not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "database"
+        ],
+        "summary": "Returns the HTTP Headers containing a minimal amount of information about the specified database.",
+        "description": "Since the response body is empty, using the HEAD method is a lightweight way to check if the database exists already or not.\n",
+        "operationId": "dbHeader",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Database exists"
+          },
+          "404": {
+            "description": "Requested database not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "database"
+        ],
+        "summary": "Creates a new document in the specified database, using the supplied JSON document structure.",
+        "description": "If the JSON structure includes the _id field, then the document will be created with the \nspecified document ID.\n\nIf the _id field is not specified, a new unique ID will be generated, following whatever \nUUID algorithm is configured for that server.\n",
+        "operationId": "dbPost",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "batch",
+            "in": "query",
+            "description": "Stores document in batch mode Possible values: ok. Optional\n",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Document created and stored on disk",
+            "schema": {
+              "$ref": "#/definitions/OK"
+            }
+          },
+          "202": {
+            "description": "Document data accepted, but not yet stored on disk",
+            "schema": {
+              "$ref": "#/definitions/OK"
+            }
+          },
+          "400": {
+            "description": "Invalid database name",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Write privileges required",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Database doesn’t exist",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "A Conflicting Document with same ID already exists",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "database"
+        ],
+        "summary": "Creates a new database.",
+        "description": "The database name {db} must be composed by following next rules:\nName must begin with a lowercase letter (a-z)\n* Lowercase characters (a-z)\n* Digits (0-9)\n* Any of the characters _, $, (, ), +, -, and /.\n\nIf you’re familiar with Regular Expressions, the rules above could be written as \n",
+        "operationId": "dbPut",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Shards, aka the number of range partitions. Default is 8, unless overridden in the cluster config.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "n",
+            "in": "query",
+            "description": "Replicas. The number of copies of the database in the cluster. The default is 3, unless overridden in the cluster config .",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "partitioned",
+            "in": "query",
+            "description": "Whether to create a partitioned database. Default is false.",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Database created successfully (quorum is met)",
+            "schema": {
+              "$ref": "#/definitions/OK"
+            }
+          },
+          "202": {
+            "description": "Accepted (at least by one node)",
+            "schema": {
+              "$ref": "#/definitions/OK"
+            }
+          },
+          "400": {
+            "description": "Invalid database name",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "CouchDB Server Administrator privileges required",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "412": {
+            "description": "Database already exists",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "database"
+        ],
+        "summary": "Deletes the specified database, and all the documents and attachments contained within it.",
+        "description": "*Note*\nTo avoid deleting a database, CouchDB will respond with the HTTP status code 400 when the request \nURL includes a ?rev= parameter. This suggests that one wants to delete a document but forgot to add \nthe document id to the URL.\n",
+        "operationId": "dbDelete",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Database removed successfully (quorum is met and database is deleted by at least one node)",
+            "schema": {
+              "$ref": "#/definitions/OK"
+            }
+          },
+          "202": {
+            "description": "Accepted (deleted by at least one of the nodes, quorum is not met yet)",
+            "schema": {
+              "$ref": "#/definitions/OK"
+            }
+          },
+          "400": {
+            "description": "Invalid database name or forgotten document id by accident",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "CouchDB Server Administrator privileges required",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Database doesn’t exist or invalid database name",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/{db}/{docid}": {
+      "get": {
+        "tags": [
+          "document"
+        ],
+        "summary": "Returns document by the specified docid from the specified db. Unless you request a specific revision, the latest revision of the document will always be returned.",
+        "operationId": "docGet",
+        "consumes": [
+          "application/json",
+          "multipart/related",
+          "multipart/mixed",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "multipart/related",
+          "multipart/mixed",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "docid",
+            "in": "path",
+            "description": "DDocument ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "Double quoted document’s revision token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "attachments",
+            "in": "query",
+            "description": "Includes attachments bodies in response. Default is false",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "att_encoding_info",
+            "in": "query",
+            "description": "Includes encoding information in attachment stubs if the particular attachment is compressed. Default is false.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "atts_since",
+            "in": "query",
+            "description": "Includes attachments only since specified revisions. Doesn’t includes attachments for specified revisions. Optional",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "conflicts",
+            "in": "query",
+            "description": "Includes information about conflicts in document. Default is false",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "deleted_conflicts",
+            "in": "query",
+            "description": "Includes information about deleted conflicted revisions. Default is false",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "latest",
+            "in": "query",
+            "description": "Forces retrieving latest “leaf” revision, no matter what rev was requested. Default is false",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "local_seq",
+            "in": "query",
+            "description": "Includes last update sequence for the document. Default is false",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "meta",
+            "in": "query",
+            "description": "Acts same as specifying all conflicts, deleted_conflicts and revs_info query parameters. Default is false",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "open_revs",
+            "in": "query",
+            "description": "Retrieves documents of specified leaf revisions. Additionally, it accepts value as all to return all leaf revisions. Optional",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "rev",
+            "in": "query",
+            "description": "Retrieves document of specified revision. Optional",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "revs",
+            "in": "query",
+            "description": "Includes list of all known document revisions. Default is false",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "revs_info",
+            "in": "query",
+            "description": "Includes detailed information for all known document revisions. Default is false",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "headers": {
+              "ETag": {
+                "type": "string",
+                "description": "Double quoted document’s revision token"
+              },
+              "Transfer-Encoding": {
+                "type": "string",
+                "description": "chunked. Available if requested with query parameter open_revs"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/Document"
+            }
+          },
+          "304": {
+            "description": "Document wasn’t modified since specified revision"
+          },
+          "401": {
+            "description": "Read privilege required",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Document not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "document"
+        ],
+        "summary": "Returns the HTTP Headers containing a minimal amount of information about the specified document.",
+        "description": "The method supports the same query arguments as the GET /{db}/{docid} method, \nbut only the header information (including document size, and the revision as an ETag), is returned.\n\nThe ETag header shows the current revision for the requested document, and the Content-Length \nspecifies the length of the data, if the document were requested in full.\n\nAdding any of the query arguments (see GET /{db}/{docid}), then the resulting HTTP Headers \nwill correspond to what would be returned.\n",
+        "operationId": "doc",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "docid",
+            "in": "path",
+            "description": "DDocument ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Document exists",
+            "headers": {
+              "ETag": {
+                "type": "string",
+                "description": "Double quoted document’s revision token"
+              },
+              "Content-Length": {
+                "type": "integer",
+                "description": "Document size"
+              }
+            }
+          },
+          "304": {
+            "description": "Document wasn’t modified since specified revision"
+          },
+          "401": {
+            "description": "Read privilege required",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Document not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "document"
+        ],
+        "summary": "The PUT method creates a new named document, or creates a new revision of the existing document. Unlike the POST /{db}, you must specify the document ID in the request URL.",
+        "description": "When updating an existing document, the current document revision must be included in the document \n(i.e. the request body), as the rev query parameter, or in the If-Match request header.\n",
+        "operationId": "docPut",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "docid",
+            "in": "path",
+            "description": "DDocument ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "description": "Document’s revision. Alternative to rev query parameter or document key. Optional",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "rev",
+            "in": "query",
+            "description": "Document’s revision if updating an existing document. Alternative to If-Match header or document key. Optional",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "batch",
+            "in": "query",
+            "description": "Stores document in batch mode. Possible values: ok. Optional\n",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "new_edits",
+            "in": "query",
+            "description": "Prevents insertion of a conflicting document. Possible values: true (default) and false. If false, \na well-formed _rev must be included in the document. new_edits=false is used by the replicator \nto insert documents into the target database even if that leads to the creation of conflicts. Optional\n",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Document created and stored on disk",
+            "headers": {
+              "ETag": {
+                "type": "string",
+                "description": "Double quoted document’s revision token"
+              },
+              "Transfer-Encoding": {
+                "type": "string",
+                "description": "chunked. Available if requested with query parameter open_revs"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/DocumentOK"
+            }
+          },
+          "202": {
+            "description": "Document data accepted, but not yet stored on disk",
+            "headers": {
+              "ETag": {
+                "type": "string",
+                "description": "Double quoted document’s revision token"
+              },
+              "Transfer-Encoding": {
+                "type": "string",
+                "description": "chunked. Available if requested with query parameter open_revs"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/DocumentOK"
+            }
+          },
+          "400": {
+            "description": "Invalid request body or parameters",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Write privileges required",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Specified database or document ID doesn’t exists",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "Document with the specified ID already exists or specified revision is not latest for target document",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "document"
+        ],
+        "summary": "Marks the specified document as deleted by adding a field _deleted with the value true.",
+        "description": "Documents with this field will not be returned within requests anymore, but stay in the database. \nYou must supply the current (latest) revision, either by using the rev parameter or by using the\nIf-Match header to specify the revision.\n\n*Notes*\nCouchDB doesn’t completely delete the specified document. Instead, it leaves a tombstone with very \nbasic information about the document. The tombstone is required so that the delete action can be \nreplicated across databases.\n",
+        "operationId": "docDelete",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "docid",
+            "in": "path",
+            "description": "DDocument ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "description": "Document’s revision. Alternative to rev query parameter",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "rev",
+            "in": "query",
+            "description": "Actual document’s revision",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "batch",
+            "in": "query",
+            "description": "Stores document in batch mode Possible values: ok. Optional\n",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Document successfully removed",
+            "headers": {
+              "ETag": {
+                "type": "string",
+                "description": "Double quoted document’s revision token"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/DocumentOK"
+            }
+          },
+          "202": {
+            "description": "Request was accepted, but changes are not yet stored on disk",
+            "headers": {
+              "ETag": {
+                "type": "string",
+                "description": "Double quoted document’s revision token"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/DocumentOK"
+            }
+          },
+          "400": {
+            "description": "Invalid request body or parameters",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Write privileges required",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Specified database or document ID doesn’t exists",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "409": {
+            "description": "Specified revision is not the latest for target document",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/{db}/_all_docs": {
+      "get": {
+        "tags": [
+          "database"
+        ],
+        "summary": "Executes the built-in _all_docs view",
+        "description": "returning all of the documents in the database. With the exception of the URL parameters \n(described below), this endpoint works identically to any other view. Refer to the view endpoint \ndocumentation for a complete description of the available query parameters and the format of \nthe returned data.\n",
+        "operationId": "docGetAll",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "schema": {
+              "$ref": "#/definitions/Pagination"
+            }
+          },
+          "404": {
+            "description": "Requested database not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "database"
+        ],
+        "summary": "Executes the built-in _all_docs view",
+        "description": "POST _all_docs functionality supports identical parameters and behavior as specified in the \nGET /{db}/_all_docs API but allows for the query string parameters to be supplied as keys in a \nJSON object in the body of the POST request.\n",
+        "operationId": "docPostAll",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Keys"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "schema": {
+              "$ref": "#/definitions/Pagination"
+            }
+          },
+          "404": {
+            "description": "Requested database not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Keys": {
+      "type": "object",
+      "properties": {
+        "keys": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Pagination": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "integer"
+        },
+        "total_rows": {
+          "type": "integer"
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Row"
+          }
+        }
+      }
+    },
+    "Row": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Document ID"
+        },
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "object",
+          "properties": {
+            "rev": {
+              "type": "string",
+              "description": "Revision MVCC token"
+            }
+          }
+        }
+      }
+    },
+    "Document": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "Document ID"
+        },
+        "_rev": {
+          "type": "string",
+          "description": "Revision MVCC token"
+        },
+        "_deleted": {
+          "type": "boolean",
+          "description": "Deletion flag. Available if document was removed"
+        },
+        "_attachments": {
+          "type": "object",
+          "description": "Attachment’s stubs. Available if document has any attachments",
+          "properties": {}
+        },
+        "_conflicts": {
+          "type": "array",
+          "description": "List of conflicted revisions. Available if requested with conflicts=true query parameter",
+          "items": {
+            "type": "string"
+          }
+        },
+        "_deleted_conflicts": {
+          "type": "array",
+          "description": "List of deleted conflicted revisions. Available if requested with deleted_conflicts=true query parameter",
+          "items": {
+            "type": "string"
+          }
+        },
+        "_local_seq": {
+          "type": "string",
+          "description": "Document’s update sequence in current database. Available if requested with local_seq=true query parameter"
+        },
+        "_revs_info": {
+          "type": "array",
+          "description": "List of objects with information about local revisions and their status. Available if requested with open_revs query parameter",
+          "items": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        "_revisions": {
+          "type": "object",
+          "description": "List of local revision tokens without. Available if requested with revs=true query parameter",
+          "properties": {}
+        }
+      }
+    },
+    "DocumentOK": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Document ID"
+        },
+        "ok": {
+          "type": "boolean",
+          "description": "Operation status"
+        },
+        "rev": {
+          "type": "string",
+          "description": "Revision MVCC token"
+        }
+      }
+    },
+    "OK": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean",
+          "description": "Operation status"
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "description": "Error type. Available if response code is 4xx"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Error description. Available if response code is 4xx"
+        }
+      }
+    },
+    "Database": {
+      "type": "object",
+      "properties": {
+        "db_name": {
+          "type": "string",
+          "description": "The name of the database."
+        },
+        "cluster": {
+          "type": "object",
+          "properties": {
+            "n": {
+              "type": "integer",
+              "description": "Replicas. The number of copies of every document."
+            },
+            "q": {
+              "type": "integer",
+              "description": "Shards. The number of range partitions."
+            },
+            "r": {
+              "type": "integer",
+              "description": "Read quorum. The number of consistent copies of a document that need to be read before a successful reply."
+            },
+            "w": {
+              "type": "integer",
+              "description": "Write quorum. The number of copies of a document that need to be written before a successful reply."
+            }
+          }
+        },
+        "compact_running": {
+          "type": "boolean",
+          "description": "Set to true if the database compaction routine is operating on this database."
+        },
+        "disk_format_version": {
+          "type": "integer",
+          "description": "The version of the physical format used for the data when it is stored on disk."
+        },
+        "doc_count": {
+          "type": "integer",
+          "description": "A count of the documents in the specified database."
+        },
+        "doc_del_count": {
+          "type": "integer",
+          "description": "Number of deleted documents"
+        },
+        "instance_start_time": {
+          "type": "string",
+          "description": "Always \"0\". (Returned for legacy reasons.)"
+        },
+        "purge_seq": {
+          "type": "string",
+          "description": "An opaque string that describes the purge state of the database. Do not rely on this string for counting the number of purge operations."
+        },
+        "sizes": {
+          "type": "object",
+          "properties": {
+            "active": {
+              "type": "integer",
+              "description": "The size of live data inside the database, in bytes."
+            },
+            "external": {
+              "type": "integer",
+              "description": "The uncompressed size of database contents in bytes. sizes.file (number) – The size of the database file on disk in bytes. Views indexes are not included in the calculation."
+            },
+            "file": {
+              "type": "integer",
+              "description": "An opaque string that describes the state of the database. Do not rely on this string for counting the number of updates."
+            }
+          }
+        },
+        "update_seq": {
+          "type": "string",
+          "description": "Always \"0\". (Returned for legacy reasons.)"
+        },
+        "props": {
+          "type": "object",
+          "properties": {
+            "partitioned": {
+              "type": "boolean",
+              "description": "If present and true, this indicates that the database is partitioned."
+            }
+          }
+        }
+      }
+    }
+  }
+}
