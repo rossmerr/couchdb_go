@@ -75,20 +75,20 @@ func NewDbPostCreated() *DbPostCreated {
 Document created and stored on disk
 */
 type DbPostCreated struct {
-	Payload *models.OK
+	Payload *models.DocumentOK
 }
 
 func (o *DbPostCreated) Error() string {
 	return fmt.Sprintf("[POST /{db}][%d] dbPostCreated  %+v", 201, o.Payload)
 }
 
-func (o *DbPostCreated) GetPayload() *models.OK {
+func (o *DbPostCreated) GetPayload() *models.DocumentOK {
 	return o.Payload
 }
 
 func (o *DbPostCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OK)
+	o.Payload = new(models.DocumentOK)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -108,20 +108,20 @@ func NewDbPostAccepted() *DbPostAccepted {
 Document data accepted, but not yet stored on disk
 */
 type DbPostAccepted struct {
-	Payload *models.OK
+	Payload *models.DocumentOK
 }
 
 func (o *DbPostAccepted) Error() string {
 	return fmt.Sprintf("[POST /{db}][%d] dbPostAccepted  %+v", 202, o.Payload)
 }
 
-func (o *DbPostAccepted) GetPayload() *models.OK {
+func (o *DbPostAccepted) GetPayload() *models.DocumentOK {
 	return o.Payload
 }
 
 func (o *DbPostAccepted) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OK)
+	o.Payload = new(models.DocumentOK)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

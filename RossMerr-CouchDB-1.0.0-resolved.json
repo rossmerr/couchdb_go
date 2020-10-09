@@ -151,13 +151,13 @@
           "201": {
             "description": "Document created and stored on disk",
             "schema": {
-              "$ref": "#/definitions/OK"
+              "$ref": "#/definitions/DocumentOK"
             }
           },
           "202": {
             "description": "Document data accepted, but not yet stored on disk",
             "schema": {
-              "$ref": "#/definitions/OK"
+              "$ref": "#/definitions/DocumentOK"
             }
           },
           "400": {
