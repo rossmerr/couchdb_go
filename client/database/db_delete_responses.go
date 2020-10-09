@@ -135,20 +135,20 @@ func NewDbDeleteBadRequest() *DbDeleteBadRequest {
 Invalid database name or forgotten document id by accident
 */
 type DbDeleteBadRequest struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DbDeleteBadRequest) Error() string {
 	return fmt.Sprintf("[DELETE /{db}][%d] dbDeleteBadRequest  %+v", 400, o.Payload)
 }
 
-func (o *DbDeleteBadRequest) GetPayload() *models.Error {
+func (o *DbDeleteBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DbDeleteBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -168,20 +168,20 @@ func NewDbDeleteUnauthorized() *DbDeleteUnauthorized {
 CouchDB Server Administrator privileges required
 */
 type DbDeleteUnauthorized struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DbDeleteUnauthorized) Error() string {
 	return fmt.Sprintf("[DELETE /{db}][%d] dbDeleteUnauthorized  %+v", 401, o.Payload)
 }
 
-func (o *DbDeleteUnauthorized) GetPayload() *models.Error {
+func (o *DbDeleteUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DbDeleteUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -201,20 +201,20 @@ func NewDbDeleteNotFound() *DbDeleteNotFound {
 Database doesn’t exist or invalid database name
 */
 type DbDeleteNotFound struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DbDeleteNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /{db}][%d] dbDeleteNotFound  %+v", 404, o.Payload)
 }
 
-func (o *DbDeleteNotFound) GetPayload() *models.Error {
+func (o *DbDeleteNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DbDeleteNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

@@ -84,20 +84,20 @@ func NewDocGetAllNotFound() *DocGetAllNotFound {
 Requested database not found
 */
 type DocGetAllNotFound struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DocGetAllNotFound) Error() string {
 	return fmt.Sprintf("[GET /{db}/_all_docs][%d] docGetAllNotFound  %+v", 404, o.Payload)
 }
 
-func (o *DocGetAllNotFound) GetPayload() *models.Error {
+func (o *DocGetAllNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DocGetAllNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

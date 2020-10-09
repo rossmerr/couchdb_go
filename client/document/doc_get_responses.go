@@ -128,20 +128,20 @@ func NewDocGetUnauthorized() *DocGetUnauthorized {
 Read privilege required
 */
 type DocGetUnauthorized struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DocGetUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /{db}/{docid}][%d] docGetUnauthorized  %+v", 401, o.Payload)
 }
 
-func (o *DocGetUnauthorized) GetPayload() *models.Error {
+func (o *DocGetUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DocGetUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -161,20 +161,20 @@ func NewDocGetNotFound() *DocGetNotFound {
 Document not found
 */
 type DocGetNotFound struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DocGetNotFound) Error() string {
 	return fmt.Sprintf("[GET /{db}/{docid}][%d] docGetNotFound  %+v", 404, o.Payload)
 }
 
-func (o *DocGetNotFound) GetPayload() *models.Error {
+func (o *DocGetNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DocGetNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

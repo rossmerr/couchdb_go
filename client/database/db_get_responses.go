@@ -84,20 +84,20 @@ func NewDbGetNotFound() *DbGetNotFound {
 Requested database not found
 */
 type DbGetNotFound struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DbGetNotFound) Error() string {
 	return fmt.Sprintf("[GET /{db}][%d] dbGetNotFound  %+v", 404, o.Payload)
 }
 
-func (o *DbGetNotFound) GetPayload() *models.Error {
+func (o *DbGetNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DbGetNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

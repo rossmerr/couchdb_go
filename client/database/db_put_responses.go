@@ -135,20 +135,20 @@ func NewDbPutBadRequest() *DbPutBadRequest {
 Invalid database name
 */
 type DbPutBadRequest struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DbPutBadRequest) Error() string {
 	return fmt.Sprintf("[PUT /{db}][%d] dbPutBadRequest  %+v", 400, o.Payload)
 }
 
-func (o *DbPutBadRequest) GetPayload() *models.Error {
+func (o *DbPutBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DbPutBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -168,20 +168,20 @@ func NewDbPutUnauthorized() *DbPutUnauthorized {
 CouchDB Server Administrator privileges required
 */
 type DbPutUnauthorized struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DbPutUnauthorized) Error() string {
 	return fmt.Sprintf("[PUT /{db}][%d] dbPutUnauthorized  %+v", 401, o.Payload)
 }
 
-func (o *DbPutUnauthorized) GetPayload() *models.Error {
+func (o *DbPutUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DbPutUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -201,20 +201,20 @@ func NewDbPutPreconditionFailed() *DbPutPreconditionFailed {
 Database already exists
 */
 type DbPutPreconditionFailed struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DbPutPreconditionFailed) Error() string {
 	return fmt.Sprintf("[PUT /{db}][%d] dbPutPreconditionFailed  %+v", 412, o.Payload)
 }
 
-func (o *DbPutPreconditionFailed) GetPayload() *models.Error {
+func (o *DbPutPreconditionFailed) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DbPutPreconditionFailed) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

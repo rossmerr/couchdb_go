@@ -72,20 +72,20 @@ func NewDbHeaderNotFound() *DbHeaderNotFound {
 Requested database not found
 */
 type DbHeaderNotFound struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DbHeaderNotFound) Error() string {
 	return fmt.Sprintf("[HEAD /{db}][%d] dbHeaderNotFound  %+v", 404, o.Payload)
 }
 
-func (o *DbHeaderNotFound) GetPayload() *models.Error {
+func (o *DbHeaderNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DbHeaderNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

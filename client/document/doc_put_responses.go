@@ -167,20 +167,20 @@ func NewDocPutBadRequest() *DocPutBadRequest {
 Invalid request body or parameters
 */
 type DocPutBadRequest struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DocPutBadRequest) Error() string {
 	return fmt.Sprintf("[PUT /{db}/{docid}][%d] docPutBadRequest  %+v", 400, o.Payload)
 }
 
-func (o *DocPutBadRequest) GetPayload() *models.Error {
+func (o *DocPutBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DocPutBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -200,20 +200,20 @@ func NewDocPutUnauthorized() *DocPutUnauthorized {
 Write privileges required
 */
 type DocPutUnauthorized struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DocPutUnauthorized) Error() string {
 	return fmt.Sprintf("[PUT /{db}/{docid}][%d] docPutUnauthorized  %+v", 401, o.Payload)
 }
 
-func (o *DocPutUnauthorized) GetPayload() *models.Error {
+func (o *DocPutUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DocPutUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -233,20 +233,20 @@ func NewDocPutNotFound() *DocPutNotFound {
 Specified database or document ID doesn’t exists
 */
 type DocPutNotFound struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DocPutNotFound) Error() string {
 	return fmt.Sprintf("[PUT /{db}/{docid}][%d] docPutNotFound  %+v", 404, o.Payload)
 }
 
-func (o *DocPutNotFound) GetPayload() *models.Error {
+func (o *DocPutNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DocPutNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -266,20 +266,20 @@ func NewDocPutConflict() *DocPutConflict {
 Document with the specified ID already exists or specified revision is not latest for target document
 */
 type DocPutConflict struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DocPutConflict) Error() string {
 	return fmt.Sprintf("[PUT /{db}/{docid}][%d] docPutConflict  %+v", 409, o.Payload)
 }
 
-func (o *DocPutConflict) GetPayload() *models.Error {
+func (o *DocPutConflict) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DocPutConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

@@ -141,20 +141,20 @@ func NewDbPostBadRequest() *DbPostBadRequest {
 Invalid database name
 */
 type DbPostBadRequest struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DbPostBadRequest) Error() string {
 	return fmt.Sprintf("[POST /{db}][%d] dbPostBadRequest  %+v", 400, o.Payload)
 }
 
-func (o *DbPostBadRequest) GetPayload() *models.Error {
+func (o *DbPostBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DbPostBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -174,20 +174,20 @@ func NewDbPostUnauthorized() *DbPostUnauthorized {
 Write privileges required
 */
 type DbPostUnauthorized struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DbPostUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /{db}][%d] dbPostUnauthorized  %+v", 401, o.Payload)
 }
 
-func (o *DbPostUnauthorized) GetPayload() *models.Error {
+func (o *DbPostUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DbPostUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -207,20 +207,20 @@ func NewDbPostNotFound() *DbPostNotFound {
 Database doesn’t exist
 */
 type DbPostNotFound struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DbPostNotFound) Error() string {
 	return fmt.Sprintf("[POST /{db}][%d] dbPostNotFound  %+v", 404, o.Payload)
 }
 
-func (o *DbPostNotFound) GetPayload() *models.Error {
+func (o *DbPostNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DbPostNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -240,20 +240,20 @@ func NewDbPostConflict() *DbPostConflict {
 A Conflicting Document with same ID already exists
 */
 type DbPostConflict struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DbPostConflict) Error() string {
 	return fmt.Sprintf("[POST /{db}][%d] dbPostConflict  %+v", 409, o.Payload)
 }
 
-func (o *DbPostConflict) GetPayload() *models.Error {
+func (o *DbPostConflict) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DbPostConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

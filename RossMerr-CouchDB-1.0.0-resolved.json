@@ -51,7 +51,8 @@
             "in": "path",
             "description": "Database name",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
           }
         ],
         "responses": {
@@ -64,7 +65,7 @@
           "404": {
             "description": "Requested database not found",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -90,7 +91,8 @@
             "in": "path",
             "description": "Database name",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
           }
         ],
         "responses": {
@@ -100,7 +102,7 @@
           "404": {
             "description": "Requested database not found",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -126,7 +128,8 @@
             "in": "path",
             "description": "Database name",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
           },
           {
             "name": "batch",
@@ -160,25 +163,25 @@
           "400": {
             "description": "Invalid database name",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "401": {
             "description": "Write privileges required",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "404": {
             "description": "Database doesn’t exist",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "409": {
             "description": "A Conflicting Document with same ID already exists",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -204,7 +207,8 @@
             "in": "path",
             "description": "Database name",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
           },
           {
             "name": "q",
@@ -246,19 +250,19 @@
           "400": {
             "description": "Invalid database name",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "401": {
             "description": "CouchDB Server Administrator privileges required",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "412": {
             "description": "Database already exists",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -284,7 +288,8 @@
             "in": "path",
             "description": "Database name",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
           }
         ],
         "responses": {
@@ -303,19 +308,19 @@
           "400": {
             "description": "Invalid database name or forgotten document id by accident",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "401": {
             "description": "CouchDB Server Administrator privileges required",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "404": {
             "description": "Database doesn’t exist or invalid database name",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -346,7 +351,8 @@
             "in": "path",
             "description": "Database name",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
           },
           {
             "name": "docid",
@@ -478,13 +484,13 @@
           "401": {
             "description": "Read privilege required",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "404": {
             "description": "Document not found",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -510,7 +516,8 @@
             "in": "path",
             "description": "Database name",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
           },
           {
             "name": "docid",
@@ -540,13 +547,13 @@
           "401": {
             "description": "Read privilege required",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "404": {
             "description": "Document not found",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -572,7 +579,8 @@
             "in": "path",
             "description": "Database name",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
           },
           {
             "name": "docid",
@@ -654,25 +662,25 @@
           "400": {
             "description": "Invalid request body or parameters",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "401": {
             "description": "Write privileges required",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "404": {
             "description": "Specified database or document ID doesn’t exists",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "409": {
             "description": "Document with the specified ID already exists or specified revision is not latest for target document",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -698,7 +706,8 @@
             "in": "path",
             "description": "Database name",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
           },
           {
             "name": "docid",
@@ -757,25 +766,25 @@
           "400": {
             "description": "Invalid request body or parameters",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "401": {
             "description": "Write privileges required",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "404": {
             "description": "Specified database or document ID doesn’t exists",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "409": {
             "description": "Specified revision is not the latest for target document",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -801,7 +810,8 @@
             "in": "path",
             "description": "Database name",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
           }
         ],
         "responses": {
@@ -814,7 +824,7 @@
           "404": {
             "description": "Requested database not found",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -838,7 +848,8 @@
             "in": "path",
             "description": "Database name",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
           },
           {
             "in": "body",
@@ -859,7 +870,145 @@
           "404": {
             "description": "Requested database not found",
             "schema": {
-              "$ref": "#/definitions/Error"
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/{db}/_bulk_get": {
+      "get": {
+        "tags": [
+          "database"
+        ],
+        "summary": "This method can be called to query several documents in bulk",
+        "description": "It is well suited for fetching a specific revision of documents, as replicators do for example, or for getting revision history.\n",
+        "operationId": "bulkGetAll",
+        "consumes": [
+          "application/json",
+          "multipart/related",
+          "multipart/mixed"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
+          },
+          {
+            "name": "revs",
+            "in": "query",
+            "description": "Give the revisions history",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/All"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "schema": {
+              "$ref": "#/definitions/Results"
+            }
+          },
+          "400": {
+            "description": "The request provided invalid JSON data or invalid query parameter",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Read permission required",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Invalid database name",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "415": {
+            "description": "Bad Content-Type value",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "database"
+        ],
+        "summary": "The bulk document API allows you to create and update multiple documents at the same time within a single request.",
+        "description": "The basic operation is similar to creating or updating a single document, except that you batch the document structure and information.\n\nWhen creating new documents the document ID (_id) is optional.\n\nFor updating existing documents, you must provide the document ID, revision information (_rev), and new document values.\n\nIn case of batch deleting documents all fields as document ID, revision information and deletion status (_deleted) are required.\n",
+        "operationId": "bulkPostAll",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "docs": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Document"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Document(s) have been created or updated",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DocumentOK"
+              }
+            }
+          },
+          "400": {
+            "description": "The request provided invalid JSON data",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Requested database not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -872,6 +1021,72 @@
     }
   },
   "definitions": {
+    "All": {
+      "type": "object",
+      "properties": {
+        "docs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "rev": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Results": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "docs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "object",
+                      "properties": {}
+                    },
+                    "error": {
+                      "type": "object",
+                      "allOf": [
+                        {
+                          "$ref": "#/definitions/ErrorResponse"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "rev": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Keys": {
       "type": "object",
       "properties": {
@@ -951,7 +1166,7 @@
         }
       }
     },
-    "Error": {
+    "ErrorResponse": {
       "type": "object",
       "properties": {
         "error": {

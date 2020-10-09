@@ -155,20 +155,20 @@ func NewDocDeleteBadRequest() *DocDeleteBadRequest {
 Invalid request body or parameters
 */
 type DocDeleteBadRequest struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DocDeleteBadRequest) Error() string {
 	return fmt.Sprintf("[DELETE /{db}/{docid}][%d] docDeleteBadRequest  %+v", 400, o.Payload)
 }
 
-func (o *DocDeleteBadRequest) GetPayload() *models.Error {
+func (o *DocDeleteBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DocDeleteBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -188,20 +188,20 @@ func NewDocDeleteUnauthorized() *DocDeleteUnauthorized {
 Write privileges required
 */
 type DocDeleteUnauthorized struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DocDeleteUnauthorized) Error() string {
 	return fmt.Sprintf("[DELETE /{db}/{docid}][%d] docDeleteUnauthorized  %+v", 401, o.Payload)
 }
 
-func (o *DocDeleteUnauthorized) GetPayload() *models.Error {
+func (o *DocDeleteUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DocDeleteUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -221,20 +221,20 @@ func NewDocDeleteNotFound() *DocDeleteNotFound {
 Specified database or document ID doesn’t exists
 */
 type DocDeleteNotFound struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DocDeleteNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /{db}/{docid}][%d] docDeleteNotFound  %+v", 404, o.Payload)
 }
 
-func (o *DocDeleteNotFound) GetPayload() *models.Error {
+func (o *DocDeleteNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DocDeleteNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -254,20 +254,20 @@ func NewDocDeleteConflict() *DocDeleteConflict {
 Specified revision is not the latest for target document
 */
 type DocDeleteConflict struct {
-	Payload *models.Error
+	Payload *models.ErrorResponse
 }
 
 func (o *DocDeleteConflict) Error() string {
 	return fmt.Sprintf("[DELETE /{db}/{docid}][%d] docDeleteConflict  %+v", 409, o.Payload)
 }
 
-func (o *DocDeleteConflict) GetPayload() *models.Error {
+func (o *DocDeleteConflict) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
 
 func (o *DocDeleteConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.Error)
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
