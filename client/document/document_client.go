@@ -27,13 +27,13 @@ type Client struct {
 
 // ClientService is the interface for Client methods
 type ClientService interface {
-	Doc(params *DocParams, authInfo runtime.ClientAuthInfoWriter) (*DocOK, error)
+	Doc(params *DocParams) (*DocOK, error)
 
-	DocDelete(params *DocDeleteParams, authInfo runtime.ClientAuthInfoWriter) (*DocDeleteOK, *DocDeleteAccepted, error)
+	DocDelete(params *DocDeleteParams) (*DocDeleteOK, *DocDeleteAccepted, error)
 
-	DocGet(params *DocGetParams, authInfo runtime.ClientAuthInfoWriter) (*DocGetOK, error)
+	DocGet(params *DocGetParams) (*DocGetOK, error)
 
-	DocPut(params *DocPutParams, authInfo runtime.ClientAuthInfoWriter) (*DocPutCreated, *DocPutAccepted, error)
+	DocPut(params *DocPutParams) (*DocPutCreated, *DocPutAccepted, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -51,7 +51,7 @@ Adding any of the query arguments (see GET /{db}/{docid}), then the resulting HT
 will correspond to what would be returned.
 
 */
-func (a *Client) Doc(params *DocParams, authInfo runtime.ClientAuthInfoWriter) (*DocOK, error) {
+func (a *Client) Doc(params *DocParams) (*DocOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDocParams()
@@ -66,7 +66,6 @@ func (a *Client) Doc(params *DocParams, authInfo runtime.ClientAuthInfoWriter) (
 		Schemes:            []string{"http", "https"},
 		Params:             params,
 		Reader:             &DocReader{formats: a.formats},
-		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -96,7 +95,7 @@ basic information about the document. The tombstone is required so that the dele
 replicated across databases.
 
 */
-func (a *Client) DocDelete(params *DocDeleteParams, authInfo runtime.ClientAuthInfoWriter) (*DocDeleteOK, *DocDeleteAccepted, error) {
+func (a *Client) DocDelete(params *DocDeleteParams) (*DocDeleteOK, *DocDeleteAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDocDeleteParams()
@@ -111,7 +110,6 @@ func (a *Client) DocDelete(params *DocDeleteParams, authInfo runtime.ClientAuthI
 		Schemes:            []string{"http", "https"},
 		Params:             params,
 		Reader:             &DocDeleteReader{formats: a.formats},
-		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -132,7 +130,7 @@ func (a *Client) DocDelete(params *DocDeleteParams, authInfo runtime.ClientAuthI
 /*
   DocGet returns document by the specified docid from the specified db unless you request a specific revision the latest revision of the document will always be returned
 */
-func (a *Client) DocGet(params *DocGetParams, authInfo runtime.ClientAuthInfoWriter) (*DocGetOK, error) {
+func (a *Client) DocGet(params *DocGetParams) (*DocGetOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDocGetParams()
@@ -147,7 +145,6 @@ func (a *Client) DocGet(params *DocGetParams, authInfo runtime.ClientAuthInfoWri
 		Schemes:            []string{"http", "https"},
 		Params:             params,
 		Reader:             &DocGetReader{formats: a.formats},
-		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -171,7 +168,7 @@ func (a *Client) DocGet(params *DocGetParams, authInfo runtime.ClientAuthInfoWri
 (i.e. the request body), as the rev query parameter, or in the If-Match request header.
 
 */
-func (a *Client) DocPut(params *DocPutParams, authInfo runtime.ClientAuthInfoWriter) (*DocPutCreated, *DocPutAccepted, error) {
+func (a *Client) DocPut(params *DocPutParams) (*DocPutCreated, *DocPutAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDocPutParams()
@@ -186,7 +183,6 @@ func (a *Client) DocPut(params *DocPutParams, authInfo runtime.ClientAuthInfoWri
 		Schemes:            []string{"http", "https"},
 		Params:             params,
 		Reader:             &DocPutReader{formats: a.formats},
-		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})

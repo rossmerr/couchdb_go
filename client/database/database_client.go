@@ -27,19 +27,19 @@ type Client struct {
 
 // ClientService is the interface for Client methods
 type ClientService interface {
-	DbDelete(params *DbDeleteParams, authInfo runtime.ClientAuthInfoWriter) (*DbDeleteOK, *DbDeleteAccepted, error)
+	DbDelete(params *DbDeleteParams) (*DbDeleteOK, *DbDeleteAccepted, error)
 
-	DbGet(params *DbGetParams, authInfo runtime.ClientAuthInfoWriter) (*DbGetOK, error)
+	DbGet(params *DbGetParams) (*DbGetOK, error)
 
-	DbHeader(params *DbHeaderParams, authInfo runtime.ClientAuthInfoWriter) (*DbHeaderOK, error)
+	DbHeader(params *DbHeaderParams) (*DbHeaderOK, error)
 
-	DbPost(params *DbPostParams, authInfo runtime.ClientAuthInfoWriter) (*DbPostCreated, *DbPostAccepted, error)
+	DbPost(params *DbPostParams) (*DbPostCreated, *DbPostAccepted, error)
 
-	DbPut(params *DbPutParams, authInfo runtime.ClientAuthInfoWriter) (*DbPutCreated, *DbPutAccepted, error)
+	DbPut(params *DbPutParams) (*DbPutCreated, *DbPutAccepted, error)
 
-	DocGetAll(params *DocGetAllParams, authInfo runtime.ClientAuthInfoWriter) (*DocGetAllOK, error)
+	DocGetAll(params *DocGetAllParams) (*DocGetAllOK, error)
 
-	DocPostAll(params *DocPostAllParams, authInfo runtime.ClientAuthInfoWriter) (*DocPostAllOK, error)
+	DocPostAll(params *DocPostAllParams) (*DocPostAllOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -53,7 +53,7 @@ URL includes a ?rev= parameter. This suggests that one wants to delete a documen
 the document id to the URL.
 
 */
-func (a *Client) DbDelete(params *DbDeleteParams, authInfo runtime.ClientAuthInfoWriter) (*DbDeleteOK, *DbDeleteAccepted, error) {
+func (a *Client) DbDelete(params *DbDeleteParams) (*DbDeleteOK, *DbDeleteAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDbDeleteParams()
@@ -68,7 +68,6 @@ func (a *Client) DbDelete(params *DbDeleteParams, authInfo runtime.ClientAuthInf
 		Schemes:            []string{"http", "https"},
 		Params:             params,
 		Reader:             &DbDeleteReader{formats: a.formats},
-		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -93,7 +92,7 @@ func (a *Client) DbDelete(params *DbDeleteParams, authInfo runtime.ClientAuthInf
 available inventory in the system
 
 */
-func (a *Client) DbGet(params *DbGetParams, authInfo runtime.ClientAuthInfoWriter) (*DbGetOK, error) {
+func (a *Client) DbGet(params *DbGetParams) (*DbGetOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDbGetParams()
@@ -108,7 +107,6 @@ func (a *Client) DbGet(params *DbGetParams, authInfo runtime.ClientAuthInfoWrite
 		Schemes:            []string{"http", "https"},
 		Params:             params,
 		Reader:             &DbGetReader{formats: a.formats},
-		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -131,7 +129,7 @@ func (a *Client) DbGet(params *DbGetParams, authInfo runtime.ClientAuthInfoWrite
   Since the response body is empty, using the HEAD method is a lightweight way to check if the database exists already or not.
 
 */
-func (a *Client) DbHeader(params *DbHeaderParams, authInfo runtime.ClientAuthInfoWriter) (*DbHeaderOK, error) {
+func (a *Client) DbHeader(params *DbHeaderParams) (*DbHeaderOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDbHeaderParams()
@@ -146,7 +144,6 @@ func (a *Client) DbHeader(params *DbHeaderParams, authInfo runtime.ClientAuthInf
 		Schemes:            []string{"http", "https"},
 		Params:             params,
 		Reader:             &DbHeaderReader{formats: a.formats},
-		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -173,7 +170,7 @@ If the _id field is not specified, a new unique ID will be generated, following 
 UUID algorithm is configured for that server.
 
 */
-func (a *Client) DbPost(params *DbPostParams, authInfo runtime.ClientAuthInfoWriter) (*DbPostCreated, *DbPostAccepted, error) {
+func (a *Client) DbPost(params *DbPostParams) (*DbPostCreated, *DbPostAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDbPostParams()
@@ -188,7 +185,6 @@ func (a *Client) DbPost(params *DbPostParams, authInfo runtime.ClientAuthInfoWri
 		Schemes:            []string{"http", "https"},
 		Params:             params,
 		Reader:             &DbPostReader{formats: a.formats},
-		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -218,7 +214,7 @@ Name must begin with a lowercase letter (a-z)
 If you’re familiar with Regular Expressions, the rules above could be written as
 
 */
-func (a *Client) DbPut(params *DbPutParams, authInfo runtime.ClientAuthInfoWriter) (*DbPutCreated, *DbPutAccepted, error) {
+func (a *Client) DbPut(params *DbPutParams) (*DbPutCreated, *DbPutAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDbPutParams()
@@ -233,7 +229,6 @@ func (a *Client) DbPut(params *DbPutParams, authInfo runtime.ClientAuthInfoWrite
 		Schemes:            []string{"http", "https"},
 		Params:             params,
 		Reader:             &DbPutReader{formats: a.formats},
-		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -260,7 +255,7 @@ documentation for a complete description of the available query parameters and t
 the returned data.
 
 */
-func (a *Client) DocGetAll(params *DocGetAllParams, authInfo runtime.ClientAuthInfoWriter) (*DocGetAllOK, error) {
+func (a *Client) DocGetAll(params *DocGetAllParams) (*DocGetAllOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDocGetAllParams()
@@ -275,7 +270,6 @@ func (a *Client) DocGetAll(params *DocGetAllParams, authInfo runtime.ClientAuthI
 		Schemes:            []string{"http", "https"},
 		Params:             params,
 		Reader:             &DocGetAllReader{formats: a.formats},
-		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -300,7 +294,7 @@ GET /{db}/_all_docs API but allows for the query string parameters to be supplie
 JSON object in the body of the POST request.
 
 */
-func (a *Client) DocPostAll(params *DocPostAllParams, authInfo runtime.ClientAuthInfoWriter) (*DocPostAllOK, error) {
+func (a *Client) DocPostAll(params *DocPostAllParams) (*DocPostAllOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDocPostAllParams()
@@ -315,7 +309,6 @@ func (a *Client) DocPostAll(params *DocPostAllParams, authInfo runtime.ClientAut
 		Schemes:            []string{"http", "https"},
 		Params:             params,
 		Reader:             &DocPostAllReader{formats: a.formats},
-		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
