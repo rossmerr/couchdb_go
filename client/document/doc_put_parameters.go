@@ -15,6 +15,8 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+
+	"github.com/RossMerr/couchdb_go/models"
 )
 
 // NewDocPutParams creates a new DocPutParams object
@@ -72,6 +74,8 @@ type DocPutParams struct {
 
 	*/
 	Batch *string
+	/*Body*/
+	Body models.Document
 	/*Db
 	  Database name
 
@@ -156,6 +160,17 @@ func (o *DocPutParams) SetBatch(batch *string) {
 	o.Batch = batch
 }
 
+// WithBody adds the body to the doc put params
+func (o *DocPutParams) WithBody(body models.Document) *DocPutParams {
+	o.SetBody(body)
+	return o
+}
+
+// SetBody adds the body to the doc put params
+func (o *DocPutParams) SetBody(body models.Document) {
+	o.Body = body
+}
+
 // WithDb adds the db to the doc put params
 func (o *DocPutParams) WithDb(db string) *DocPutParams {
 	o.SetDb(db)
@@ -231,6 +246,12 @@ func (o *DocPutParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regist
 			}
 		}
 
+	}
+
+	if o.Body != nil {
+		if err := r.SetBodyParam(o.Body); err != nil {
+			return err
+		}
 	}
 
 	// path param db

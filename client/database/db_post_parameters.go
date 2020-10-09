@@ -14,6 +14,8 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+
+	"github.com/RossMerr/couchdb_go/models"
 )
 
 // NewDbPostParams creates a new DbPostParams object
@@ -67,7 +69,7 @@ type DbPostParams struct {
 	*/
 	Batch *string
 	/*Body*/
-	Body interface{}
+	Body models.Document
 	/*Db
 	  Database name
 
@@ -124,13 +126,13 @@ func (o *DbPostParams) SetBatch(batch *string) {
 }
 
 // WithBody adds the body to the db post params
-func (o *DbPostParams) WithBody(body interface{}) *DbPostParams {
+func (o *DbPostParams) WithBody(body models.Document) *DbPostParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the db post params
-func (o *DbPostParams) SetBody(body interface{}) {
+func (o *DbPostParams) SetBody(body models.Document) {
 	o.Body = body
 }
 

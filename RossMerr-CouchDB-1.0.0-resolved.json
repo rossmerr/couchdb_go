@@ -140,7 +140,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "type": "object"
+              "$ref": "#/definitions/Document"
             }
           }
         ],
@@ -608,6 +608,14 @@
             "description": "Prevents insertion of a conflicting document. Possible values: true (default) and false. If false, \na well-formed _rev must be included in the document. new_edits=false is used by the replicator \nto insert documents into the target database even if that leads to the creation of conflicts. Optional\n",
             "required": false,
             "type": "boolean"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Document"
+            }
           }
         ],
         "responses": {
@@ -915,56 +923,7 @@
     },
     "Document": {
       "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string",
-          "description": "Document ID"
-        },
-        "_rev": {
-          "type": "string",
-          "description": "Revision MVCC token"
-        },
-        "_deleted": {
-          "type": "boolean",
-          "description": "Deletion flag. Available if document was removed"
-        },
-        "_attachments": {
-          "type": "object",
-          "description": "Attachment’s stubs. Available if document has any attachments",
-          "properties": {}
-        },
-        "_conflicts": {
-          "type": "array",
-          "description": "List of conflicted revisions. Available if requested with conflicts=true query parameter",
-          "items": {
-            "type": "string"
-          }
-        },
-        "_deleted_conflicts": {
-          "type": "array",
-          "description": "List of deleted conflicted revisions. Available if requested with deleted_conflicts=true query parameter",
-          "items": {
-            "type": "string"
-          }
-        },
-        "_local_seq": {
-          "type": "string",
-          "description": "Document’s update sequence in current database. Available if requested with local_seq=true query parameter"
-        },
-        "_revs_info": {
-          "type": "array",
-          "description": "List of objects with information about local revisions and their status. Available if requested with open_revs query parameter",
-          "items": {
-            "type": "object",
-            "properties": {}
-          }
-        },
-        "_revisions": {
-          "type": "object",
-          "description": "List of local revision tokens without. Available if requested with revs=true query parameter",
-          "properties": {}
-        }
-      }
+      "additionalProperties": {}
     },
     "DocumentOK": {
       "type": "object",

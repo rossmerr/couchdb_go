@@ -70,14 +70,14 @@ type DocGetOK struct {
 	 */
 	TransferEncoding string
 
-	Payload *models.Document
+	Payload models.Document
 }
 
 func (o *DocGetOK) Error() string {
 	return fmt.Sprintf("[GET /{db}/{docid}][%d] docGetOK  %+v", 200, o.Payload)
 }
 
-func (o *DocGetOK) GetPayload() *models.Document {
+func (o *DocGetOK) GetPayload() models.Document {
 	return o.Payload
 }
 
@@ -89,10 +89,8 @@ func (o *DocGetOK) readResponse(response runtime.ClientResponse, consumer runtim
 	// response header Transfer-Encoding
 	o.TransferEncoding = response.GetHeader("Transfer-Encoding")
 
-	o.Payload = new(models.Document)
-
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 
