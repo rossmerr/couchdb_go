@@ -10,8 +10,8 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/RossMerr/couchdb-go/client/database"
-	"github.com/RossMerr/couchdb-go/client/document"
+	"github.com/RossMerr/couchdb_go/client/database"
+	"github.com/RossMerr/couchdb_go/client/document"
 )
 
 // Default couchdb go HTTP client.

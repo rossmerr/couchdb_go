@@ -14,7 +14,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"github.com/RossMerr/couchdb-go/models"
+	"github.com/RossMerr/couchdb_go/models"
 )
 
 // DocReader is a Reader for the Doc structure.

@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/RossMerr/couchdb-go/models"
+	"github.com/RossMerr/couchdb_go/models"
 )
 
 // NewDocPostAllParams creates a new DocPostAllParams object

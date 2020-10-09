@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/RossMerr/couchdb-go/models"
+	"github.com/RossMerr/couchdb_go/models"
 )
 
 // DbDeleteReader is a Reader for the DbDelete structure.
