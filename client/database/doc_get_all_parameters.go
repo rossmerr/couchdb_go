@@ -86,6 +86,26 @@ type DocGetAllParams struct {
 
 	*/
 	Descending *bool
+	/*EndKey
+	  Alias for endkey param
+
+	*/
+	EndKey *string
+	/*EndKeyDocID
+	  Alias for endkey_docid.
+
+	*/
+	EndKeyDocID *string
+	/*Endkey
+	  Stop returning records when the specified key is reached.
+
+	*/
+	QueryEndKey *string
+	/*EndkeyDocid
+	  Stop returning records when the specified document ID is reached. Ignored if endkey is not set.
+
+	*/
+	EndkeyDocid *string
 	/*Group
 	  Group the results using the reduce function to a group or single row. Implies reduce is true and the maximum group_level. Default is false.
 
@@ -96,11 +116,26 @@ type DocGetAllParams struct {
 
 	*/
 	GroupLevel *int64
+	/*IncludeDocs
+	  Include the associated document with each row. Default is false.
+
+	*/
+	IncludeDocs *bool
 	/*InclusiveEnd
 	  Specifies whether the specified end key should be included in the result. Default is true.
 
 	*/
 	InclusiveEnd *bool
+	/*Key
+	  eturn only documents that match the specified key.
+
+	*/
+	Key *string
+	/*Keys
+	  Return only documents where the key matches one of the keys specified in the array.
+
+	*/
+	Keys []string
 	/*Limit
 	  Limit the number of the returned documents to the specified number.
 
@@ -111,6 +146,11 @@ type DocGetAllParams struct {
 
 	*/
 	Reduce *bool
+	/*RevsInfo
+	  Includes detailed information for all known document revisions. Default is false
+
+	*/
+	RevsInfo *bool
 	/*Skip
 	  Skip this number of records before starting to return the results. Default is 0.
 
@@ -132,11 +172,21 @@ type DocGetAllParams struct {
 
 	*/
 	Stale *string
+	/*StartKey
+	  Alias for startkey.
+
+	*/
+	StartKey *string
 	/*StartKeyDocID
 	  Alias for startkey_docid param
 
 	*/
 	StartKeyDocID *string
+	/*Startkey
+	  Return records starting with the specified key.
+
+	*/
+	Startkey *string
 	/*StartkeyDocid
 	  Return records starting with the specified document ID. Ignored if startkey is not set.
 
@@ -247,6 +297,50 @@ func (o *DocGetAllParams) SetDescending(descending *bool) {
 	o.Descending = descending
 }
 
+// WithEndKey adds the endKey to the doc get all params
+func (o *DocGetAllParams) WithEndKey(endKey *string) *DocGetAllParams {
+	o.SetEndKey(endKey)
+	return o
+}
+
+// SetEndKey adds the endKey to the doc get all params
+func (o *DocGetAllParams) SetEndKey(endKey *string) {
+	o.EndKey = endKey
+}
+
+// WithEndKeyDocID adds the endKeyDocID to the doc get all params
+func (o *DocGetAllParams) WithEndKeyDocID(endKeyDocID *string) *DocGetAllParams {
+	o.SetEndKeyDocID(endKeyDocID)
+	return o
+}
+
+// SetEndKeyDocID adds the endKeyDocId to the doc get all params
+func (o *DocGetAllParams) SetEndKeyDocID(endKeyDocID *string) {
+	o.EndKeyDocID = endKeyDocID
+}
+
+// WithQueryEndKey adds the endkey to the doc get all params
+func (o *DocGetAllParams) WithQueryEndKey(endkey *string) *DocGetAllParams {
+	o.SetQueryEndKey(endkey)
+	return o
+}
+
+// SetQueryEndKey adds the endkey to the doc get all params
+func (o *DocGetAllParams) SetQueryEndKey(endkey *string) {
+	o.QueryEndKey = endkey
+}
+
+// WithEndkeyDocid adds the endkeyDocid to the doc get all params
+func (o *DocGetAllParams) WithEndkeyDocid(endkeyDocid *string) *DocGetAllParams {
+	o.SetEndkeyDocid(endkeyDocid)
+	return o
+}
+
+// SetEndkeyDocid adds the endkeyDocid to the doc get all params
+func (o *DocGetAllParams) SetEndkeyDocid(endkeyDocid *string) {
+	o.EndkeyDocid = endkeyDocid
+}
+
 // WithGroup adds the group to the doc get all params
 func (o *DocGetAllParams) WithGroup(group *bool) *DocGetAllParams {
 	o.SetGroup(group)
@@ -269,6 +363,17 @@ func (o *DocGetAllParams) SetGroupLevel(groupLevel *int64) {
 	o.GroupLevel = groupLevel
 }
 
+// WithIncludeDocs adds the includeDocs to the doc get all params
+func (o *DocGetAllParams) WithIncludeDocs(includeDocs *bool) *DocGetAllParams {
+	o.SetIncludeDocs(includeDocs)
+	return o
+}
+
+// SetIncludeDocs adds the includeDocs to the doc get all params
+func (o *DocGetAllParams) SetIncludeDocs(includeDocs *bool) {
+	o.IncludeDocs = includeDocs
+}
+
 // WithInclusiveEnd adds the inclusiveEnd to the doc get all params
 func (o *DocGetAllParams) WithInclusiveEnd(inclusiveEnd *bool) *DocGetAllParams {
 	o.SetInclusiveEnd(inclusiveEnd)
@@ -278,6 +383,28 @@ func (o *DocGetAllParams) WithInclusiveEnd(inclusiveEnd *bool) *DocGetAllParams 
 // SetInclusiveEnd adds the inclusiveEnd to the doc get all params
 func (o *DocGetAllParams) SetInclusiveEnd(inclusiveEnd *bool) {
 	o.InclusiveEnd = inclusiveEnd
+}
+
+// WithKey adds the key to the doc get all params
+func (o *DocGetAllParams) WithKey(key *string) *DocGetAllParams {
+	o.SetKey(key)
+	return o
+}
+
+// SetKey adds the key to the doc get all params
+func (o *DocGetAllParams) SetKey(key *string) {
+	o.Key = key
+}
+
+// WithKeys adds the keys to the doc get all params
+func (o *DocGetAllParams) WithKeys(keys []string) *DocGetAllParams {
+	o.SetKeys(keys)
+	return o
+}
+
+// SetKeys adds the keys to the doc get all params
+func (o *DocGetAllParams) SetKeys(keys []string) {
+	o.Keys = keys
 }
 
 // WithLimit adds the limit to the doc get all params
@@ -300,6 +427,17 @@ func (o *DocGetAllParams) WithReduce(reduce *bool) *DocGetAllParams {
 // SetReduce adds the reduce to the doc get all params
 func (o *DocGetAllParams) SetReduce(reduce *bool) {
 	o.Reduce = reduce
+}
+
+// WithRevsInfo adds the revsInfo to the doc get all params
+func (o *DocGetAllParams) WithRevsInfo(revsInfo *bool) *DocGetAllParams {
+	o.SetRevsInfo(revsInfo)
+	return o
+}
+
+// SetRevsInfo adds the revsInfo to the doc get all params
+func (o *DocGetAllParams) SetRevsInfo(revsInfo *bool) {
+	o.RevsInfo = revsInfo
 }
 
 // WithSkip adds the skip to the doc get all params
@@ -346,6 +484,17 @@ func (o *DocGetAllParams) SetStale(stale *string) {
 	o.Stale = stale
 }
 
+// WithStartKey adds the startKey to the doc get all params
+func (o *DocGetAllParams) WithStartKey(startKey *string) *DocGetAllParams {
+	o.SetStartKey(startKey)
+	return o
+}
+
+// SetStartKey adds the startKey to the doc get all params
+func (o *DocGetAllParams) SetStartKey(startKey *string) {
+	o.StartKey = startKey
+}
+
 // WithStartKeyDocID adds the startKeyDocID to the doc get all params
 func (o *DocGetAllParams) WithStartKeyDocID(startKeyDocID *string) *DocGetAllParams {
 	o.SetStartKeyDocID(startKeyDocID)
@@ -355,6 +504,17 @@ func (o *DocGetAllParams) WithStartKeyDocID(startKeyDocID *string) *DocGetAllPar
 // SetStartKeyDocID adds the startKeyDocId to the doc get all params
 func (o *DocGetAllParams) SetStartKeyDocID(startKeyDocID *string) {
 	o.StartKeyDocID = startKeyDocID
+}
+
+// WithStartkey adds the startkey to the doc get all params
+func (o *DocGetAllParams) WithStartkey(startkey *string) *DocGetAllParams {
+	o.SetStartkey(startkey)
+	return o
+}
+
+// SetStartkey adds the startkey to the doc get all params
+func (o *DocGetAllParams) SetStartkey(startkey *string) {
+	o.Startkey = startkey
 }
 
 // WithStartkeyDocid adds the startkeyDocid to the doc get all params
@@ -467,6 +627,70 @@ func (o *DocGetAllParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 
 	}
 
+	if o.EndKey != nil {
+
+		// query param end_key
+		var qrEndKey string
+		if o.EndKey != nil {
+			qrEndKey = *o.EndKey
+		}
+		qEndKey := qrEndKey
+		if qEndKey != "" {
+			if err := r.SetQueryParam("end_key", qEndKey); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.EndKeyDocID != nil {
+
+		// query param end_key_doc_id
+		var qrEndKeyDocID string
+		if o.EndKeyDocID != nil {
+			qrEndKeyDocID = *o.EndKeyDocID
+		}
+		qEndKeyDocID := qrEndKeyDocID
+		if qEndKeyDocID != "" {
+			if err := r.SetQueryParam("end_key_doc_id", qEndKeyDocID); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.QueryEndKey != nil {
+
+		// query param endkey
+		var qrEndkey string
+		if o.QueryEndKey != nil {
+			qrEndkey = *o.QueryEndKey
+		}
+		qEndkey := qrEndkey
+		if qEndkey != "" {
+			if err := r.SetQueryParam("endkey", qEndkey); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.EndkeyDocid != nil {
+
+		// query param endkey_docid
+		var qrEndkeyDocid string
+		if o.EndkeyDocid != nil {
+			qrEndkeyDocid = *o.EndkeyDocid
+		}
+		qEndkeyDocid := qrEndkeyDocid
+		if qEndkeyDocid != "" {
+			if err := r.SetQueryParam("endkey_docid", qEndkeyDocid); err != nil {
+				return err
+			}
+		}
+
+	}
+
 	if o.Group != nil {
 
 		// query param group
@@ -499,6 +723,22 @@ func (o *DocGetAllParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 
 	}
 
+	if o.IncludeDocs != nil {
+
+		// query param include_docs
+		var qrIncludeDocs bool
+		if o.IncludeDocs != nil {
+			qrIncludeDocs = *o.IncludeDocs
+		}
+		qIncludeDocs := swag.FormatBool(qrIncludeDocs)
+		if qIncludeDocs != "" {
+			if err := r.SetQueryParam("include_docs", qIncludeDocs); err != nil {
+				return err
+			}
+		}
+
+	}
+
 	if o.InclusiveEnd != nil {
 
 		// query param inclusive_end
@@ -513,6 +753,30 @@ func (o *DocGetAllParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 			}
 		}
 
+	}
+
+	if o.Key != nil {
+
+		// query param key
+		var qrKey string
+		if o.Key != nil {
+			qrKey = *o.Key
+		}
+		qKey := qrKey
+		if qKey != "" {
+			if err := r.SetQueryParam("key", qKey); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	valuesKeys := o.Keys
+
+	joinedKeys := swag.JoinByFormat(valuesKeys, "multi")
+	// query array param keys
+	if err := r.SetQueryParam("keys", joinedKeys...); err != nil {
+		return err
 	}
 
 	if o.Limit != nil {
@@ -541,6 +805,22 @@ func (o *DocGetAllParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 		qReduce := swag.FormatBool(qrReduce)
 		if qReduce != "" {
 			if err := r.SetQueryParam("reduce", qReduce); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.RevsInfo != nil {
+
+		// query param revs_info
+		var qrRevsInfo bool
+		if o.RevsInfo != nil {
+			qrRevsInfo = *o.RevsInfo
+		}
+		qRevsInfo := swag.FormatBool(qrRevsInfo)
+		if qRevsInfo != "" {
+			if err := r.SetQueryParam("revs_info", qRevsInfo); err != nil {
 				return err
 			}
 		}
@@ -611,6 +891,22 @@ func (o *DocGetAllParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 
 	}
 
+	if o.StartKey != nil {
+
+		// query param start_key
+		var qrStartKey string
+		if o.StartKey != nil {
+			qrStartKey = *o.StartKey
+		}
+		qStartKey := qrStartKey
+		if qStartKey != "" {
+			if err := r.SetQueryParam("start_key", qStartKey); err != nil {
+				return err
+			}
+		}
+
+	}
+
 	if o.StartKeyDocID != nil {
 
 		// query param start_key_doc_id
@@ -621,6 +917,22 @@ func (o *DocGetAllParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 		qStartKeyDocID := qrStartKeyDocID
 		if qStartKeyDocID != "" {
 			if err := r.SetQueryParam("start_key_doc_id", qStartKeyDocID); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.Startkey != nil {
+
+		// query param startkey
+		var qrStartkey string
+		if o.Startkey != nil {
+			qrStartkey = *o.Startkey
+		}
+		qStartkey := qrStartkey
+		if qStartkey != "" {
+			if err := r.SetQueryParam("startkey", qStartkey); err != nil {
 				return err
 			}
 		}

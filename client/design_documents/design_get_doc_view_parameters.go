@@ -191,7 +191,7 @@ type DesignGetDocViewParams struct {
 	  Return records starting with the specified key.
 
 	*/
-	QueryStartKey *string
+	Startkey *string
 	/*StartkeyDocid
 	  Return records starting with the specified document ID. Ignored if startkey is not set.
 
@@ -527,15 +527,15 @@ func (o *DesignGetDocViewParams) SetStartKeyDocID(startKeyDocID *string) {
 	o.StartKeyDocID = startKeyDocID
 }
 
-// WithQueryStartKey adds the startkey to the design get doc view params
-func (o *DesignGetDocViewParams) WithQueryStartKey(startkey *string) *DesignGetDocViewParams {
-	o.SetQueryStartKey(startkey)
+// WithStartkey adds the startkey to the design get doc view params
+func (o *DesignGetDocViewParams) WithStartkey(startkey *string) *DesignGetDocViewParams {
+	o.SetStartkey(startkey)
 	return o
 }
 
-// SetQueryStartKey adds the startkey to the design get doc view params
-func (o *DesignGetDocViewParams) SetQueryStartKey(startkey *string) {
-	o.QueryStartKey = startkey
+// SetStartkey adds the startkey to the design get doc view params
+func (o *DesignGetDocViewParams) SetStartkey(startkey *string) {
+	o.Startkey = startkey
 }
 
 // WithStartkeyDocid adds the startkeyDocid to the design get doc view params
@@ -960,12 +960,12 @@ func (o *DesignGetDocViewParams) WriteToRequest(r runtime.ClientRequest, reg str
 
 	}
 
-	if o.QueryStartKey != nil {
+	if o.Startkey != nil {
 
 		// query param startkey
 		var qrStartkey string
-		if o.QueryStartKey != nil {
-			qrStartkey = *o.QueryStartKey
+		if o.Startkey != nil {
+			qrStartkey = *o.Startkey
 		}
 		qStartkey := qrStartkey
 		if qStartkey != "" {

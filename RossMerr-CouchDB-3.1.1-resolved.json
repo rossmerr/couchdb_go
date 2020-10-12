@@ -833,6 +833,34 @@
             "type": "boolean"
           },
           {
+            "name": "endkey",
+            "in": "query",
+            "description": "Stop returning records when the specified key is reached.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "end_key",
+            "in": "query",
+            "description": "Alias for endkey param",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endkey_docid",
+            "in": "query",
+            "description": "Stop returning records when the specified document ID is reached. Ignored if endkey is not set.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "end_key_doc_id",
+            "in": "query",
+            "description": "Alias for endkey_docid.",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "group",
             "in": "query",
             "description": "Group the results using the reduce function to a group or single row. Implies reduce is true and the maximum group_level. Default is false.",
@@ -845,6 +873,13 @@
             "description": "Specify the group level to be used. Implies group is true.",
             "required": false,
             "type": "integer"
+          },
+          {
+            "name": "include_docs",
+            "in": "query",
+            "description": "Include the associated document with each row. Default is false.",
+            "required": false,
+            "type": "boolean"
           },
           {
             "name": "attachments",
@@ -866,6 +901,31 @@
             "description": "Specifies whether the specified end key should be included in the result. Default is true.",
             "required": false,
             "type": "boolean"
+          },
+          {
+            "name": "revs_info",
+            "in": "query",
+            "description": "Includes detailed information for all known document revisions. Default is false",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "key",
+            "in": "query",
+            "description": "eturn only documents that match the specified key.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "keys",
+            "in": "query",
+            "description": "Return only documents where the key matches one of the keys specified in the array.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
           },
           {
             "name": "limit",
@@ -906,6 +966,20 @@
             "name": "stale",
             "in": "query",
             "description": "Allow the results from a stale view to be used. Supported values: ok and update_after. ok is equivalent to stable=true&update=false. update_after is equivalent to stable=true&update=lazy. The default behavior is equivalent to stable=false&update=true. Note that this parameter is deprecated. Use stable and update instead. See Views Generation for more details.\n",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startkey",
+            "in": "query",
+            "description": "Return records starting with the specified key.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start_key",
+            "in": "query",
+            "description": "Alias for startkey.",
             "required": false,
             "type": "string"
           },
@@ -976,14 +1050,6 @@
             "pattern": "^[a-z][a-z0-9_$()+/-]*$"
           },
           {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Keys"
-            }
-          },
-          {
             "name": "conflicts",
             "in": "query",
             "description": "Include conflicts information in response. Ignored if include_docs isn’t true. Default is false.",
@@ -998,6 +1064,34 @@
             "type": "boolean"
           },
           {
+            "name": "endkey",
+            "in": "query",
+            "description": "Stop returning records when the specified key is reached.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "end_key",
+            "in": "query",
+            "description": "Alias for endkey param",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endkey_docid",
+            "in": "query",
+            "description": "Stop returning records when the specified document ID is reached. Ignored if endkey is not set.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "end_key_doc_id",
+            "in": "query",
+            "description": "Alias for endkey_docid.",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "group",
             "in": "query",
             "description": "Group the results using the reduce function to a group or single row. Implies reduce is true and the maximum group_level. Default is false.",
@@ -1010,6 +1104,13 @@
             "description": "Specify the group level to be used. Implies group is true.",
             "required": false,
             "type": "integer"
+          },
+          {
+            "name": "include_docs",
+            "in": "query",
+            "description": "Include the associated document with each row. Default is false.",
+            "required": false,
+            "type": "boolean"
           },
           {
             "name": "attachments",
@@ -1031,6 +1132,31 @@
             "description": "Specifies whether the specified end key should be included in the result. Default is true.",
             "required": false,
             "type": "boolean"
+          },
+          {
+            "name": "revs_info",
+            "in": "query",
+            "description": "Includes detailed information for all known document revisions. Default is false",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "key",
+            "in": "query",
+            "description": "eturn only documents that match the specified key.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "keys",
+            "in": "query",
+            "description": "Return only documents where the key matches one of the keys specified in the array.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
           },
           {
             "name": "limit",
@@ -1071,6 +1197,20 @@
             "name": "stale",
             "in": "query",
             "description": "Allow the results from a stale view to be used. Supported values: ok and update_after. ok is equivalent to stable=true&update=false. update_after is equivalent to stable=true&update=lazy. The default behavior is equivalent to stable=false&update=true. Note that this parameter is deprecated. Use stable and update instead. See Views Generation for more details.\n",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startkey",
+            "in": "query",
+            "description": "Return records starting with the specified key.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start_key",
+            "in": "query",
+            "description": "Alias for startkey.",
             "required": false,
             "type": "string"
           },
