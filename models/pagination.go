@@ -18,14 +18,17 @@ import (
 // swagger:model Pagination
 type Pagination struct {
 
-	// offset
+	// Offset where the document list started.
 	Offset int64 `json:"offset,omitempty"`
 
-	// rows
+	// Array of view row objects. By default the information returned contains only the document ID and revision.
 	Rows []*Row `json:"rows"`
 
-	// total rows
+	// Number of documents in the database/view.
 	TotalRows int64 `json:"total_rows,omitempty"`
+
+	// Current update sequence for the database.
+	UpdateSeq interface{} `json:"update_seq,omitempty"`
 }
 
 // Validate validates this pagination

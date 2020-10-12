@@ -27,6 +27,8 @@ type Client struct {
 
 // ClientService is the interface for Client methods
 type ClientService interface {
+	DbPost(params *DbPostParams) (*DbPostCreated, *DbPostAccepted, error)
+
 	Doc(params *DocParams) (*DocOK, error)
 
 	DocDelete(params *DocDeleteParams) (*DocDeleteOK, *DocDeleteAccepted, error)
@@ -36,6 +38,48 @@ type ClientService interface {
 	DocPut(params *DocPutParams) (*DocPutCreated, *DocPutAccepted, error)
 
 	SetTransport(transport runtime.ClientTransport)
+}
+
+/*
+  DbPost creates a new document in the specified database using the supplied JSON document structure
+
+  If the JSON structure includes the _id field, then the document will be created with the
+specified document ID.
+
+If the _id field is not specified, a new unique ID will be generated, following whatever
+UUID algorithm is configured for that server.
+
+*/
+func (a *Client) DbPost(params *DbPostParams) (*DbPostCreated, *DbPostAccepted, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDbPostParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "dbPost",
+		Method:             "POST",
+		PathPattern:        "/{db}",
+		ProducesMediaTypes: []string{"application/json", "text/plain"},
+		ConsumesMediaTypes: []string{"application/json", "text/plain"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &DbPostReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+	switch value := result.(type) {
+	case *DbPostCreated:
+		return value, nil, nil
+	case *DbPostAccepted:
+		return nil, value, nil
+	}
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for document: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
 }
 
 /*

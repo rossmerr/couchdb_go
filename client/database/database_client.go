@@ -37,9 +37,11 @@ type ClientService interface {
 
 	DbHeader(params *DbHeaderParams) (*DbHeaderOK, error)
 
-	DbPost(params *DbPostParams) (*DbPostCreated, *DbPostAccepted, error)
-
 	DbPut(params *DbPutParams) (*DbPutCreated, *DbPutAccepted, error)
+
+	DesignGet(params *DesignGetParams) (*DesignGetOK, error)
+
+	DesignPost(params *DesignPostParams) (*DesignPostOK, error)
 
 	DocGetAll(params *DocGetAllParams) (*DocGetAllOK, error)
 
@@ -107,8 +109,8 @@ func (a *Client) BulkPostAll(params *BulkPostAllParams) (*BulkPostAllCreated, er
 		ID:                 "bulkPostAll",
 		Method:             "POST",
 		PathPattern:        "/{db}/_bulk_get",
-		ProducesMediaTypes: []string{"application/json"},
-		ConsumesMediaTypes: []string{"application/json"},
+		ProducesMediaTypes: []string{"application/json", "text/plain"},
+		ConsumesMediaTypes: []string{"application/json", "text/plain"},
 		Schemes:            []string{"http", "https"},
 		Params:             params,
 		Reader:             &BulkPostAllReader{formats: a.formats},
@@ -245,48 +247,6 @@ func (a *Client) DbHeader(params *DbHeaderParams) (*DbHeaderOK, error) {
 }
 
 /*
-  DbPost creates a new document in the specified database using the supplied JSON document structure
-
-  If the JSON structure includes the _id field, then the document will be created with the
-specified document ID.
-
-If the _id field is not specified, a new unique ID will be generated, following whatever
-UUID algorithm is configured for that server.
-
-*/
-func (a *Client) DbPost(params *DbPostParams) (*DbPostCreated, *DbPostAccepted, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewDbPostParams()
-	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "dbPost",
-		Method:             "POST",
-		PathPattern:        "/{db}",
-		ProducesMediaTypes: []string{"application/json", "text/plain"},
-		ConsumesMediaTypes: []string{"application/json", "text/plain"},
-		Schemes:            []string{"http", "https"},
-		Params:             params,
-		Reader:             &DbPostReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	})
-	if err != nil {
-		return nil, nil, err
-	}
-	switch value := result.(type) {
-	case *DbPostCreated:
-		return value, nil, nil
-	case *DbPostAccepted:
-		return nil, value, nil
-	}
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for database: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
   DbPut creates a new database
 
   The database name {db} must be composed by following next rules:
@@ -327,6 +287,80 @@ func (a *Client) DbPut(params *DbPutParams) (*DbPutCreated, *DbPutAccepted, erro
 	}
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for database: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  DesignGet returns a JSON structure of all of the design documents in a given database
+
+  The information is returned as a JSON structure containing meta information about the return structure, including a list of all design documents and basic contents, consisting the ID, revision and key. The key is the design document’s _id.
+
+*/
+func (a *Client) DesignGet(params *DesignGetParams) (*DesignGetOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDesignGetParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "designGet",
+		Method:             "GET",
+		PathPattern:        "/{db}/_design_docs",
+		ProducesMediaTypes: []string{"application/json", "text/plan"},
+		ConsumesMediaTypes: []string{"application/json", "text/plan"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &DesignGetReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DesignGetOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for designGet: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  DesignPost ps o s t design docs functionality supports identical parameters and behavior as specified in the g e t db design docs
+
+  API but allows for the query string parameters to be supplied as keys in a JSON object in the body of the POST request.
+
+*/
+func (a *Client) DesignPost(params *DesignPostParams) (*DesignPostOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDesignPostParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "designPost",
+		Method:             "POST",
+		PathPattern:        "/{db}/_design_docs",
+		ProducesMediaTypes: []string{"application/json", "text/plan"},
+		ConsumesMediaTypes: []string{"application/json", "text/plan"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &DesignPostReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DesignPostOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for designPost: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

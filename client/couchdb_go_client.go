@@ -11,7 +11,9 @@ import (
 	"github.com/go-openapi/strfmt"
 
 	"github.com/RossMerr/couchdb_go/client/database"
+	"github.com/RossMerr/couchdb_go/client/design_documents"
 	"github.com/RossMerr/couchdb_go/client/document"
+	"github.com/RossMerr/couchdb_go/client/partition"
 )
 
 // Default couchdb go HTTP client.
@@ -23,7 +25,7 @@ const (
 	DefaultHost string = "virtserver.swaggerhub.com"
 	// DefaultBasePath is the default BasePath
 	// found in Meta (info) section of spec file
-	DefaultBasePath string = "/RossMerr/CouchDB/1.0.0"
+	DefaultBasePath string = "/RossMerr/CouchDB/3.1.1"
 )
 
 // DefaultSchemes are the default schemes found in Meta (info) section of spec file
@@ -57,7 +59,9 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *CouchdbGo 
 	cli := new(CouchdbGo)
 	cli.Transport = transport
 	cli.Database = database.New(transport, formats)
+	cli.DesignDocuments = design_documents.New(transport, formats)
 	cli.Document = document.New(transport, formats)
+	cli.Partition = partition.New(transport, formats)
 	return cli
 }
 
@@ -104,7 +108,11 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 type CouchdbGo struct {
 	Database database.ClientService
 
+	DesignDocuments design_documents.ClientService
+
 	Document document.ClientService
+
+	Partition partition.ClientService
 
 	Transport runtime.ClientTransport
 }
@@ -113,5 +121,7 @@ type CouchdbGo struct {
 func (c *CouchdbGo) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
 	c.Database.SetTransport(transport)
+	c.DesignDocuments.SetTransport(transport)
 	c.Document.SetTransport(transport)
+	c.Partition.SetTransport(transport)
 }

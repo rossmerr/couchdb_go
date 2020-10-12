@@ -165,7 +165,7 @@ type ResultsResultsItems0DocsItems0 struct {
 	} `json:"error,omitempty"`
 
 	// ok
-	Ok interface{} `json:"ok,omitempty"`
+	Ok Document `json:"ok,omitempty"`
 }
 
 // Validate validates this results results items0 docs items0
