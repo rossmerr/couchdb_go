@@ -16,7 +16,7 @@ import (
 Create a Client
 
 ``` go
-transport := httptransport.New("http://localhost:5984", "", nil)
+transport := httptransport.New("localhost:5984", "", nil)
 transport.DefaultAuthentication = httptransport.BasicAuth("username", "password")
 client := apiclient.New(transport, strfmt.Default)
 ```    
@@ -24,7 +24,7 @@ client := apiclient.New(transport, strfmt.Default)
 Get a docuemnt
 
 ``` go
-params := &document.DocGetParams{}
+params := document.NewDocGetParams()
 params.WithDb("db").WithDocid("docid")
 
 // GET /{db}/{docid}
