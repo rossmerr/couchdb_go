@@ -27,8 +27,6 @@ type Client struct {
 
 // ClientService is the interface for Client methods
 type ClientService interface {
-	BulkGetAll(params *BulkGetAllParams) (*BulkGetAllOK, error)
-
 	BulkPostAll(params *BulkPostAllParams) (*BulkPostAllCreated, error)
 
 	DbDelete(params *DbDeleteParams) (*DbDeleteOK, *DbDeleteAccepted, error)
@@ -48,43 +46,6 @@ type ClientService interface {
 	DocPostAll(params *DocPostAllParams) (*DocPostAllOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
-}
-
-/*
-  BulkGetAll this method can be called to query several documents in bulk
-
-  It is well suited for fetching a specific revision of documents, as replicators do for example, or for getting revision history.
-
-*/
-func (a *Client) BulkGetAll(params *BulkGetAllParams) (*BulkGetAllOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewBulkGetAllParams()
-	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "bulkGetAll",
-		Method:             "GET",
-		PathPattern:        "/{db}/_bulk_get",
-		ProducesMediaTypes: []string{"application/json"},
-		ConsumesMediaTypes: []string{"application/json", "multipart/mixed", "multipart/related"},
-		Schemes:            []string{"http", "https"},
-		Params:             params,
-		Reader:             &BulkGetAllReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	})
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*BulkGetAllOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for bulkGetAll: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
 }
 
 /*

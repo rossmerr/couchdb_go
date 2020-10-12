@@ -92,7 +92,7 @@ type DesignPostParams struct {
 	  Stop returning records when the specified key is reached. Optional.
 
 	*/
-	Endkey *string
+	QueryEndKey *string
 	/*EndkeyDocid
 	  Stop returning records when the specified design document ID is reached. Optional.
 
@@ -258,15 +258,15 @@ func (o *DesignPostParams) SetEndKeyDocID(endKeyDocID *string) {
 	o.EndKeyDocID = endKeyDocID
 }
 
-// WithEndkey adds the endkey to the design post params
-func (o *DesignPostParams) WithEndkey(endkey *string) *DesignPostParams {
-	o.SetEndkey(endkey)
+// WithQueryEndKey adds the endkey to the design post params
+func (o *DesignPostParams) WithQueryEndKey(endkey *string) *DesignPostParams {
+	o.SetQueryEndKey(endkey)
 	return o
 }
 
-// SetEndkey adds the endkey to the design post params
-func (o *DesignPostParams) SetEndkey(endkey *string) {
-	o.Endkey = endkey
+// SetQueryEndKey adds the endkey to the design post params
+func (o *DesignPostParams) SetQueryEndKey(endkey *string) {
+	o.QueryEndKey = endkey
 }
 
 // WithEndkeyDocid adds the endkeyDocid to the design post params
@@ -482,12 +482,12 @@ func (o *DesignPostParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 
 	}
 
-	if o.Endkey != nil {
+	if o.QueryEndKey != nil {
 
 		// query param endkey
 		var qrEndkey string
-		if o.Endkey != nil {
-			qrEndkey = *o.Endkey
+		if o.QueryEndKey != nil {
+			qrEndkey = *o.QueryEndKey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {

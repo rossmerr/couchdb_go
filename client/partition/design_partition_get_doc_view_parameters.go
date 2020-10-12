@@ -105,7 +105,7 @@ type DesignPartitionGetDocViewParams struct {
 	  Stop returning records when the specified key is reached.
 
 	*/
-	Endkey *string
+	QueryEndKey *string
 	/*EndkeyDocid
 	  Stop returning records when the specified document ID is reached. Ignored if endkey is not set.
 
@@ -345,15 +345,15 @@ func (o *DesignPartitionGetDocViewParams) SetEndKeyDocID(endKeyDocID *string) {
 	o.EndKeyDocID = endKeyDocID
 }
 
-// WithEndkey adds the endkey to the design partition get doc view params
-func (o *DesignPartitionGetDocViewParams) WithEndkey(endkey *string) *DesignPartitionGetDocViewParams {
-	o.SetEndkey(endkey)
+// WithQueryEndKey adds the endkey to the design partition get doc view params
+func (o *DesignPartitionGetDocViewParams) WithQueryEndKey(endkey *string) *DesignPartitionGetDocViewParams {
+	o.SetQueryEndKey(endkey)
 	return o
 }
 
-// SetEndkey adds the endkey to the design partition get doc view params
-func (o *DesignPartitionGetDocViewParams) SetEndkey(endkey *string) {
-	o.Endkey = endkey
+// SetQueryEndKey adds the endkey to the design partition get doc view params
+func (o *DesignPartitionGetDocViewParams) SetQueryEndKey(endkey *string) {
+	o.QueryEndKey = endkey
 }
 
 // WithEndkeyDocid adds the endkeyDocid to the design partition get doc view params
@@ -712,12 +712,12 @@ func (o *DesignPartitionGetDocViewParams) WriteToRequest(r runtime.ClientRequest
 
 	}
 
-	if o.Endkey != nil {
+	if o.QueryEndKey != nil {
 
 		// query param endkey
 		var qrEndkey string
-		if o.Endkey != nil {
-			qrEndkey = *o.Endkey
+		if o.QueryEndKey != nil {
+			qrEndkey = *o.QueryEndKey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {

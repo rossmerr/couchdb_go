@@ -90,7 +90,7 @@ type DesignGetParams struct {
 	  Stop returning records when the specified key is reached. Optional.
 
 	*/
-	Endkey *string
+	QueryEndKey *string
 	/*EndkeyDocid
 	  Stop returning records when the specified design document ID is reached. Optional.
 
@@ -140,7 +140,7 @@ type DesignGetParams struct {
 	  Return records starting with the specified key. Optional.
 
 	*/
-	Startkey *string
+	QueryStartKey *string
 	/*StartkeyDocid
 	  Return records starting with the specified design document ID. Optional.
 
@@ -245,15 +245,15 @@ func (o *DesignGetParams) SetEndKeyDocID(endKeyDocID *string) {
 	o.EndKeyDocID = endKeyDocID
 }
 
-// WithEndkey adds the endkey to the design get params
-func (o *DesignGetParams) WithEndkey(endkey *string) *DesignGetParams {
-	o.SetEndkey(endkey)
+// WithQueryEndKey adds the endkey to the design get params
+func (o *DesignGetParams) WithQueryEndKey(endkey *string) *DesignGetParams {
+	o.SetQueryEndKey(endkey)
 	return o
 }
 
-// SetEndkey adds the endkey to the design get params
-func (o *DesignGetParams) SetEndkey(endkey *string) {
-	o.Endkey = endkey
+// SetQueryEndKey adds the endkey to the design get params
+func (o *DesignGetParams) SetQueryEndKey(endkey *string) {
+	o.QueryEndKey = endkey
 }
 
 // WithEndkeyDocid adds the endkeyDocid to the design get params
@@ -355,15 +355,15 @@ func (o *DesignGetParams) SetStartKeyDocID(startKeyDocID *string) {
 	o.StartKeyDocID = startKeyDocID
 }
 
-// WithStartkey adds the startkey to the design get params
-func (o *DesignGetParams) WithStartkey(startkey *string) *DesignGetParams {
-	o.SetStartkey(startkey)
+// WithQueryStartKey adds the startkey to the design get params
+func (o *DesignGetParams) WithQueryStartKey(startkey *string) *DesignGetParams {
+	o.SetQueryStartKey(startkey)
 	return o
 }
 
-// SetStartkey adds the startkey to the design get params
-func (o *DesignGetParams) SetStartkey(startkey *string) {
-	o.Startkey = startkey
+// SetQueryStartKey adds the startkey to the design get params
+func (o *DesignGetParams) SetQueryStartKey(startkey *string) {
+	o.QueryStartKey = startkey
 }
 
 // WithStartkeyDocid adds the startkeyDocid to the design get params
@@ -465,12 +465,12 @@ func (o *DesignGetParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 
 	}
 
-	if o.Endkey != nil {
+	if o.QueryEndKey != nil {
 
 		// query param endkey
 		var qrEndkey string
-		if o.Endkey != nil {
-			qrEndkey = *o.Endkey
+		if o.QueryEndKey != nil {
+			qrEndkey = *o.QueryEndKey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {
@@ -625,12 +625,12 @@ func (o *DesignGetParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 
 	}
 
-	if o.Startkey != nil {
+	if o.QueryStartKey != nil {
 
 		// query param startkey
 		var qrStartkey string
-		if o.Startkey != nil {
-			qrStartkey = *o.Startkey
+		if o.QueryStartKey != nil {
+			qrStartkey = *o.QueryStartKey
 		}
 		qStartkey := qrStartkey
 		if qStartkey != "" {

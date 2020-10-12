@@ -1260,79 +1260,6 @@
       }
     },
     "/{db}/_bulk_get": {
-      "get": {
-        "tags": [
-          "Database"
-        ],
-        "summary": "This method can be called to query several documents in bulk",
-        "description": "It is well suited for fetching a specific revision of documents, as replicators do for example, or for getting revision history.\n",
-        "operationId": "bulkGetAll",
-        "consumes": [
-          "application/json",
-          "multipart/related",
-          "multipart/mixed"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "db",
-            "in": "path",
-            "description": "Database name",
-            "required": true,
-            "type": "string",
-            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
-          },
-          {
-            "name": "revs",
-            "in": "query",
-            "description": "Give the revisions history",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/All"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Request completed successfully",
-            "schema": {
-              "$ref": "#/definitions/Results"
-            }
-          },
-          "400": {
-            "description": "The request provided invalid JSON data or invalid query parameter",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "401": {
-            "description": "Read permission required",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "Invalid database name",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "415": {
-            "description": "Bad Content-Type value",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      },
       "post": {
         "tags": [
           "Database"
@@ -1367,7 +1294,17 @@
                 "docs": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/definitions/Document"
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Document ID"
+                      },
+                      "rev": {
+                        "type": "string",
+                        "description": "Revision MVCC token"
+                      }
+                    }
                   }
                 }
               }
@@ -1380,7 +1317,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/DocumentOK"
+                "$ref": "#/definitions/Results"
               }
             }
           },
@@ -4104,6 +4041,9 @@
               "description": "Revision MVCC token"
             }
           }
+        },
+        "doc": {
+          "$ref": "#/definitions/Document"
         }
       }
     },

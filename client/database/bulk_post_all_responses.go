@@ -8,7 +8,9 @@ package database
 import (
 	"fmt"
 	"io"
+	"strconv"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -58,14 +60,14 @@ func NewBulkPostAllCreated() *BulkPostAllCreated {
 Document(s) have been created or updated
 */
 type BulkPostAllCreated struct {
-	Payload []*models.DocumentOK
+	Payload []*models.Results
 }
 
 func (o *BulkPostAllCreated) Error() string {
 	return fmt.Sprintf("[POST /{db}/_bulk_get][%d] bulkPostAllCreated  %+v", 201, o.Payload)
 }
 
-func (o *BulkPostAllCreated) GetPayload() []*models.DocumentOK {
+func (o *BulkPostAllCreated) GetPayload() []*models.Results {
 	return o.Payload
 }
 
@@ -151,11 +153,45 @@ swagger:model BulkPostAllBody
 type BulkPostAllBody struct {
 
 	// docs
-	Docs []models.Document `json:"docs"`
+	Docs []*BulkPostAllParamsBodyDocsItems0 `json:"docs"`
 }
 
 // Validate validates this bulk post all body
 func (o *BulkPostAllBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateDocs(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *BulkPostAllBody) validateDocs(formats strfmt.Registry) error {
+
+	if swag.IsZero(o.Docs) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(o.Docs); i++ {
+		if swag.IsZero(o.Docs[i]) { // not required
+			continue
+		}
+
+		if o.Docs[i] != nil {
+			if err := o.Docs[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("body" + "." + "docs" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
@@ -170,6 +206,41 @@ func (o *BulkPostAllBody) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *BulkPostAllBody) UnmarshalBinary(b []byte) error {
 	var res BulkPostAllBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*BulkPostAllParamsBodyDocsItems0 bulk post all params body docs items0
+swagger:model BulkPostAllParamsBodyDocsItems0
+*/
+type BulkPostAllParamsBodyDocsItems0 struct {
+
+	// Document ID
+	ID string `json:"id,omitempty"`
+
+	// Revision MVCC token
+	Rev string `json:"rev,omitempty"`
+}
+
+// Validate validates this bulk post all params body docs items0
+func (o *BulkPostAllParamsBodyDocsItems0) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *BulkPostAllParamsBodyDocsItems0) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *BulkPostAllParamsBodyDocsItems0) UnmarshalBinary(b []byte) error {
+	var res BulkPostAllParamsBodyDocsItems0
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

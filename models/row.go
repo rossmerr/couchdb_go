@@ -16,6 +16,9 @@ import (
 // swagger:model Row
 type Row struct {
 
+	// doc
+	Doc Document `json:"doc,omitempty"`
+
 	// Document ID
 	ID string `json:"id,omitempty"`
 
