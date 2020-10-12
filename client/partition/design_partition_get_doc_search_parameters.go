@@ -138,6 +138,11 @@ type DesignPartitionGetDocSearchParams struct {
 
 	*/
 	Index string
+	/*Limit
+	  Limit the number of the returned documents to the specified number. For a grouped search, this parameter limits the number of documents per group.
+
+	*/
+	Limit *int64
 	/*Partition
 	  Partition name
 
@@ -370,6 +375,17 @@ func (o *DesignPartitionGetDocSearchParams) WithIndex(index string) *DesignParti
 // SetIndex adds the index to the design partition get doc search params
 func (o *DesignPartitionGetDocSearchParams) SetIndex(index string) {
 	o.Index = index
+}
+
+// WithLimit adds the limit to the design partition get doc search params
+func (o *DesignPartitionGetDocSearchParams) WithLimit(limit *int64) *DesignPartitionGetDocSearchParams {
+	o.SetLimit(limit)
+	return o
+}
+
+// SetLimit adds the limit to the design partition get doc search params
+func (o *DesignPartitionGetDocSearchParams) SetLimit(limit *int64) {
+	o.Limit = limit
 }
 
 // WithPartition adds the partition to the design partition get doc search params
@@ -651,6 +667,22 @@ func (o *DesignPartitionGetDocSearchParams) WriteToRequest(r runtime.ClientReque
 	// path param index
 	if err := r.SetPathParam("index", o.Index); err != nil {
 		return err
+	}
+
+	if o.Limit != nil {
+
+		// query param limit
+		var qrLimit int64
+		if o.Limit != nil {
+			qrLimit = *o.Limit
+		}
+		qLimit := swag.FormatInt64(qrLimit)
+		if qLimit != "" {
+			if err := r.SetQueryParam("limit", qLimit); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	// path param partition

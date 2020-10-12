@@ -138,6 +138,11 @@ type DesignGetDocSearchParams struct {
 
 	*/
 	Index string
+	/*Limit
+	  Limit the number of the returned documents to the specified number. For a grouped search, this parameter limits the number of documents per group.
+
+	*/
+	Limit *int64
 	/*Q
 	  Alias for query.
 
@@ -365,6 +370,17 @@ func (o *DesignGetDocSearchParams) WithIndex(index string) *DesignGetDocSearchPa
 // SetIndex adds the index to the design get doc search params
 func (o *DesignGetDocSearchParams) SetIndex(index string) {
 	o.Index = index
+}
+
+// WithLimit adds the limit to the design get doc search params
+func (o *DesignGetDocSearchParams) WithLimit(limit *int64) *DesignGetDocSearchParams {
+	o.SetLimit(limit)
+	return o
+}
+
+// SetLimit adds the limit to the design get doc search params
+func (o *DesignGetDocSearchParams) SetLimit(limit *int64) {
+	o.Limit = limit
 }
 
 // WithQ adds the q to the design get doc search params
@@ -635,6 +651,22 @@ func (o *DesignGetDocSearchParams) WriteToRequest(r runtime.ClientRequest, reg s
 	// path param index
 	if err := r.SetPathParam("index", o.Index); err != nil {
 		return err
+	}
+
+	if o.Limit != nil {
+
+		// query param limit
+		var qrLimit int64
+		if o.Limit != nil {
+			qrLimit = *o.Limit
+		}
+		qLimit := swag.FormatInt64(qrLimit)
+		if qLimit != "" {
+			if err := r.SetQueryParam("limit", qLimit); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	if o.Q != nil {

@@ -2303,6 +2303,13 @@
             "type": "string"
           },
           {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit the number of the returned documents to the specified number. For a grouped search, this parameter limits the number of documents per group.",
+            "required": false,
+            "type": "integer"
+          },
+          {
             "name": "q",
             "in": "query",
             "description": "Alias for query.",
@@ -3609,6 +3616,13 @@
             "description": "A JSON array of field names to include in search results. Any fields that are included must be indexed with the store:true option. limit (number) – Limit the number of the returned documents to the specified number. For a grouped search, this parameter limits the number of documents per group.\n",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit the number of the returned documents to the specified number. For a grouped search, this parameter limits the number of documents per group.",
+            "required": false,
+            "type": "integer"
           },
           {
             "name": "q",
