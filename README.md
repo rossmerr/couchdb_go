@@ -1,3 +1,31 @@
 # couchdb go client
 
-swagger generate client -f RossMerr-CouchDB-1.0.0-resolved.json -A couchdb_go
+CouchDB go client auto generated from a OpenAPI v2 schema.
+
+## Sample
+
+Create a Client
+
+``` go
+transport := httptransport.New("http://localhost:5984", "", nil)
+transport.DefaultAuthentication = httptransport.BasicAuth("username", "password")
+client := apiclient.New(transport, strfmt.Default)
+```    
+
+Get a docuemnt
+
+``` go
+params := &document.DocGetParams{}
+params.WithDb("db").WithDocid("docid")
+
+// GET /{db}/{docid}
+response, err := s.client.Document.DocGet(params)
+if err != nil {
+    return nil, "", fmt.Errorf("couchdb not found: %w", err)
+}
+```
+
+
+## Using swagger to generate a client
+
+`swagger generate client -f RossMerr-CouchDB-3.1.1-resolved.json -A couchdb_go`
