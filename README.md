@@ -4,6 +4,15 @@ CouchDB go client auto generated from a OpenAPI v2 schema.
 
 ## Sample
 
+Import couchdb_go
+
+``` go
+import (
+	apiclient "github.com/RossMerr/couchdb_go/client"
+    httptransport "github.com/go-openapi/runtime/client"
+)
+```
+
 Create a Client
 
 ``` go
