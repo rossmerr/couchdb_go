@@ -142,7 +142,7 @@ type DesignPostParams struct {
 	  Return records starting with the specified key. Optional.
 
 	*/
-	QueryStartKey *string
+	Startkey *string
 	/*StartkeyDocid
 	  Return records starting with the specified design document ID. Optional.
 
@@ -368,15 +368,15 @@ func (o *DesignPostParams) SetStartKeyDocID(startKeyDocID *string) {
 	o.StartKeyDocID = startKeyDocID
 }
 
-// WithQueryStartKey adds the startkey to the design post params
-func (o *DesignPostParams) WithQueryStartKey(startkey *string) *DesignPostParams {
-	o.SetQueryStartKey(startkey)
+// WithStartkey adds the startkey to the design post params
+func (o *DesignPostParams) WithStartkey(startkey *string) *DesignPostParams {
+	o.SetStartkey(startkey)
 	return o
 }
 
-// SetQueryStartKey adds the startkey to the design post params
-func (o *DesignPostParams) SetQueryStartKey(startkey *string) {
-	o.QueryStartKey = startkey
+// SetStartkey adds the startkey to the design post params
+func (o *DesignPostParams) SetStartkey(startkey *string) {
+	o.Startkey = startkey
 }
 
 // WithStartkeyDocid adds the startkeyDocid to the design post params
@@ -642,12 +642,12 @@ func (o *DesignPostParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 
 	}
 
-	if o.QueryStartKey != nil {
+	if o.Startkey != nil {
 
 		// query param startkey
 		var qrStartkey string
-		if o.QueryStartKey != nil {
-			qrStartkey = *o.QueryStartKey
+		if o.Startkey != nil {
+			qrStartkey = *o.Startkey
 		}
 		qStartkey := qrStartkey
 		if qStartkey != "" {

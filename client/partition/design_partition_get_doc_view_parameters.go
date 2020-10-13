@@ -105,7 +105,7 @@ type DesignPartitionGetDocViewParams struct {
 	  Stop returning records when the specified key is reached.
 
 	*/
-	QueryEndKey *string
+	Endkey *string
 	/*EndkeyDocid
 	  Stop returning records when the specified document ID is reached. Ignored if endkey is not set.
 
@@ -196,7 +196,7 @@ type DesignPartitionGetDocViewParams struct {
 	  Return records starting with the specified key.
 
 	*/
-	Startkey *string
+	QueryStartKey *string
 	/*StartkeyDocid
 	  Return records starting with the specified document ID. Ignored if startkey is not set.
 
@@ -345,15 +345,15 @@ func (o *DesignPartitionGetDocViewParams) SetEndKeyDocID(endKeyDocID *string) {
 	o.EndKeyDocID = endKeyDocID
 }
 
-// WithQueryEndKey adds the endkey to the design partition get doc view params
-func (o *DesignPartitionGetDocViewParams) WithQueryEndKey(endkey *string) *DesignPartitionGetDocViewParams {
-	o.SetQueryEndKey(endkey)
+// WithEndkey adds the endkey to the design partition get doc view params
+func (o *DesignPartitionGetDocViewParams) WithEndkey(endkey *string) *DesignPartitionGetDocViewParams {
+	o.SetEndkey(endkey)
 	return o
 }
 
-// SetQueryEndKey adds the endkey to the design partition get doc view params
-func (o *DesignPartitionGetDocViewParams) SetQueryEndKey(endkey *string) {
-	o.QueryEndKey = endkey
+// SetEndkey adds the endkey to the design partition get doc view params
+func (o *DesignPartitionGetDocViewParams) SetEndkey(endkey *string) {
+	o.Endkey = endkey
 }
 
 // WithEndkeyDocid adds the endkeyDocid to the design partition get doc view params
@@ -543,15 +543,15 @@ func (o *DesignPartitionGetDocViewParams) SetStartKeyDocID(startKeyDocID *string
 	o.StartKeyDocID = startKeyDocID
 }
 
-// WithStartkey adds the startkey to the design partition get doc view params
-func (o *DesignPartitionGetDocViewParams) WithStartkey(startkey *string) *DesignPartitionGetDocViewParams {
-	o.SetStartkey(startkey)
+// WithQueryStartKey adds the startkey to the design partition get doc view params
+func (o *DesignPartitionGetDocViewParams) WithQueryStartKey(startkey *string) *DesignPartitionGetDocViewParams {
+	o.SetQueryStartKey(startkey)
 	return o
 }
 
-// SetStartkey adds the startkey to the design partition get doc view params
-func (o *DesignPartitionGetDocViewParams) SetStartkey(startkey *string) {
-	o.Startkey = startkey
+// SetQueryStartKey adds the startkey to the design partition get doc view params
+func (o *DesignPartitionGetDocViewParams) SetQueryStartKey(startkey *string) {
+	o.QueryStartKey = startkey
 }
 
 // WithStartkeyDocid adds the startkeyDocid to the design partition get doc view params
@@ -712,12 +712,12 @@ func (o *DesignPartitionGetDocViewParams) WriteToRequest(r runtime.ClientRequest
 
 	}
 
-	if o.QueryEndKey != nil {
+	if o.Endkey != nil {
 
 		// query param endkey
 		var qrEndkey string
-		if o.QueryEndKey != nil {
-			qrEndkey = *o.QueryEndKey
+		if o.Endkey != nil {
+			qrEndkey = *o.Endkey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {
@@ -981,12 +981,12 @@ func (o *DesignPartitionGetDocViewParams) WriteToRequest(r runtime.ClientRequest
 
 	}
 
-	if o.Startkey != nil {
+	if o.QueryStartKey != nil {
 
 		// query param startkey
 		var qrStartkey string
-		if o.Startkey != nil {
-			qrStartkey = *o.Startkey
+		if o.QueryStartKey != nil {
+			qrStartkey = *o.QueryStartKey
 		}
 		qStartkey := qrStartkey
 		if qStartkey != "" {

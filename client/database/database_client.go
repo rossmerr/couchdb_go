@@ -45,6 +45,10 @@ type ClientService interface {
 
 	DocPostAll(params *DocPostAllParams) (*DocPostAllOK, error)
 
+	SecurityGet(params *SecurityGetParams) (*SecurityGetOK, error)
+
+	SecurityPut(params *SecurityPutParams) (*SecurityPutOK, error)
+
 	SetTransport(transport runtime.ClientTransport)
 }
 
@@ -401,6 +405,100 @@ func (a *Client) DocPostAll(params *DocPostAllParams) (*DocPostAllOK, error) {
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for docPostAll: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  SecurityGet returns the current security object from the specified database
+
+  The security object consists of two compulsory elements, admins and members, which are used to specify the list of users and/or roles that have admin and members rights to the database respectively:
+
+  - members: they can read all types of documents from the DB, and they can write (and edit) documents to the DB except for design documents.
+  - admins: they have all the privileges of members plus the privileges: write (and edit) design documents, add/remove database admins and members and set the database revisions limit. They can not create a database nor delete a database.
+
+Both members and admins objects contain two array-typed fields:
+
+  - names: List of CouchDB user names
+  - roles: List of users roles
+
+Any additional fields in the security object are optional. The entire security object is made available to validation and other internal functions so that the database can control and limit functionality.
+
+If both the names and roles fields of either the admins or members properties are empty arrays, or are not existent, it means the database has no admins or members.
+
+Having no admins, only server admins (with the reserved _admin role) are able to update design document and make other admin level changes.
+
+Having no members, any user can write regular documents (any non-design document) and read documents from the database.
+
+If there are any member names or roles defined for a database, then only authenticated users having a matching name or role are allowed to read documents from the database (or do a GET /{db} call).
+
+*Note*
+If the security object for a database has never been set, then the value returned will be empty.
+
+Also note, that security objects are not regular versioned documents (that is, they are not under MVCC rules). This is a design choice to speed up authorization checks (avoids traversing a database’s documents B-Tree).
+
+*/
+func (a *Client) SecurityGet(params *SecurityGetParams) (*SecurityGetOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewSecurityGetParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "securityGet",
+		Method:             "GET",
+		PathPattern:        "/{db}/_security",
+		ProducesMediaTypes: []string{"application/json", "text/plan"},
+		ConsumesMediaTypes: []string{"application/json", "text/plan"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &SecurityGetReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*SecurityGetOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for securityGet: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  SecurityPut sets the security object for the given database
+*/
+func (a *Client) SecurityPut(params *SecurityPutParams) (*SecurityPutOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewSecurityPutParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "securityPut",
+		Method:             "PUT",
+		PathPattern:        "/{db}/_security",
+		ProducesMediaTypes: []string{"application/json", "text/plan"},
+		ConsumesMediaTypes: []string{"application/json", "text/plan"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &SecurityPutReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*SecurityPutOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for securityPut: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

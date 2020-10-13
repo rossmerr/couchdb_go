@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "The CouchDB API is the primary method of interfacing to a CouchDB instance. Requests are made using HTTP and requests are used to request information from the database, store new data, and perform views and formatting of the information stored within the documents.\n\nRequests to the API can be categorised by the different areas of the CouchDB system that you are accessing, and the HTTP method used to send the request. Different methods imply different operations, for example retrieval of information from the database is typically handled by the GET operation, while updates are handled by either a POST or PUT request. There are some differences between the information that must be supplied for the different methods\n\nFor nearly all operations, the submitted data, and the returned data structure, is defined within a JavaScript Object Notation (JSON) object. \n\nErrors when accessing the CouchDB API are reported using standard HTTP Status Codes.\n",
+    "description": "*Note*\nThis is not a definitive implementation of the CouchDB API, it's missing a lot of the endpoints for server/database managment and everything for attachments and probably a few other parts.\n\nThe CouchDB API is the primary method of interfacing to a CouchDB instance. Requests are made using HTTP and requests are used to request information from the database, store new data, and perform views and formatting of the information stored within the documents.\n\nRequests to the API can be categorised by the different areas of the CouchDB system that you are accessing, and the HTTP method used to send the request. Different methods imply different operations, for example retrieval of information from the database is typically handled by the GET operation, while updates are handled by either a POST or PUT request. There are some differences between the information that must be supplied for the different methods\n\nFor nearly all operations, the submitted data, and the returned data structure, is defined within a JavaScript Object Notation (JSON) object. \n\nErrors when accessing the CouchDB API are reported using standard HTTP Status Codes.\n",
     "version": "3.1.1",
     "title": "CouchDB API",
     "license": {
@@ -12,6 +12,10 @@
   "host": "virtserver.swaggerhub.com",
   "basePath": "/RossMerr/CouchDB/3.1.1",
   "tags": [
+    {
+      "name": "Server",
+      "description": "The CouchDB server interface provides the basic interface to a CouchDB server for obtaining CouchDB information and getting and setting configuration information."
+    },
     {
       "name": "Database",
       "description": "The Database endpoint provides an interface to an entire database with in CouchDB. These are database-level, rather than document-level requests."
@@ -34,6 +38,495 @@
     "http"
   ],
   "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "Server"
+        ],
+        "summary": "Accessing the root of a CouchDB instance returns meta information about the instance.",
+        "description": "The response is a JSON structure containing information about the server, including a welcome message and the version of the server.\n",
+        "operationId": "server",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Server"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_active_tasks": {
+      "get": {
+        "tags": [
+          "Server"
+        ],
+        "summary": "List of running tasks, including the task type, name, status and process ID.",
+        "description": "The result is a JSON array of the currently running tasks, with each task being described with a single object. Depending on operation type set of response object fields might be different.\n",
+        "operationId": "serverActiveTasks",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Task"
+              }
+            }
+          },
+          "401": {
+            "description": "CouchDB Server Administrator privileges required",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/_all_dbs": {
+      "get": {
+        "tags": [
+          "Server"
+        ],
+        "summary": "Returns a list of all the databases in the CouchDB instance.",
+        "operationId": "serveAllDBs",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "descending",
+            "in": "query",
+            "description": "Return the databases in descending order by key. Default is false.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "endkey",
+            "in": "query",
+            "description": "Stop returning databases when the specified key is reached.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "end_key",
+            "in": "query",
+            "description": "Alias for endkey param",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit the number of the returned databases to the specified number.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "description": "Skip this number of databases before starting to return the results. Default is 0.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "startkey",
+            "in": "query",
+            "description": "Return databases starting with the specified key.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start_key",
+            "in": "query",
+            "description": "Alias for startkey.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_dbs_info": {
+      "post": {
+        "tags": [
+          "Server"
+        ],
+        "summary": "Returns information of a list of the specified databases in the CouchDB instance.",
+        "description": "This enables you to request information about multiple databases in a single request, in place of multiple GET /{db} requests.\n",
+        "operationId": "serverDBsInfo",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Keys"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "info": {
+                    "$ref": "#/definitions/Database"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing keys or exceeded keys in request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/_cluster_setup": {
+      "get": {
+        "tags": [
+          "Server"
+        ],
+        "summary": "Returns the status of the node or cluster, per the cluster setup wizard.",
+        "operationId": "serverClusterSetup",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "ensure_dbs_exist",
+            "in": "query",
+            "description": "List of system databases to ensure exist on the node/cluster. Defaults to [\"_users\",\"_replicator\"].",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "type": "string",
+                  "description": "Current state of the node and/or cluster (see below)",
+                  "enum": [
+                    "cluster_disabled",
+                    "single_node_disabled",
+                    "single_node_enabled",
+                    "cluster_enabled",
+                    "cluster_finished"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Server"
+        ],
+        "summary": "Configure a node as a single (standalone) node, as part of a cluster, or finalise a cluster.",
+        "operationId": "serverPostClusterSetup",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Cluster"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "schema": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "/_membership": {
+      "get": {
+        "tags": [
+          "Server"
+        ],
+        "summary": "Displays the nodes that are part of the cluster as cluster_nodes.",
+        "description": "The field all_nodes displays all nodes this node knows about, including the ones that are part of the cluster. The endpoint is useful when setting up a cluster, see Node Management\n",
+        "operationId": "serverMembership",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "all_nodes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "cluster_nodes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_replicate": {
+      "post": {
+        "tags": [
+          "Server"
+        ],
+        "summary": "Request, configure, or stop, a replication operation.",
+        "operationId": "serverReplication",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Replicate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Replication request successfully completed",
+            "schema": {
+              "$ref": "#/definitions/Replication"
+            }
+          },
+          "202": {
+            "description": "Continuous replication request has been accepted",
+            "schema": {
+              "$ref": "#/definitions/OK"
+            }
+          },
+          "400": {
+            "description": "Invalid JSON data",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "CouchDB Server Administrator privileges required",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Either the source or target DB is not found or attempt to cancel unknown replication task",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "JSON specification was invalid",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/_search_analyze": {
+      "post": {
+        "tags": [
+          "Server"
+        ],
+        "summary": "Tests the results of Lucene analyzer tokenization on sample text.",
+        "description": "*Warning*\nSearch endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.\n",
+        "operationId": "serverSearchAnalyze",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string",
+                  "description": "Type of analyzer"
+                },
+                "text": {
+                  "type": "string",
+                  "description": "Analyzer token you want to test"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "tokens": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request body is wrong (malformed or missing one of the mandatory fields)",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "A server error (or other kind of error) occurred",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/_up": {
+      "get": {
+        "tags": [
+          "Server"
+        ],
+        "summary": "Confirms that the server is up, running, and ready to respond to requests.",
+        "description": "If maintenance_mode is true or nolb, the endpoint will return a 404 response.\n",
+        "operationId": "serverUp",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The server is unavailable for requests at this time.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
     "/{db}": {
       "get": {
         "tags": [
@@ -1684,6 +2177,105 @@
         }
       }
     },
+    "/{db}/_security": {
+      "get": {
+        "tags": [
+          "Database"
+        ],
+        "summary": "Returns the current security object from the specified database.",
+        "description": "The security object consists of two compulsory elements, admins and members, which are used to specify the list of users and/or roles that have admin and members rights to the database respectively:\n\n  - members: they can read all types of documents from the DB, and they can write (and edit) documents to the DB except for design documents.\n  - admins: they have all the privileges of members plus the privileges: write (and edit) design documents, add/remove database admins and members and set the database revisions limit. They can not create a database nor delete a database.\n\nBoth members and admins objects contain two array-typed fields:\n\n  - names: List of CouchDB user names\n  - roles: List of users roles\n\nAny additional fields in the security object are optional. The entire security object is made available to validation and other internal functions so that the database can control and limit functionality.\n\nIf both the names and roles fields of either the admins or members properties are empty arrays, or are not existent, it means the database has no admins or members.\n\nHaving no admins, only server admins (with the reserved _admin role) are able to update design document and make other admin level changes.\n\nHaving no members, any user can write regular documents (any non-design document) and read documents from the database.\n\nIf there are any member names or roles defined for a database, then only authenticated users having a matching name or role are allowed to read documents from the database (or do a GET /{db} call).\n\n*Note*\nIf the security object for a database has never been set, then the value returned will be empty.\n\nAlso note, that security objects are not regular versioned documents (that is, they are not under MVCC rules). This is a design choice to speed up authorization checks (avoids traversing a database’s documents B-Tree).\n",
+        "operationId": "securityGet",
+        "consumes": [
+          "application/json",
+          "text/plan"
+        ],
+        "produces": [
+          "application/json",
+          "text/plan"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "admins": {
+                  "$ref": "#/definitions/Admins"
+                },
+                "members": {
+                  "$ref": "#/definitions/Members"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Database"
+        ],
+        "summary": "Sets the security object for the given database.",
+        "operationId": "securityPut",
+        "consumes": [
+          "application/json",
+          "text/plan"
+        ],
+        "produces": [
+          "application/json",
+          "text/plan"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "admins": {
+                  "$ref": "#/definitions/Admins"
+                },
+                "members": {
+                  "$ref": "#/definitions/Members"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "schema": {
+              "$ref": "#/definitions/OK"
+            }
+          },
+          "401": {
+            "description": "CouchDB Server Administrator privileges required",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
     "/{db}/_partition/{partition}": {
       "get": {
         "tags": [
@@ -2178,7 +2770,7 @@
           "Partition"
         ],
         "summary": "Executes a search request against the named index in the specified design document.",
-        "description": "Search endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.\n\n*Note*\nYou must enable faceting before you can use the counts, drilldown, and ranges parameters.\n\n*Note*\nFaceting and grouping are not supported on partitioned searches, so the following query parameters should not be used on those requests: counts, drilldown, ranges, and group_field, group_limit, group_sort``.\n\n*Note*        \nDo not combine the bookmark and stale options. These options constrain the choice of shard replicas to use for the response. When used together, the options might cause problems when contact is attempted with replicas that are slow or not available.\n",
+        "description": "*Warning*\nSearch endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.\n\n*Note*\nYou must enable faceting before you can use the counts, drilldown, and ranges parameters.\n\n*Note*\nFaceting and grouping are not supported on partitioned searches, so the following query parameters should not be used on those requests: counts, drilldown, ranges, and group_field, group_limit, group_sort``.\n\n*Note*        \nDo not combine the bookmark and stale options. These options constrain the choice of shard replicas to use for the response. When used together, the options might cause problems when contact is attempted with replicas that are slow or not available.\n",
         "operationId": "designPartitionGetDocSearch",
         "consumes": [
           "application/json",
@@ -3500,7 +4092,7 @@
           "Design Documents"
         ],
         "summary": "Executes a search request against the named index in the specified design document.",
-        "description": "Search endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.\n\n*Note*\nYou must enable faceting before you can use the counts, drilldown, and ranges parameters.\n\n*Note*\nFaceting and grouping are not supported on partitioned searches, so the following query parameters should not be used on those requests: counts, drilldown, ranges, and group_field, group_limit, group_sort``.\n\n*Note*        \nDo not combine the bookmark and stale options. These options constrain the choice of shard replicas to use for the response. When used together, the options might cause problems when contact is attempted with replicas that are slow or not available.\n",
+        "description": "*Warning*\nSearch endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.\n\n*Note*\nYou must enable faceting before you can use the counts, drilldown, and ranges parameters.\n\n*Note*\nFaceting and grouping are not supported on partitioned searches, so the following query parameters should not be used on those requests: counts, drilldown, ranges, and group_field, group_limit, group_sort``.\n\n*Note*        \nDo not combine the bookmark and stale options. These options constrain the choice of shard replicas to use for the response. When used together, the options might cause problems when contact is attempted with replicas that are slow or not available.\n",
         "operationId": "designGetDocSearch",
         "consumes": [
           "application/json",
@@ -3704,7 +4296,7 @@
           "Design Documents"
         ],
         "summary": "Executes a search request against the named index in the specified design document.",
-        "description": "Search endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.\n",
+        "description": "*Warning*\nSearch endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.\n",
         "operationId": "designGetDocSearchInfo",
         "consumes": [
           "application/json",
@@ -4190,6 +4782,292 @@
           }
         }
       }
+    },
+    "Server": {
+      "type": "object",
+      "properties": {
+        "couchdb": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string",
+          "format": "uuidl"
+        },
+        "vendor": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          }
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "Task": {
+      "type": "object",
+      "properties": {
+        "changes_done": {
+          "type": "integer",
+          "description": "Processed changes"
+        },
+        "database": {
+          "type": "string",
+          "description": "Source database"
+        },
+        "pid": {
+          "type": "string",
+          "description": "Process ID"
+        },
+        "progress": {
+          "type": "integer",
+          "description": "Current percentage progress"
+        },
+        "started_on": {
+          "type": "integer",
+          "description": "ask start time as unix timestamp"
+        },
+        "status": {
+          "type": "string",
+          "description": "Task status message"
+        },
+        "task": {
+          "type": "string",
+          "description": "Task name"
+        },
+        "total_changes": {
+          "type": "integer",
+          "description": "Total changes to process"
+        },
+        "type": {
+          "type": "string",
+          "description": "Operation Type"
+        },
+        "updated_on": {
+          "type": "string",
+          "description": "Unix timestamp of last operation update"
+        }
+      }
+    },
+    "Cluster": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": [
+            "enable_single_node",
+            "enable_cluster",
+            "add_node",
+            "finish_cluster"
+          ]
+        },
+        "bind_address": {
+          "type": "string",
+          "description": "The IP address to which to bind the current node. The special value 0.0.0.0 may be specified to bind to all interfaces on the host. (enable_cluster and enable_single_node only)"
+        },
+        "username": {
+          "type": "string",
+          "description": "The username of the server-level administrator to create. (enable_cluster and enable_single_node only), or the remote server’s administrator username (add_node)"
+        },
+        "password": {
+          "type": "string",
+          "description": "The password for the server-level administrator to create. (enable_cluster and enable_single_node only), or the remote server’s administrator username (add_node)"
+        },
+        "port": {
+          "type": "integer",
+          "description": "The TCP port to which to bind this node (enable_cluster and enable_single_node only) or the TCP port to which to bind a remote node (add_node only)."
+        },
+        "node_count": {
+          "type": "integer",
+          "description": "The total number of nodes to be joined into the cluster, including this one. Used to determine the value of the cluster’s n, up to a maximum of 3. (enable_cluster only)"
+        },
+        "remote_node": {
+          "type": "string",
+          "description": "The IP address of the remote node to setup as part of this cluster’s list of nodes. (enable_cluster only)"
+        },
+        "remote_current_user": {
+          "type": "string",
+          "description": "The username of the server-level administrator authorized on the remote node. (enable_cluster only)"
+        },
+        "remote_current_password": {
+          "type": "string",
+          "description": "he password of the server-level administrator authorized on the remote node. (enable_cluster only)"
+        },
+        "host": {
+          "type": "string",
+          "description": "The remote node IP of the node to add to the cluster. (add_node only)"
+        },
+        "ensure_dbs_exist": {
+          "type": "array",
+          "description": "List of system databases to ensure exist on the node/cluster. Defaults to [\"_users\",\"_replicator\"].",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Replicate": {
+      "type": "object",
+      "properties": {
+        "cancel": {
+          "type": "boolean",
+          "description": "Cancels the replication"
+        },
+        "continuous": {
+          "type": "boolean",
+          "description": "Configure the replication to be continuous"
+        },
+        "create_target": {
+          "type": "boolean",
+          "description": "Creates the target database. Required administrator’s privileges on target server."
+        },
+        "doc_ids": {
+          "type": "array",
+          "description": "Array of document IDs to be synchronized",
+          "items": {
+            "type": "string"
+          }
+        },
+        "filter": {
+          "type": "string",
+          "description": "The name of a filter function."
+        },
+        "source_proxy": {
+          "type": "string",
+          "description": "Address of a proxy server through which replication from the source should occur (protocol can be “http” or “socks5”)"
+        },
+        "target_proxy": {
+          "type": "string",
+          "description": "Address of a proxy server through which replication to the target should occur (protocol can be “http” or “socks5”)"
+        },
+        "source": {
+          "type": "string",
+          "description": "Fully qualified source database URL or an object which contains the full URL of the source database with additional parameters like headers. Eg: ‘http://example.com/source_db_name’ \n"
+        },
+        "target": {
+          "type": "string",
+          "description": "Fully qualified target database URL or an object which contains the full URL of the target database with additional parameters like headers. Eg: ‘http://example.com/target_db_name’ \n"
+        }
+      }
+    },
+    "Replication": {
+      "type": "object",
+      "properties": {
+        "history": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReplicationHistory"
+          }
+        },
+        "ok": {
+          "type": "boolean"
+        },
+        "replication_id_version": {
+          "type": "integer"
+        },
+        "session_id": {
+          "type": "string"
+        },
+        "source_last_seq": {
+          "type": "integer"
+        }
+      }
+    },
+    "ReplicationHistory": {
+      "type": "object",
+      "properties": {
+        "doc_write_failures": {
+          "type": "integer",
+          "description": "Number of document write failures"
+        },
+        "docs_read": {
+          "type": "integer",
+          "description": "Number of documents read"
+        },
+        "docs_written": {
+          "type": "integer",
+          "description": "Number of documents written to target"
+        },
+        "end_last_seq": {
+          "type": "integer",
+          "description": "Last sequence number in changes stream"
+        },
+        "end_time": {
+          "type": "string",
+          "format": "RFC2822",
+          "description": "Date/Time replication operation completed in RFC 2822 format"
+        },
+        "missing_checked": {
+          "type": "integer",
+          "description": "Number of missing documents checked"
+        },
+        "missing_found": {
+          "type": "integer",
+          "description": "Number of missing documents found"
+        },
+        "recorded_seq": {
+          "type": "integer",
+          "description": "Last recorded sequence number"
+        },
+        "session_id": {
+          "type": "string",
+          "description": "Session ID for this replication operation"
+        },
+        "start_last_seq": {
+          "type": "integer",
+          "description": "First sequence number in changes stream"
+        },
+        "start_time": {
+          "type": "string",
+          "format": "RFC2822",
+          "description": "Date/Time replication operation started in RFC 2822 format"
+        }
+      }
+    },
+    "Admins": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "array",
+          "description": "List of CouchDB user names",
+          "items": {
+            "type": "string"
+          }
+        },
+        "roles": {
+          "type": "array",
+          "description": "List of users roles",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "they have all the privileges of members plus the privileges: write (and edit) design documents, add/remove database admins and members and set the database revisions limit. They can not create a database nor delete a database.\n"
+    },
+    "Members": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "array",
+          "description": "List of CouchDB user names",
+          "items": {
+            "type": "string"
+          }
+        },
+        "roles": {
+          "type": "array",
+          "description": "List of users roles",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "they can read all types of documents from the DB, and they can write (and edit) documents to the DB except for design documents."
     }
   }
 }

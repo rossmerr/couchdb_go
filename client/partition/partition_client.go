@@ -41,7 +41,8 @@ type ClientService interface {
 /*
   DesignPartitionGetDocSearch executes a search request against the named index in the specified design document
 
-  Search endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.
+  *Warning*
+Search endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.
 
 *Note*
 You must enable faceting before you can use the counts, drilldown, and ranges parameters.
