@@ -38,3 +38,10 @@ if err != nil {
 ## Using swagger to generate a client
 
 `swagger generate client -f RossMerr-CouchDB-3.1.1-resolved.json -A couchdb_go`
+
+
+## Contribute to the Schema
+
+[SwaggerHub](https://app.swaggerhub.com/apis/RossMerr/CouchDB/3.1.1)
+
+[API Docs](https://app.swaggerhub.com/apis-docs/RossMerr/CouchDB/3.1.1)
