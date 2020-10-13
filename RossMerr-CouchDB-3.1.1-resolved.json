@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "*Note*\nThis is not a definitive implementation of the CouchDB API, it's missing a lot of the endpoints for server/database managment and everything for attachments all COPY operations and probably a few other parts.\n\nIt also targets golang, as such the '#/definitions/Document' is intentionally left empty to generate a go `interface` type, you can then cast this to a `map[string]interface{}`.\n",
+    "description": "*Note*\nThis is not a definitive implementation of the CouchDB API, it's missing a lot of the endpoints for server/database managment and everything for attachments all COPY operations and probably a few other parts.\n\nIt also targets golang, as such the '#/definitions/Document' is intentionally left empty to generate a go `interface`, which you can then cast to a `map[string]interface{}`.\n",
     "version": "3.1.1",
     "title": "CouchDB API",
     "license": {
@@ -714,7 +714,7 @@
             "description": "Shards, aka the number of range partitions. Default is 8, unless overridden in the cluster config.",
             "required": false,
             "type": "integer",
-            "format": "int64"
+            "format": "int32"
           },
           {
             "name": "n",
@@ -722,7 +722,7 @@
             "description": "Replicas. The number of copies of the database in the cluster. The default is 3, unless overridden in the cluster config .",
             "required": false,
             "type": "integer",
-            "format": "int64"
+            "format": "int32"
           },
           {
             "name": "partitioned",

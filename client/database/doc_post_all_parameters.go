@@ -100,7 +100,7 @@ type DocPostAllParams struct {
 	  Stop returning records when the specified key is reached.
 
 	*/
-	QueryEndKey *string
+	Endkey *string
 	/*EndkeyDocid
 	  Stop returning records when the specified document ID is reached. Ignored if endkey is not set.
 
@@ -319,15 +319,15 @@ func (o *DocPostAllParams) SetEndKeyDocID(endKeyDocID *string) {
 	o.EndKeyDocID = endKeyDocID
 }
 
-// WithQueryEndKey adds the endkey to the doc post all params
-func (o *DocPostAllParams) WithQueryEndKey(endkey *string) *DocPostAllParams {
-	o.SetQueryEndKey(endkey)
+// WithEndkey adds the endkey to the doc post all params
+func (o *DocPostAllParams) WithEndkey(endkey *string) *DocPostAllParams {
+	o.SetEndkey(endkey)
 	return o
 }
 
-// SetQueryEndKey adds the endkey to the doc post all params
-func (o *DocPostAllParams) SetQueryEndKey(endkey *string) {
-	o.QueryEndKey = endkey
+// SetEndkey adds the endkey to the doc post all params
+func (o *DocPostAllParams) SetEndkey(endkey *string) {
+	o.Endkey = endkey
 }
 
 // WithEndkeyDocid adds the endkeyDocid to the doc post all params
@@ -659,12 +659,12 @@ func (o *DocPostAllParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 
 	}
 
-	if o.QueryEndKey != nil {
+	if o.Endkey != nil {
 
 		// query param endkey
 		var qrEndkey string
-		if o.QueryEndKey != nil {
-			qrEndkey = *o.QueryEndKey
+		if o.Endkey != nil {
+			qrEndkey = *o.Endkey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {

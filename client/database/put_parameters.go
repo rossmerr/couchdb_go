@@ -70,7 +70,7 @@ type PutParams struct {
 	  Replicas. The number of copies of the database in the cluster. The default is 3, unless overridden in the cluster config .
 
 	*/
-	N *int64
+	N *int32
 	/*Partitioned
 	  Whether to create a partitioned database. Default is false.
 
@@ -80,7 +80,7 @@ type PutParams struct {
 	  Shards, aka the number of range partitions. Default is 8, unless overridden in the cluster config.
 
 	*/
-	Q *int64
+	Q *int32
 
 	timeout    time.Duration
 	Context    context.Context
@@ -132,13 +132,13 @@ func (o *PutParams) SetDb(db string) {
 }
 
 // WithN adds the n to the put params
-func (o *PutParams) WithN(n *int64) *PutParams {
+func (o *PutParams) WithN(n *int32) *PutParams {
 	o.SetN(n)
 	return o
 }
 
 // SetN adds the n to the put params
-func (o *PutParams) SetN(n *int64) {
+func (o *PutParams) SetN(n *int32) {
 	o.N = n
 }
 
@@ -154,13 +154,13 @@ func (o *PutParams) SetPartitioned(partitioned *bool) {
 }
 
 // WithQ adds the q to the put params
-func (o *PutParams) WithQ(q *int64) *PutParams {
+func (o *PutParams) WithQ(q *int32) *PutParams {
 	o.SetQ(q)
 	return o
 }
 
 // SetQ adds the q to the put params
-func (o *PutParams) SetQ(q *int64) {
+func (o *PutParams) SetQ(q *int32) {
 	o.Q = q
 }
 
@@ -180,11 +180,11 @@ func (o *PutParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry)
 	if o.N != nil {
 
 		// query param n
-		var qrN int64
+		var qrN int32
 		if o.N != nil {
 			qrN = *o.N
 		}
-		qN := swag.FormatInt64(qrN)
+		qN := swag.FormatInt32(qrN)
 		if qN != "" {
 			if err := r.SetQueryParam("n", qN); err != nil {
 				return err
@@ -212,11 +212,11 @@ func (o *PutParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry)
 	if o.Q != nil {
 
 		// query param q
-		var qrQ int64
+		var qrQ int32
 		if o.Q != nil {
 			qrQ = *o.Q
 		}
-		qQ := swag.FormatInt64(qrQ)
+		qQ := swag.FormatInt32(qrQ)
 		if qQ != "" {
 			if err := r.SetQueryParam("q", qQ); err != nil {
 				return err
