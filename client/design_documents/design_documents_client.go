@@ -27,66 +27,207 @@ type Client struct {
 
 // ClientService is the interface for Client methods
 type ClientService interface {
-	DesignGetDoc(params *DesignGetDocParams) (*DesignGetDocOK, error)
+	DesignDocDelete(params *DesignDocDeleteParams) (*DesignDocDeleteOK, *DesignDocDeleteAccepted, error)
 
-	DesignGetDocSearch(params *DesignGetDocSearchParams) (*DesignGetDocSearchOK, error)
+	DesignDocExists(params *DesignDocExistsParams) (*DesignDocExistsOK, error)
 
-	DesignGetDocSearchInfo(params *DesignGetDocSearchInfoParams) (*DesignGetDocSearchInfoOK, error)
+	DesignDocGet(params *DesignDocGetParams) (*DesignDocGetOK, error)
 
-	DesignGetDocView(params *DesignGetDocViewParams) (*DesignGetDocViewOK, error)
+	DesignDocInfo(params *DesignDocInfoParams) (*DesignDocInfoOK, error)
 
-	DesignHeadDelete(params *DesignHeadDeleteParams) (*DesignHeadDeleteOK, *DesignHeadDeleteAccepted, error)
+	DesignDocPut(params *DesignDocPutParams) (*DesignDocPutOK, error)
 
-	DesignHeadDoc(params *DesignHeadDocParams) (*DesignHeadDocOK, error)
+	DesignDocSearch(params *DesignDocSearchParams) (*DesignDocSearchOK, error)
 
-	DesignHeadDocInfo(params *DesignHeadDocInfoParams) (*DesignHeadDocInfoOK, error)
+	DesignDocSearchInfo(params *DesignDocSearchInfoParams) (*DesignDocSearchInfoOK, error)
 
-	DesignPostDocView(params *DesignPostDocViewParams) (*DesignPostDocViewOK, error)
+	DesignDocView(params *DesignDocViewParams) (*DesignDocViewOK, error)
 
-	DesignPuttDoc(params *DesignPuttDocParams) (*DesignPuttDocOK, error)
+	DesignDocViewPost(params *DesignDocViewPostParams) (*DesignDocViewPostOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
 
 /*
-  DesignGetDoc returns the contents of the design document specified with the name of the design document and from the specified database from the URL
-
-  Unless you request a specific revision, the latest revision of the document will always be returned.
-
+  DesignDocDelete deletes the specified document from the database you must supply the current latest revision either by using the rev parameter to specify the revision
 */
-func (a *Client) DesignGetDoc(params *DesignGetDocParams) (*DesignGetDocOK, error) {
+func (a *Client) DesignDocDelete(params *DesignDocDeleteParams) (*DesignDocDeleteOK, *DesignDocDeleteAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewDesignGetDocParams()
+		params = NewDesignDocDeleteParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "designGetDoc",
-		Method:             "GET",
+		ID:                 "designDocDelete",
+		Method:             "DELETE",
 		PathPattern:        "/{db}/_design/{ddoc}",
-		ProducesMediaTypes: []string{"application/json", "multipart/mixed", "multipart/related", "text/plain"},
-		ConsumesMediaTypes: []string{"application/json", "multipart/mixed", "multipart/related", "text/plain"},
+		ProducesMediaTypes: []string{"application/json", "text/plain"},
+		ConsumesMediaTypes: []string{"application/json", "text/plain"},
 		Schemes:            []string{"http", "https"},
 		Params:             params,
-		Reader:             &DesignGetDocReader{formats: a.formats},
+		Reader:             &DesignDocDeleteReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+	switch value := result.(type) {
+	case *DesignDocDeleteOK:
+		return value, nil, nil
+	case *DesignDocDeleteAccepted:
+		return nil, value, nil
+	}
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for design_documents: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  DesignDocExists returns the HTTP headers containing a minimal amount of information about the specified design document
+*/
+func (a *Client) DesignDocExists(params *DesignDocExistsParams) (*DesignDocExistsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDesignDocExistsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "designDocExists",
+		Method:             "HEAD",
+		PathPattern:        "/{db}/_design/{ddoc}",
+		ProducesMediaTypes: []string{"application/json", "text/plain"},
+		ConsumesMediaTypes: []string{"application/json", "text/plain"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &DesignDocExistsReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*DesignGetDocOK)
+	success, ok := result.(*DesignDocExistsOK)
 	if ok {
 		return success, nil
 	}
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for designGetDoc: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for designDocExists: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
 /*
-  DesignGetDocSearch executes a search request against the named index in the specified design document
+  DesignDocGet returns the contents of the design document specified with the name of the design document and from the specified database from the URL
+
+  Unless you request a specific revision, the latest revision of the document will always be returned.
+
+*/
+func (a *Client) DesignDocGet(params *DesignDocGetParams) (*DesignDocGetOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDesignDocGetParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "designDocGet",
+		Method:             "GET",
+		PathPattern:        "/{db}/_design/{ddoc}",
+		ProducesMediaTypes: []string{"application/json", "multipart/mixed", "multipart/related", "text/plain"},
+		ConsumesMediaTypes: []string{"application/json", "multipart/mixed", "multipart/related", "text/plain"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &DesignDocGetReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DesignDocGetOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for designDocGet: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  DesignDocInfo obtains information about the specified design document including the index index size and current status of the design document and associated index information
+*/
+func (a *Client) DesignDocInfo(params *DesignDocInfoParams) (*DesignDocInfoOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDesignDocInfoParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "designDocInfo",
+		Method:             "HEAD",
+		PathPattern:        "/{db}/_design/{ddoc}/_info",
+		ProducesMediaTypes: []string{"application/json", "text/plain"},
+		ConsumesMediaTypes: []string{"application/json", "text/plain"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &DesignDocInfoReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DesignDocInfoOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for designDocInfo: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  DesignDocPut thes p u t method creates a new named design document or creates a new revision of the existing design document
+
+  *Note*
+that for filters, lists, shows and updates fields objects are mapping of function name to string function source code. For views mapping is the same except that values are objects with map and reduce (optional) keys which also contains functions source code.
+
+*/
+func (a *Client) DesignDocPut(params *DesignDocPutParams) (*DesignDocPutOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDesignDocPutParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "designDocPut",
+		Method:             "PUT",
+		PathPattern:        "/{db}/_design/{ddoc}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &DesignDocPutReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DesignDocPutOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for designDocPut: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  DesignDocSearch executes a search request against the named index in the specified design document
 
   *Warning*
 Search endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.
@@ -101,284 +242,143 @@ Faceting and grouping are not supported on partitioned searches, so the followin
 Do not combine the bookmark and stale options. These options constrain the choice of shard replicas to use for the response. When used together, the options might cause problems when contact is attempted with replicas that are slow or not available.
 
 */
-func (a *Client) DesignGetDocSearch(params *DesignGetDocSearchParams) (*DesignGetDocSearchOK, error) {
+func (a *Client) DesignDocSearch(params *DesignDocSearchParams) (*DesignDocSearchOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewDesignGetDocSearchParams()
+		params = NewDesignDocSearchParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "designGetDocSearch",
+		ID:                 "designDocSearch",
 		Method:             "GET",
 		PathPattern:        "/{db}/_design/{ddoc}/_search/{index}",
 		ProducesMediaTypes: []string{"application/json", "text/plain"},
 		ConsumesMediaTypes: []string{"application/json", "text/plain"},
 		Schemes:            []string{"http", "https"},
 		Params:             params,
-		Reader:             &DesignGetDocSearchReader{formats: a.formats},
+		Reader:             &DesignDocSearchReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*DesignGetDocSearchOK)
+	success, ok := result.(*DesignDocSearchOK)
 	if ok {
 		return success, nil
 	}
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for designGetDocSearch: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for designDocSearch: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
 /*
-  DesignGetDocSearchInfo executes a search request against the named index in the specified design document
+  DesignDocSearchInfo executes a search request against the named index in the specified design document
 
   *Warning*
 Search endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.
 
 */
-func (a *Client) DesignGetDocSearchInfo(params *DesignGetDocSearchInfoParams) (*DesignGetDocSearchInfoOK, error) {
+func (a *Client) DesignDocSearchInfo(params *DesignDocSearchInfoParams) (*DesignDocSearchInfoOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewDesignGetDocSearchInfoParams()
+		params = NewDesignDocSearchInfoParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "designGetDocSearchInfo",
+		ID:                 "designDocSearchInfo",
 		Method:             "GET",
 		PathPattern:        "/{db}/_design/{ddoc}/_search_info/{index}",
 		ProducesMediaTypes: []string{"application/json", "text/plain"},
 		ConsumesMediaTypes: []string{"application/json", "text/plain"},
 		Schemes:            []string{"http", "https"},
 		Params:             params,
-		Reader:             &DesignGetDocSearchInfoReader{formats: a.formats},
+		Reader:             &DesignDocSearchInfoReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*DesignGetDocSearchInfoOK)
+	success, ok := result.(*DesignDocSearchInfoOK)
 	if ok {
 		return success, nil
 	}
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for designGetDocSearchInfo: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for designDocSearchInfo: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
 /*
-  DesignGetDocView executes the specified view function from the specified design document
+  DesignDocView executes the specified view function from the specified design document
 */
-func (a *Client) DesignGetDocView(params *DesignGetDocViewParams) (*DesignGetDocViewOK, error) {
+func (a *Client) DesignDocView(params *DesignDocViewParams) (*DesignDocViewOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewDesignGetDocViewParams()
+		params = NewDesignDocViewParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "designGetDocView",
+		ID:                 "designDocView",
 		Method:             "GET",
 		PathPattern:        "/{db}/_design/{ddoc}/_view/{view}",
 		ProducesMediaTypes: []string{"application/json", "text/plain"},
 		ConsumesMediaTypes: []string{"application/json", "text/plain"},
 		Schemes:            []string{"http", "https"},
 		Params:             params,
-		Reader:             &DesignGetDocViewReader{formats: a.formats},
+		Reader:             &DesignDocViewReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*DesignGetDocViewOK)
+	success, ok := result.(*DesignDocViewOK)
 	if ok {
 		return success, nil
 	}
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for designGetDocView: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for designDocView: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
 /*
-  DesignHeadDelete deletes the specified document from the database you must supply the current latest revision either by using the rev parameter to specify the revision
-*/
-func (a *Client) DesignHeadDelete(params *DesignHeadDeleteParams) (*DesignHeadDeleteOK, *DesignHeadDeleteAccepted, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewDesignHeadDeleteParams()
-	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "designHeadDelete",
-		Method:             "DELETE",
-		PathPattern:        "/{db}/_design/{ddoc}",
-		ProducesMediaTypes: []string{"application/json", "text/plain"},
-		ConsumesMediaTypes: []string{"application/json", "text/plain"},
-		Schemes:            []string{"http", "https"},
-		Params:             params,
-		Reader:             &DesignHeadDeleteReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	})
-	if err != nil {
-		return nil, nil, err
-	}
-	switch value := result.(type) {
-	case *DesignHeadDeleteOK:
-		return value, nil, nil
-	case *DesignHeadDeleteAccepted:
-		return nil, value, nil
-	}
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for design_documents: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-  DesignHeadDoc returns the HTTP headers containing a minimal amount of information about the specified design document
-*/
-func (a *Client) DesignHeadDoc(params *DesignHeadDocParams) (*DesignHeadDocOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewDesignHeadDocParams()
-	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "designHeadDoc",
-		Method:             "HEAD",
-		PathPattern:        "/{db}/_design/{ddoc}",
-		ProducesMediaTypes: []string{"application/json", "text/plain"},
-		ConsumesMediaTypes: []string{"application/json", "text/plain"},
-		Schemes:            []string{"http", "https"},
-		Params:             params,
-		Reader:             &DesignHeadDocReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	})
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*DesignHeadDocOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for designHeadDoc: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-  DesignHeadDocInfo obtains information about the specified design document including the index index size and current status of the design document and associated index information
-*/
-func (a *Client) DesignHeadDocInfo(params *DesignHeadDocInfoParams) (*DesignHeadDocInfoOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewDesignHeadDocInfoParams()
-	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "designHeadDocInfo",
-		Method:             "HEAD",
-		PathPattern:        "/{db}/_design/{ddoc}/_info",
-		ProducesMediaTypes: []string{"application/json", "text/plain"},
-		ConsumesMediaTypes: []string{"application/json", "text/plain"},
-		Schemes:            []string{"http", "https"},
-		Params:             params,
-		Reader:             &DesignHeadDocInfoReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	})
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*DesignHeadDocInfoOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for designHeadDocInfo: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-  DesignPostDocView executes the specified view function from the specified design document
+  DesignDocViewPost executes the specified view function from the specified design document
 
   POST view functionality supports identical parameters and behavior as specified in the GET /{db}/_design/{ddoc}/_view/{view} API but allows for the query string parameters to be supplied as keys in a JSON object in the body of the POST request.
 
 */
-func (a *Client) DesignPostDocView(params *DesignPostDocViewParams) (*DesignPostDocViewOK, error) {
+func (a *Client) DesignDocViewPost(params *DesignDocViewPostParams) (*DesignDocViewPostOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewDesignPostDocViewParams()
+		params = NewDesignDocViewPostParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "designPostDocView",
+		ID:                 "designDocViewPost",
 		Method:             "POST",
 		PathPattern:        "/{db}/_design/{ddoc}/_view/{view}",
 		ProducesMediaTypes: []string{"application/json", "text/plain"},
 		ConsumesMediaTypes: []string{"application/json", "text/plain"},
 		Schemes:            []string{"http", "https"},
 		Params:             params,
-		Reader:             &DesignPostDocViewReader{formats: a.formats},
+		Reader:             &DesignDocViewPostReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*DesignPostDocViewOK)
+	success, ok := result.(*DesignDocViewPostOK)
 	if ok {
 		return success, nil
 	}
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for designPostDocView: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-  DesignPuttDoc thes p u t method creates a new named design document or creates a new revision of the existing design document
-
-  *Note*
-that for filters, lists, shows and updates fields objects are mapping of function name to string function source code. For views mapping is the same except that values are objects with map and reduce (optional) keys which also contains functions source code.
-
-*/
-func (a *Client) DesignPuttDoc(params *DesignPuttDocParams) (*DesignPuttDocOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewDesignPuttDocParams()
-	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "designPuttDoc",
-		Method:             "PUT",
-		PathPattern:        "/{db}/_design/{ddoc}",
-		ProducesMediaTypes: []string{"application/json"},
-		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http", "https"},
-		Params:             params,
-		Reader:             &DesignPuttDocReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	})
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*DesignPuttDocOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for designPuttDoc: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for designDocViewPost: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

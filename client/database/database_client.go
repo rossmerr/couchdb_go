@@ -27,33 +27,208 @@ type Client struct {
 
 // ClientService is the interface for Client methods
 type ClientService interface {
-	BulkPostAll(params *BulkPostAllParams) (*BulkPostAllCreated, error)
+	DbSecurityGet(params *DbSecurityGetParams) (*DbSecurityGetOK, error)
 
-	DbDelete(params *DbDeleteParams) (*DbDeleteOK, *DbDeleteAccepted, error)
+	Delete(params *DeleteParams) (*DeleteOK, *DeleteAccepted, error)
 
-	DbGet(params *DbGetParams) (*DbGetOK, error)
+	DesignDocAllGet(params *DesignDocAllGetParams) (*DesignDocAllGetOK, error)
 
-	DbHeader(params *DbHeaderParams) (*DbHeaderOK, error)
+	DesignDocAllPost(params *DesignDocAllPostParams) (*DesignDocAllPostOK, error)
 
-	DbPut(params *DbPutParams) (*DbPutCreated, *DbPutAccepted, error)
-
-	DesignGet(params *DesignGetParams) (*DesignGetOK, error)
-
-	DesignPost(params *DesignPostParams) (*DesignPostOK, error)
+	DocBulkPostAll(params *DocBulkPostAllParams) (*DocBulkPostAllCreated, error)
 
 	DocGetAll(params *DocGetAllParams) (*DocGetAllOK, error)
 
 	DocPostAll(params *DocPostAllParams) (*DocPostAllOK, error)
 
-	SecurityGet(params *SecurityGetParams) (*SecurityGetOK, error)
+	Exists(params *ExistsParams) (*ExistsOK, error)
 
-	SecurityPut(params *SecurityPutParams) (*SecurityPutOK, error)
+	Get(params *GetParams) (*GetOK, error)
+
+	Put(params *PutParams) (*PutCreated, *PutAccepted, error)
+
+	SbSecurityPut(params *SbSecurityPutParams) (*SbSecurityPutOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
 
 /*
-  BulkPostAll thes bulk document API allows you to create and update multiple documents at the same time within a single request
+  DbSecurityGet returns the current security object from the specified database
+
+  The security object consists of two compulsory elements, admins and members, which are used to specify the list of users and/or roles that have admin and members rights to the database respectively:
+
+  - members: they can read all types of documents from the DB, and they can write (and edit) documents to the DB except for design documents.
+  - admins: they have all the privileges of members plus the privileges: write (and edit) design documents, add/remove database admins and members and set the database revisions limit. They can not create a database nor delete a database.
+
+Both members and admins objects contain two array-typed fields:
+
+  - names: List of CouchDB user names
+  - roles: List of users roles
+
+Any additional fields in the security object are optional. The entire security object is made available to validation and other internal functions so that the database can control and limit functionality.
+
+If both the names and roles fields of either the admins or members properties are empty arrays, or are not existent, it means the database has no admins or members.
+
+Having no admins, only server admins (with the reserved _admin role) are able to update design document and make other admin level changes.
+
+Having no members, any user can write regular documents (any non-design document) and read documents from the database.
+
+If there are any member names or roles defined for a database, then only authenticated users having a matching name or role are allowed to read documents from the database (or do a GET /{db} call).
+
+*Note*
+If the security object for a database has never been set, then the value returned will be empty.
+
+Also note, that security objects are not regular versioned documents (that is, they are not under MVCC rules). This is a design choice to speed up authorization checks (avoids traversing a database’s documents B-Tree).
+
+*/
+func (a *Client) DbSecurityGet(params *DbSecurityGetParams) (*DbSecurityGetOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDbSecurityGetParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "dbSecurityGet",
+		Method:             "GET",
+		PathPattern:        "/{db}/_security",
+		ProducesMediaTypes: []string{"application/json", "text/plan"},
+		ConsumesMediaTypes: []string{"application/json", "text/plan"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &DbSecurityGetReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DbSecurityGetOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for dbSecurityGet: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  Delete deletes the specified database and all the documents and attachments contained within it
+
+  *Note*
+To avoid deleting a database, CouchDB will respond with the HTTP status code 400 when the request
+URL includes a ?rev= parameter. This suggests that one wants to delete a document but forgot to add
+the document id to the URL.
+
+*/
+func (a *Client) Delete(params *DeleteParams) (*DeleteOK, *DeleteAccepted, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDeleteParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "delete",
+		Method:             "DELETE",
+		PathPattern:        "/{db}",
+		ProducesMediaTypes: []string{"application/json", "text/plain"},
+		ConsumesMediaTypes: []string{"application/json", "text/plain"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &DeleteReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+	switch value := result.(type) {
+	case *DeleteOK:
+		return value, nil, nil
+	case *DeleteAccepted:
+		return nil, value, nil
+	}
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for database: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  DesignDocAllGet returns a JSON structure of all of the design documents in a given database
+
+  The information is returned as a JSON structure containing meta information about the return structure, including a list of all design documents and basic contents, consisting the ID, revision and key. The key is the design document’s _id.
+
+*/
+func (a *Client) DesignDocAllGet(params *DesignDocAllGetParams) (*DesignDocAllGetOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDesignDocAllGetParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "designDocAllGet",
+		Method:             "GET",
+		PathPattern:        "/{db}/_design_docs",
+		ProducesMediaTypes: []string{"application/json", "text/plan"},
+		ConsumesMediaTypes: []string{"application/json", "text/plan"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &DesignDocAllGetReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DesignDocAllGetOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for designDocAllGet: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  DesignDocAllPost ps o s t design docs functionality supports identical parameters and behavior as specified in the g e t db design docs
+
+  API but allows for the query string parameters to be supplied as keys in a JSON object in the body of the POST request.
+
+*/
+func (a *Client) DesignDocAllPost(params *DesignDocAllPostParams) (*DesignDocAllPostOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDesignDocAllPostParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "designDocAllPost",
+		Method:             "POST",
+		PathPattern:        "/{db}/_design_docs",
+		ProducesMediaTypes: []string{"application/json", "text/plan"},
+		ConsumesMediaTypes: []string{"application/json", "text/plan"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &DesignDocAllPostReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DesignDocAllPostOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for designDocAllPost: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  DocBulkPostAll thes bulk document API allows you to create and update multiple documents at the same time within a single request
 
   The basic operation is similar to creating or updating a single document, except that you batch the document structure and information.
 
@@ -64,268 +239,34 @@ For updating existing documents, you must provide the document ID, revision info
 In case of batch deleting documents all fields as document ID, revision information and deletion status (_deleted) are required.
 
 */
-func (a *Client) BulkPostAll(params *BulkPostAllParams) (*BulkPostAllCreated, error) {
+func (a *Client) DocBulkPostAll(params *DocBulkPostAllParams) (*DocBulkPostAllCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewBulkPostAllParams()
+		params = NewDocBulkPostAllParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "bulkPostAll",
+		ID:                 "docBulkPostAll",
 		Method:             "POST",
 		PathPattern:        "/{db}/_bulk_get",
 		ProducesMediaTypes: []string{"application/json", "text/plain"},
 		ConsumesMediaTypes: []string{"application/json", "text/plain"},
 		Schemes:            []string{"http", "https"},
 		Params:             params,
-		Reader:             &BulkPostAllReader{formats: a.formats},
+		Reader:             &DocBulkPostAllReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*BulkPostAllCreated)
+	success, ok := result.(*DocBulkPostAllCreated)
 	if ok {
 		return success, nil
 	}
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for bulkPostAll: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-  DbDelete deletes the specified database and all the documents and attachments contained within it
-
-  *Note*
-To avoid deleting a database, CouchDB will respond with the HTTP status code 400 when the request
-URL includes a ?rev= parameter. This suggests that one wants to delete a document but forgot to add
-the document id to the URL.
-
-*/
-func (a *Client) DbDelete(params *DbDeleteParams) (*DbDeleteOK, *DbDeleteAccepted, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewDbDeleteParams()
-	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "dbDelete",
-		Method:             "DELETE",
-		PathPattern:        "/{db}",
-		ProducesMediaTypes: []string{"application/json", "text/plain"},
-		ConsumesMediaTypes: []string{"application/json", "text/plain"},
-		Schemes:            []string{"http", "https"},
-		Params:             params,
-		Reader:             &DbDeleteReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	})
-	if err != nil {
-		return nil, nil, err
-	}
-	switch value := result.(type) {
-	case *DbDeleteOK:
-		return value, nil, nil
-	case *DbDeleteAccepted:
-		return nil, value, nil
-	}
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for database: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-  DbGet gets information about the specified database
-
-  By passing in the appropriate options, you can search for
-available inventory in the system
-
-*/
-func (a *Client) DbGet(params *DbGetParams) (*DbGetOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewDbGetParams()
-	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "dbGet",
-		Method:             "GET",
-		PathPattern:        "/{db}",
-		ProducesMediaTypes: []string{"application/json", "text/plain"},
-		ConsumesMediaTypes: []string{"application/json", "text/plain"},
-		Schemes:            []string{"http", "https"},
-		Params:             params,
-		Reader:             &DbGetReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	})
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*DbGetOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for dbGet: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-  DbHeader returns the HTTP headers containing a minimal amount of information about the specified database
-
-  Since the response body is empty, using the HEAD method is a lightweight way to check if the database exists already or not.
-
-*/
-func (a *Client) DbHeader(params *DbHeaderParams) (*DbHeaderOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewDbHeaderParams()
-	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "dbHeader",
-		Method:             "HEAD",
-		PathPattern:        "/{db}",
-		ProducesMediaTypes: []string{"application/json", "text/plain"},
-		ConsumesMediaTypes: []string{"application/json", "text/plain"},
-		Schemes:            []string{"http", "https"},
-		Params:             params,
-		Reader:             &DbHeaderReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	})
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*DbHeaderOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for dbHeader: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-  DbPut creates a new database
-
-  The database name {db} must be composed by following next rules:
-Name must begin with a lowercase letter (a-z)
-* Lowercase characters (a-z)
-* Digits (0-9)
-* Any of the characters _, $, (, ), +, -, and /.
-
-If you’re familiar with Regular Expressions, the rules above could be written as
-
-*/
-func (a *Client) DbPut(params *DbPutParams) (*DbPutCreated, *DbPutAccepted, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewDbPutParams()
-	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "dbPut",
-		Method:             "PUT",
-		PathPattern:        "/{db}",
-		ProducesMediaTypes: []string{"application/json", "text/plain"},
-		ConsumesMediaTypes: []string{"application/json", "text/plain"},
-		Schemes:            []string{"http", "https"},
-		Params:             params,
-		Reader:             &DbPutReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	})
-	if err != nil {
-		return nil, nil, err
-	}
-	switch value := result.(type) {
-	case *DbPutCreated:
-		return value, nil, nil
-	case *DbPutAccepted:
-		return nil, value, nil
-	}
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for database: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-  DesignGet returns a JSON structure of all of the design documents in a given database
-
-  The information is returned as a JSON structure containing meta information about the return structure, including a list of all design documents and basic contents, consisting the ID, revision and key. The key is the design document’s _id.
-
-*/
-func (a *Client) DesignGet(params *DesignGetParams) (*DesignGetOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewDesignGetParams()
-	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "designGet",
-		Method:             "GET",
-		PathPattern:        "/{db}/_design_docs",
-		ProducesMediaTypes: []string{"application/json", "text/plan"},
-		ConsumesMediaTypes: []string{"application/json", "text/plan"},
-		Schemes:            []string{"http", "https"},
-		Params:             params,
-		Reader:             &DesignGetReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	})
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*DesignGetOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for designGet: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-  DesignPost ps o s t design docs functionality supports identical parameters and behavior as specified in the g e t db design docs
-
-  API but allows for the query string parameters to be supplied as keys in a JSON object in the body of the POST request.
-
-*/
-func (a *Client) DesignPost(params *DesignPostParams) (*DesignPostOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewDesignPostParams()
-	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "designPost",
-		Method:             "POST",
-		PathPattern:        "/{db}/_design_docs",
-		ProducesMediaTypes: []string{"application/json", "text/plan"},
-		ConsumesMediaTypes: []string{"application/json", "text/plan"},
-		Schemes:            []string{"http", "https"},
-		Params:             params,
-		Reader:             &DesignPostReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	})
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*DesignPostOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for designPost: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for docBulkPostAll: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -409,96 +350,155 @@ func (a *Client) DocPostAll(params *DocPostAllParams) (*DocPostAllOK, error) {
 }
 
 /*
-  SecurityGet returns the current security object from the specified database
+  Exists returns the HTTP headers containing a minimal amount of information about the specified database
 
-  The security object consists of two compulsory elements, admins and members, which are used to specify the list of users and/or roles that have admin and members rights to the database respectively:
-
-  - members: they can read all types of documents from the DB, and they can write (and edit) documents to the DB except for design documents.
-  - admins: they have all the privileges of members plus the privileges: write (and edit) design documents, add/remove database admins and members and set the database revisions limit. They can not create a database nor delete a database.
-
-Both members and admins objects contain two array-typed fields:
-
-  - names: List of CouchDB user names
-  - roles: List of users roles
-
-Any additional fields in the security object are optional. The entire security object is made available to validation and other internal functions so that the database can control and limit functionality.
-
-If both the names and roles fields of either the admins or members properties are empty arrays, or are not existent, it means the database has no admins or members.
-
-Having no admins, only server admins (with the reserved _admin role) are able to update design document and make other admin level changes.
-
-Having no members, any user can write regular documents (any non-design document) and read documents from the database.
-
-If there are any member names or roles defined for a database, then only authenticated users having a matching name or role are allowed to read documents from the database (or do a GET /{db} call).
-
-*Note*
-If the security object for a database has never been set, then the value returned will be empty.
-
-Also note, that security objects are not regular versioned documents (that is, they are not under MVCC rules). This is a design choice to speed up authorization checks (avoids traversing a database’s documents B-Tree).
+  Since the response body is empty, using the HEAD method is a lightweight way to check if the database exists already or not.
 
 */
-func (a *Client) SecurityGet(params *SecurityGetParams) (*SecurityGetOK, error) {
+func (a *Client) Exists(params *ExistsParams) (*ExistsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewSecurityGetParams()
+		params = NewExistsParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "securityGet",
-		Method:             "GET",
-		PathPattern:        "/{db}/_security",
-		ProducesMediaTypes: []string{"application/json", "text/plan"},
-		ConsumesMediaTypes: []string{"application/json", "text/plan"},
+		ID:                 "exists",
+		Method:             "HEAD",
+		PathPattern:        "/{db}",
+		ProducesMediaTypes: []string{"application/json", "text/plain"},
+		ConsumesMediaTypes: []string{"application/json", "text/plain"},
 		Schemes:            []string{"http", "https"},
 		Params:             params,
-		Reader:             &SecurityGetReader{formats: a.formats},
+		Reader:             &ExistsReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*SecurityGetOK)
+	success, ok := result.(*ExistsOK)
 	if ok {
 		return success, nil
 	}
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for securityGet: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for exists: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
 /*
-  SecurityPut sets the security object for the given database
+  Get gets information about the specified database
+
+  By passing in the appropriate options, you can search for
+available inventory in the system
+
 */
-func (a *Client) SecurityPut(params *SecurityPutParams) (*SecurityPutOK, error) {
+func (a *Client) Get(params *GetParams) (*GetOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewSecurityPutParams()
+		params = NewGetParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "securityPut",
+		ID:                 "get",
+		Method:             "GET",
+		PathPattern:        "/{db}",
+		ProducesMediaTypes: []string{"application/json", "text/plain"},
+		ConsumesMediaTypes: []string{"application/json", "text/plain"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &GetReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for get: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  Put creates a new database
+
+  The database name {db} must be composed by following next rules:
+Name must begin with a lowercase letter (a-z)
+* Lowercase characters (a-z)
+* Digits (0-9)
+* Any of the characters _, $, (, ), +, -, and /.
+
+If you’re familiar with Regular Expressions, the rules above could be written as
+
+*/
+func (a *Client) Put(params *PutParams) (*PutCreated, *PutAccepted, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPutParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "put",
+		Method:             "PUT",
+		PathPattern:        "/{db}",
+		ProducesMediaTypes: []string{"application/json", "text/plain"},
+		ConsumesMediaTypes: []string{"application/json", "text/plain"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &PutReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+	switch value := result.(type) {
+	case *PutCreated:
+		return value, nil, nil
+	case *PutAccepted:
+		return nil, value, nil
+	}
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for database: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  SbSecurityPut sets the security object for the given database
+*/
+func (a *Client) SbSecurityPut(params *SbSecurityPutParams) (*SbSecurityPutOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewSbSecurityPutParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "sbSecurityPut",
 		Method:             "PUT",
 		PathPattern:        "/{db}/_security",
 		ProducesMediaTypes: []string{"application/json", "text/plan"},
 		ConsumesMediaTypes: []string{"application/json", "text/plan"},
 		Schemes:            []string{"http", "https"},
 		Params:             params,
-		Reader:             &SecurityPutReader{formats: a.formats},
+		Reader:             &SbSecurityPutReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*SecurityPutOK)
+	success, ok := result.(*SbSecurityPutOK)
 	if ok {
 		return success, nil
 	}
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for securityPut: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for sbSecurityPut: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

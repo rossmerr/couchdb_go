@@ -27,19 +27,19 @@ type Client struct {
 
 // ClientService is the interface for Client methods
 type ClientService interface {
-	DesignPartitionGetDocSearch(params *DesignPartitionGetDocSearchParams) (*DesignPartitionGetDocSearchOK, error)
+	PartitionDesignDocSearch(params *PartitionDesignDocSearchParams) (*PartitionDesignDocSearchOK, error)
 
-	DesignPartitionGetDocView(params *DesignPartitionGetDocViewParams) (*DesignPartitionGetDocViewOK, error)
-
-	PartitionDocGet(params *PartitionDocGetParams) (*PartitionDocGetOK, error)
+	PartitionDesignDocView(params *PartitionDesignDocViewParams) (*PartitionDesignDocViewOK, error)
 
 	PartitionDocGetAll(params *PartitionDocGetAllParams) (*PartitionDocGetAllOK, error)
+
+	PartitionInfo(params *PartitionInfoParams) (*PartitionInfoOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
 
 /*
-  DesignPartitionGetDocSearch executes a search request against the named index in the specified design document
+  PartitionDesignDocSearch executes a search request against the named index in the specified design document
 
   *Warning*
 Search endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.
@@ -54,102 +54,68 @@ Faceting and grouping are not supported on partitioned searches, so the followin
 Do not combine the bookmark and stale options. These options constrain the choice of shard replicas to use for the response. When used together, the options might cause problems when contact is attempted with replicas that are slow or not available.
 
 */
-func (a *Client) DesignPartitionGetDocSearch(params *DesignPartitionGetDocSearchParams) (*DesignPartitionGetDocSearchOK, error) {
+func (a *Client) PartitionDesignDocSearch(params *PartitionDesignDocSearchParams) (*PartitionDesignDocSearchOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewDesignPartitionGetDocSearchParams()
+		params = NewPartitionDesignDocSearchParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "designPartitionGetDocSearch",
+		ID:                 "partitionDesignDocSearch",
 		Method:             "GET",
 		PathPattern:        "/{db}/_partition/{partition}/_design/{ddoc}/_search/{index}",
 		ProducesMediaTypes: []string{"application/json", "text/plain"},
 		ConsumesMediaTypes: []string{"application/json", "text/plain"},
 		Schemes:            []string{"http", "https"},
 		Params:             params,
-		Reader:             &DesignPartitionGetDocSearchReader{formats: a.formats},
+		Reader:             &PartitionDesignDocSearchReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*DesignPartitionGetDocSearchOK)
+	success, ok := result.(*PartitionDesignDocSearchOK)
 	if ok {
 		return success, nil
 	}
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for designPartitionGetDocSearch: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for partitionDesignDocSearch: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
 /*
-  DesignPartitionGetDocView executes the specified view function from the specified design document
+  PartitionDesignDocView executes the specified view function from the specified design document
 */
-func (a *Client) DesignPartitionGetDocView(params *DesignPartitionGetDocViewParams) (*DesignPartitionGetDocViewOK, error) {
+func (a *Client) PartitionDesignDocView(params *PartitionDesignDocViewParams) (*PartitionDesignDocViewOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewDesignPartitionGetDocViewParams()
+		params = NewPartitionDesignDocViewParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "designPartitionGetDocView",
+		ID:                 "partitionDesignDocView",
 		Method:             "GET",
 		PathPattern:        "/{db}/_partition/{partition}/_design/{ddoc}/_view/{view}",
 		ProducesMediaTypes: []string{"application/json", "text/plain"},
 		ConsumesMediaTypes: []string{"application/json", "text/plain"},
 		Schemes:            []string{"http", "https"},
 		Params:             params,
-		Reader:             &DesignPartitionGetDocViewReader{formats: a.formats},
+		Reader:             &PartitionDesignDocViewReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*DesignPartitionGetDocViewOK)
+	success, ok := result.(*PartitionDesignDocViewOK)
 	if ok {
 		return success, nil
 	}
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for designPartitionGetDocView: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-  PartitionDocGet this endpoint returns information describing the provided partition it includes document and deleted document counts along with external and active data sizes
-*/
-func (a *Client) PartitionDocGet(params *PartitionDocGetParams) (*PartitionDocGetOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewPartitionDocGetParams()
-	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "partitionDocGet",
-		Method:             "GET",
-		PathPattern:        "/{db}/_partition/{partition}",
-		ProducesMediaTypes: []string{"application/json", "text/plain"},
-		ConsumesMediaTypes: []string{"application/json", "text/plain"},
-		Schemes:            []string{"http", "https"},
-		Params:             params,
-		Reader:             &PartitionDocGetReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	})
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*PartitionDocGetOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for partitionDocGet: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for partitionDesignDocView: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -189,6 +155,40 @@ func (a *Client) PartitionDocGetAll(params *PartitionDocGetAllParams) (*Partitio
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for partitionDocGetAll: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  PartitionInfo this endpoint returns information describing the provided partition it includes document and deleted document counts along with external and active data sizes
+*/
+func (a *Client) PartitionInfo(params *PartitionInfoParams) (*PartitionInfoOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPartitionInfoParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "partitionInfo",
+		Method:             "GET",
+		PathPattern:        "/{db}/_partition/{partition}",
+		ProducesMediaTypes: []string{"application/json", "text/plain"},
+		ConsumesMediaTypes: []string{"application/json", "text/plain"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &PartitionInfoReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PartitionInfoOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for partitionInfo: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

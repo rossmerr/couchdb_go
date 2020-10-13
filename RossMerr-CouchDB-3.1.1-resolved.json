@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "*Note*\nThis is not a definitive implementation of the CouchDB API, it's missing a lot of the endpoints for server/database managment and everything for attachments and probably a few other parts.\n\nThe CouchDB API is the primary method of interfacing to a CouchDB instance. Requests are made using HTTP and requests are used to request information from the database, store new data, and perform views and formatting of the information stored within the documents.\n\nRequests to the API can be categorised by the different areas of the CouchDB system that you are accessing, and the HTTP method used to send the request. Different methods imply different operations, for example retrieval of information from the database is typically handled by the GET operation, while updates are handled by either a POST or PUT request. There are some differences between the information that must be supplied for the different methods\n\nFor nearly all operations, the submitted data, and the returned data structure, is defined within a JavaScript Object Notation (JSON) object. \n\nErrors when accessing the CouchDB API are reported using standard HTTP Status Codes.\n",
+    "description": "*Note*\nThis is not a definitive implementation of the CouchDB API, it's missing a lot of the endpoints for server/database managment and everything for attachments all COPY operations and probably a few other parts.\n\nIt also targets golang, as such the '#/definitions/Document' is intentionally left empty to generate a go `interface` type, you can then cast this to a `map[string]interface{}`.\n",
     "version": "3.1.1",
     "title": "CouchDB API",
     "license": {
@@ -45,7 +45,7 @@
         ],
         "summary": "Accessing the root of a CouchDB instance returns meta information about the instance.",
         "description": "The response is a JSON structure containing information about the server, including a welcome message and the version of the server.\n",
-        "operationId": "server",
+        "operationId": "metaInformation",
         "consumes": [
           "application/json",
           "text/plain"
@@ -75,7 +75,7 @@
         ],
         "summary": "List of running tasks, including the task type, name, status and process ID.",
         "description": "The result is a JSON array of the currently running tasks, with each task being described with a single object. Depending on operation type set of response object fields might be different.\n",
-        "operationId": "serverActiveTasks",
+        "operationId": "activeTasks",
         "consumes": [
           "application/json",
           "text/plain"
@@ -110,7 +110,7 @@
           "Server"
         ],
         "summary": "Returns a list of all the databases in the CouchDB instance.",
-        "operationId": "serveAllDBs",
+        "operationId": "allDBs",
         "consumes": [
           "application/json",
           "text/plain"
@@ -190,7 +190,7 @@
         ],
         "summary": "Returns information of a list of the specified databases in the CouchDB instance.",
         "description": "This enables you to request information about multiple databases in a single request, in place of multiple GET /{db} requests.\n",
-        "operationId": "serverDBsInfo",
+        "operationId": "DBsInfo",
         "consumes": [
           "application/json"
         ],
@@ -240,7 +240,7 @@
           "Server"
         ],
         "summary": "Returns the status of the node or cluster, per the cluster setup wizard.",
-        "operationId": "serverClusterSetup",
+        "operationId": "clusterSetupGet",
         "consumes": [
           "application/json",
           "text/plain"
@@ -289,7 +289,7 @@
           "Server"
         ],
         "summary": "Configure a node as a single (standalone) node, as part of a cluster, or finalise a cluster.",
-        "operationId": "serverPostClusterSetup",
+        "operationId": "clusterSetupPost",
         "consumes": [
           "application/json",
           "text/plain"
@@ -324,7 +324,7 @@
         ],
         "summary": "Displays the nodes that are part of the cluster as cluster_nodes.",
         "description": "The field all_nodes displays all nodes this node knows about, including the ones that are part of the cluster. The endpoint is useful when setting up a cluster, see Node Management\n",
-        "operationId": "serverMembership",
+        "operationId": "membership",
         "consumes": [
           "application/json",
           "text/plain"
@@ -364,7 +364,7 @@
           "Server"
         ],
         "summary": "Request, configure, or stop, a replication operation.",
-        "operationId": "serverReplication",
+        "operationId": "replication",
         "consumes": [
           "application/json",
           "text/plain"
@@ -430,7 +430,7 @@
         ],
         "summary": "Tests the results of Lucene analyzer tokenization on sample text.",
         "description": "*Warning*\nSearch endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.\n",
-        "operationId": "serverSearchAnalyze",
+        "operationId": "searchAnalyze",
         "consumes": [
           "application/json",
           "text/plain"
@@ -496,7 +496,7 @@
         ],
         "summary": "Confirms that the server is up, running, and ready to respond to requests.",
         "description": "If maintenance_mode is true or nolb, the endpoint will return a 404 response.\n",
-        "operationId": "serverUp",
+        "operationId": "up",
         "consumes": [
           "application/json",
           "text/plain"
@@ -534,7 +534,7 @@
         ],
         "summary": "Gets information about the specified database.",
         "description": "By passing in the appropriate options, you can search for\navailable inventory in the system\n",
-        "operationId": "dbGet",
+        "operationId": "get",
         "consumes": [
           "application/json",
           "text/plain"
@@ -574,7 +574,7 @@
         ],
         "summary": "Returns the HTTP Headers containing a minimal amount of information about the specified database.",
         "description": "Since the response body is empty, using the HEAD method is a lightweight way to check if the database exists already or not.\n",
-        "operationId": "dbHeader",
+        "operationId": "exists",
         "consumes": [
           "application/json",
           "text/plain"
@@ -611,7 +611,7 @@
         ],
         "summary": "Creates a new document in the specified database, using the supplied JSON document structure.",
         "description": "If the JSON structure includes the _id field, then the document will be created with the \nspecified document ID.\n\nIf the _id field is not specified, a new unique ID will be generated, following whatever \nUUID algorithm is configured for that server.\n",
-        "operationId": "dbPost",
+        "operationId": "post",
         "consumes": [
           "application/json",
           "text/plain"
@@ -690,7 +690,7 @@
         ],
         "summary": "Creates a new database.",
         "description": "The database name {db} must be composed by following next rules:\nName must begin with a lowercase letter (a-z)\n* Lowercase characters (a-z)\n* Digits (0-9)\n* Any of the characters _, $, (, ), +, -, and /.\n\nIf you’re familiar with Regular Expressions, the rules above could be written as \n",
-        "operationId": "dbPut",
+        "operationId": "put",
         "consumes": [
           "application/json",
           "text/plain"
@@ -771,7 +771,7 @@
         ],
         "summary": "Deletes the specified database, and all the documents and attachments contained within it.",
         "description": "*Note*\nTo avoid deleting a database, CouchDB will respond with the HTTP status code 400 when the request \nURL includes a ?rev= parameter. This suggests that one wants to delete a document but forgot to add \nthe document id to the URL.\n",
-        "operationId": "dbDelete",
+        "operationId": "delete",
         "consumes": [
           "application/json",
           "text/plain"
@@ -999,7 +999,7 @@
         ],
         "summary": "Returns the HTTP Headers containing a minimal amount of information about the specified document.",
         "description": "The method supports the same query arguments as the GET /{db}/{docid} method, \nbut only the header information (including document size, and the revision as an ETag), is returned.\n\nThe ETag header shows the current revision for the requested document, and the Content-Length \nspecifies the length of the data, if the document were requested in full.\n\nAdding any of the query arguments (see GET /{db}/{docid}), then the resulting HTTP Headers \nwill correspond to what would be returned.\n",
-        "operationId": "doc",
+        "operationId": "docInfo",
         "consumes": [
           "application/json",
           "text/plain"
@@ -1759,7 +1759,7 @@
         ],
         "summary": "The bulk document API allows you to create and update multiple documents at the same time within a single request.",
         "description": "The basic operation is similar to creating or updating a single document, except that you batch the document structure and information.\n\nWhen creating new documents the document ID (_id) is optional.\n\nFor updating existing documents, you must provide the document ID, revision information (_rev), and new document values.\n\nIn case of batch deleting documents all fields as document ID, revision information and deletion status (_deleted) are required.\n",
-        "operationId": "bulkPostAll",
+        "operationId": "docBulkPostAll",
         "consumes": [
           "application/json",
           "text/plain"
@@ -1836,7 +1836,7 @@
         ],
         "summary": "Returns a JSON structure of all of the design documents in a given database.",
         "description": "The information is returned as a JSON structure containing meta information about the return structure, including a list of all design documents and basic contents, consisting the ID, revision and key. The key is the design document’s _id.\n",
-        "operationId": "designGet",
+        "operationId": "designDocAllGet",
         "consumes": [
           "application/json",
           "text/plan"
@@ -2001,7 +2001,7 @@
         ],
         "summary": "POST _design_docs functionality supports identical parameters and behavior as specified in the GET /{db}/_design_docs",
         "description": "API but allows for the query string parameters to be supplied as keys in a JSON object in the body of the POST request.\n",
-        "operationId": "designPost",
+        "operationId": "designDocAllPost",
         "consumes": [
           "application/json",
           "text/plan"
@@ -2184,7 +2184,7 @@
         ],
         "summary": "Returns the current security object from the specified database.",
         "description": "The security object consists of two compulsory elements, admins and members, which are used to specify the list of users and/or roles that have admin and members rights to the database respectively:\n\n  - members: they can read all types of documents from the DB, and they can write (and edit) documents to the DB except for design documents.\n  - admins: they have all the privileges of members plus the privileges: write (and edit) design documents, add/remove database admins and members and set the database revisions limit. They can not create a database nor delete a database.\n\nBoth members and admins objects contain two array-typed fields:\n\n  - names: List of CouchDB user names\n  - roles: List of users roles\n\nAny additional fields in the security object are optional. The entire security object is made available to validation and other internal functions so that the database can control and limit functionality.\n\nIf both the names and roles fields of either the admins or members properties are empty arrays, or are not existent, it means the database has no admins or members.\n\nHaving no admins, only server admins (with the reserved _admin role) are able to update design document and make other admin level changes.\n\nHaving no members, any user can write regular documents (any non-design document) and read documents from the database.\n\nIf there are any member names or roles defined for a database, then only authenticated users having a matching name or role are allowed to read documents from the database (or do a GET /{db} call).\n\n*Note*\nIf the security object for a database has never been set, then the value returned will be empty.\n\nAlso note, that security objects are not regular versioned documents (that is, they are not under MVCC rules). This is a design choice to speed up authorization checks (avoids traversing a database’s documents B-Tree).\n",
-        "operationId": "securityGet",
+        "operationId": "dbSecurityGet",
         "consumes": [
           "application/json",
           "text/plan"
@@ -2225,7 +2225,7 @@
           "Database"
         ],
         "summary": "Sets the security object for the given database.",
-        "operationId": "securityPut",
+        "operationId": "sbSecurityPut",
         "consumes": [
           "application/json",
           "text/plan"
@@ -2282,7 +2282,7 @@
           "Partition"
         ],
         "summary": "This endpoint returns information describing the provided partition. It includes document and deleted document counts along with external and active data sizes.",
-        "operationId": "partitionDocGet",
+        "operationId": "partitionInfo",
         "consumes": [
           "application/json",
           "text/plain"
@@ -2490,7 +2490,7 @@
           "Partition"
         ],
         "summary": "Executes the specified view function from the specified design document.",
-        "operationId": "designPartitionGetDocView",
+        "operationId": "partitionDesignDocView",
         "consumes": [
           "application/json",
           "text/plain"
@@ -2771,7 +2771,7 @@
         ],
         "summary": "Executes a search request against the named index in the specified design document.",
         "description": "*Warning*\nSearch endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.\n\n*Note*\nYou must enable faceting before you can use the counts, drilldown, and ranges parameters.\n\n*Note*\nFaceting and grouping are not supported on partitioned searches, so the following query parameters should not be used on those requests: counts, drilldown, ranges, and group_field, group_limit, group_sort``.\n\n*Note*        \nDo not combine the bookmark and stale options. These options constrain the choice of shard replicas to use for the response. When used together, the options might cause problems when contact is attempted with replicas that are slow or not available.\n",
-        "operationId": "designPartitionGetDocSearch",
+        "operationId": "partitionDesignDocSearch",
         "consumes": [
           "application/json",
           "text/plain"
@@ -2982,7 +2982,7 @@
         ],
         "summary": "Returns the contents of the design document specified with the name of the design document and from the specified database from the URL.",
         "description": "Unless you request a specific revision, the latest revision of the document will always be returned.\n",
-        "operationId": "designGetDoc",
+        "operationId": "designDocGet",
         "consumes": [
           "application/json",
           "multipart/related",
@@ -3150,7 +3150,7 @@
           "Design Documents"
         ],
         "summary": "Returns the HTTP Headers containing a minimal amount of information about the specified design document.",
-        "operationId": "designHeadDoc",
+        "operationId": "designDocExists",
         "consumes": [
           "application/json",
           "text/plain"
@@ -3213,7 +3213,7 @@
         ],
         "summary": "The PUT method creates a new named design document, or creates a new revision of the existing design document.",
         "description": "*Note*\nthat for filters, lists, shows and updates fields objects are mapping of function name to string function source code. For views mapping is the same except that values are objects with map and reduce (optional) keys which also contains functions source code.\n",
-        "operationId": "designPuttDoc",
+        "operationId": "designDocPut",
         "consumes": [
           "application/json"
         ],
@@ -3384,7 +3384,7 @@
           "Design Documents"
         ],
         "summary": "Deletes the specified document from the database. You must supply the current (latest) revision, either by using the rev parameter to specify the revision.",
-        "operationId": "designHeadDelete",
+        "operationId": "designDocDelete",
         "consumes": [
           "application/json",
           "text/plain"
@@ -3489,7 +3489,7 @@
           "Design Documents"
         ],
         "summary": "Obtains information about the specified design document, including the index, index size and current status of the design document and associated index information.",
-        "operationId": "designHeadDocInfo",
+        "operationId": "designDocInfo",
         "consumes": [
           "application/json",
           "text/plain"
@@ -3539,7 +3539,7 @@
           "Design Documents"
         ],
         "summary": "Executes the specified view function from the specified design document.",
-        "operationId": "designGetDocView",
+        "operationId": "designDocView",
         "consumes": [
           "application/json",
           "text/plain"
@@ -3811,7 +3811,7 @@
         ],
         "summary": "Executes the specified view function from the specified design document.",
         "description": "POST view functionality supports identical parameters and behavior as specified in the GET /{db}/_design/{ddoc}/_view/{view} API but allows for the query string parameters to be supplied as keys in a JSON object in the body of the POST request.\n",
-        "operationId": "designPostDocView",
+        "operationId": "designDocViewPost",
         "consumes": [
           "application/json",
           "text/plain"
@@ -4093,7 +4093,7 @@
         ],
         "summary": "Executes a search request against the named index in the specified design document.",
         "description": "*Warning*\nSearch endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.\n\n*Note*\nYou must enable faceting before you can use the counts, drilldown, and ranges parameters.\n\n*Note*\nFaceting and grouping are not supported on partitioned searches, so the following query parameters should not be used on those requests: counts, drilldown, ranges, and group_field, group_limit, group_sort``.\n\n*Note*        \nDo not combine the bookmark and stale options. These options constrain the choice of shard replicas to use for the response. When used together, the options might cause problems when contact is attempted with replicas that are slow or not available.\n",
-        "operationId": "designGetDocSearch",
+        "operationId": "designDocSearch",
         "consumes": [
           "application/json",
           "text/plain"
@@ -4297,7 +4297,7 @@
         ],
         "summary": "Executes a search request against the named index in the specified design document.",
         "description": "*Warning*\nSearch endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.\n",
-        "operationId": "designGetDocSearchInfo",
+        "operationId": "designDocSearchInfo",
         "consumes": [
           "application/json",
           "text/plain"

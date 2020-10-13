@@ -27,103 +27,17 @@ type Client struct {
 
 // ClientService is the interface for Client methods
 type ClientService interface {
-	DbPost(params *DbPostParams) (*DbPostCreated, *DbPostAccepted, error)
-
-	Doc(params *DocParams) (*DocOK, error)
-
 	DocDelete(params *DocDeleteParams) (*DocDeleteOK, *DocDeleteAccepted, error)
 
 	DocGet(params *DocGetParams) (*DocGetOK, error)
 
+	DocInfo(params *DocInfoParams) (*DocInfoOK, error)
+
 	DocPut(params *DocPutParams) (*DocPutCreated, *DocPutAccepted, error)
 
+	Post(params *PostParams) (*PostCreated, *PostAccepted, error)
+
 	SetTransport(transport runtime.ClientTransport)
-}
-
-/*
-  DbPost creates a new document in the specified database using the supplied JSON document structure
-
-  If the JSON structure includes the _id field, then the document will be created with the
-specified document ID.
-
-If the _id field is not specified, a new unique ID will be generated, following whatever
-UUID algorithm is configured for that server.
-
-*/
-func (a *Client) DbPost(params *DbPostParams) (*DbPostCreated, *DbPostAccepted, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewDbPostParams()
-	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "dbPost",
-		Method:             "POST",
-		PathPattern:        "/{db}",
-		ProducesMediaTypes: []string{"application/json", "text/plain"},
-		ConsumesMediaTypes: []string{"application/json", "text/plain"},
-		Schemes:            []string{"http", "https"},
-		Params:             params,
-		Reader:             &DbPostReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	})
-	if err != nil {
-		return nil, nil, err
-	}
-	switch value := result.(type) {
-	case *DbPostCreated:
-		return value, nil, nil
-	case *DbPostAccepted:
-		return nil, value, nil
-	}
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for document: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-  Doc returns the HTTP headers containing a minimal amount of information about the specified document
-
-  The method supports the same query arguments as the GET /{db}/{docid} method,
-but only the header information (including document size, and the revision as an ETag), is returned.
-
-The ETag header shows the current revision for the requested document, and the Content-Length
-specifies the length of the data, if the document were requested in full.
-
-Adding any of the query arguments (see GET /{db}/{docid}), then the resulting HTTP Headers
-will correspond to what would be returned.
-
-*/
-func (a *Client) Doc(params *DocParams) (*DocOK, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewDocParams()
-	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "doc",
-		Method:             "HEAD",
-		PathPattern:        "/{db}/{docid}",
-		ProducesMediaTypes: []string{"application/json", "text/plain"},
-		ConsumesMediaTypes: []string{"application/json", "text/plain"},
-		Schemes:            []string{"http", "https"},
-		Params:             params,
-		Reader:             &DocReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	})
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*DocOK)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for doc: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
 }
 
 /*
@@ -206,6 +120,50 @@ func (a *Client) DocGet(params *DocGetParams) (*DocGetOK, error) {
 }
 
 /*
+  DocInfo returns the HTTP headers containing a minimal amount of information about the specified document
+
+  The method supports the same query arguments as the GET /{db}/{docid} method,
+but only the header information (including document size, and the revision as an ETag), is returned.
+
+The ETag header shows the current revision for the requested document, and the Content-Length
+specifies the length of the data, if the document were requested in full.
+
+Adding any of the query arguments (see GET /{db}/{docid}), then the resulting HTTP Headers
+will correspond to what would be returned.
+
+*/
+func (a *Client) DocInfo(params *DocInfoParams) (*DocInfoOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewDocInfoParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "docInfo",
+		Method:             "HEAD",
+		PathPattern:        "/{db}/{docid}",
+		ProducesMediaTypes: []string{"application/json", "text/plain"},
+		ConsumesMediaTypes: []string{"application/json", "text/plain"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &DocInfoReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*DocInfoOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for docInfo: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
   DocPut thes p u t method creates a new named document or creates a new revision of the existing document unlike the p o s t db you must specify the document ID in the request URL
 
   When updating an existing document, the current document revision must be included in the document
@@ -237,6 +195,48 @@ func (a *Client) DocPut(params *DocPutParams) (*DocPutCreated, *DocPutAccepted, 
 	case *DocPutCreated:
 		return value, nil, nil
 	case *DocPutAccepted:
+		return nil, value, nil
+	}
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for document: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  Post creates a new document in the specified database using the supplied JSON document structure
+
+  If the JSON structure includes the _id field, then the document will be created with the
+specified document ID.
+
+If the _id field is not specified, a new unique ID will be generated, following whatever
+UUID algorithm is configured for that server.
+
+*/
+func (a *Client) Post(params *PostParams) (*PostCreated, *PostAccepted, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPostParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "post",
+		Method:             "POST",
+		PathPattern:        "/{db}",
+		ProducesMediaTypes: []string{"application/json", "text/plain"},
+		ConsumesMediaTypes: []string{"application/json", "text/plain"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &PostReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+	switch value := result.(type) {
+	case *PostCreated:
+		return value, nil, nil
+	case *PostAccepted:
 		return nil, value, nil
 	}
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
