@@ -92,7 +92,7 @@ type DesignDocAllPostParams struct {
 	  Stop returning records when the specified key is reached. Optional.
 
 	*/
-	Endkey *string
+	QueryEndKey *string
 	/*EndkeyDocid
 	  Stop returning records when the specified design document ID is reached. Optional.
 
@@ -142,7 +142,7 @@ type DesignDocAllPostParams struct {
 	  Return records starting with the specified key. Optional.
 
 	*/
-	QueryStartKey *string
+	Startkey *string
 	/*StartkeyDocid
 	  Return records starting with the specified design document ID. Optional.
 
@@ -258,15 +258,15 @@ func (o *DesignDocAllPostParams) SetEndKeyDocID(endKeyDocID *string) {
 	o.EndKeyDocID = endKeyDocID
 }
 
-// WithEndkey adds the endkey to the design doc all post params
-func (o *DesignDocAllPostParams) WithEndkey(endkey *string) *DesignDocAllPostParams {
-	o.SetEndkey(endkey)
+// WithQueryEndKey adds the endkey to the design doc all post params
+func (o *DesignDocAllPostParams) WithQueryEndKey(endkey *string) *DesignDocAllPostParams {
+	o.SetQueryEndKey(endkey)
 	return o
 }
 
-// SetEndkey adds the endkey to the design doc all post params
-func (o *DesignDocAllPostParams) SetEndkey(endkey *string) {
-	o.Endkey = endkey
+// SetQueryEndKey adds the endkey to the design doc all post params
+func (o *DesignDocAllPostParams) SetQueryEndKey(endkey *string) {
+	o.QueryEndKey = endkey
 }
 
 // WithEndkeyDocid adds the endkeyDocid to the design doc all post params
@@ -368,15 +368,15 @@ func (o *DesignDocAllPostParams) SetStartKeyDocID(startKeyDocID *string) {
 	o.StartKeyDocID = startKeyDocID
 }
 
-// WithQueryStartKey adds the startkey to the design doc all post params
-func (o *DesignDocAllPostParams) WithQueryStartKey(startkey *string) *DesignDocAllPostParams {
-	o.SetQueryStartKey(startkey)
+// WithStartkey adds the startkey to the design doc all post params
+func (o *DesignDocAllPostParams) WithStartkey(startkey *string) *DesignDocAllPostParams {
+	o.SetStartkey(startkey)
 	return o
 }
 
-// SetQueryStartKey adds the startkey to the design doc all post params
-func (o *DesignDocAllPostParams) SetQueryStartKey(startkey *string) {
-	o.QueryStartKey = startkey
+// SetStartkey adds the startkey to the design doc all post params
+func (o *DesignDocAllPostParams) SetStartkey(startkey *string) {
+	o.Startkey = startkey
 }
 
 // WithStartkeyDocid adds the startkeyDocid to the design doc all post params
@@ -482,12 +482,12 @@ func (o *DesignDocAllPostParams) WriteToRequest(r runtime.ClientRequest, reg str
 
 	}
 
-	if o.Endkey != nil {
+	if o.QueryEndKey != nil {
 
 		// query param endkey
 		var qrEndkey string
-		if o.Endkey != nil {
-			qrEndkey = *o.Endkey
+		if o.QueryEndKey != nil {
+			qrEndkey = *o.QueryEndKey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {
@@ -642,12 +642,12 @@ func (o *DesignDocAllPostParams) WriteToRequest(r runtime.ClientRequest, reg str
 
 	}
 
-	if o.QueryStartKey != nil {
+	if o.Startkey != nil {
 
 		// query param startkey
 		var qrStartkey string
-		if o.QueryStartKey != nil {
-			qrStartkey = *o.QueryStartKey
+		if o.Startkey != nil {
+			qrStartkey = *o.Startkey
 		}
 		qStartkey := qrStartkey
 		if qStartkey != "" {

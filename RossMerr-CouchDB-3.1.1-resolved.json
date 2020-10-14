@@ -1132,9 +1132,10 @@
                 "type": "string",
                 "description": "Double quoted document’s revision token"
               },
-              "Transfer-Encoding": {
+              "Location": {
                 "type": "string",
-                "description": "chunked. Available if requested with query parameter open_revs"
+                "format": "uri",
+                "description": "Document URI"
               }
             },
             "schema": {
@@ -3381,6 +3382,17 @@
         "responses": {
           "200": {
             "description": "Request completed successfully",
+            "headers": {
+              "ETag": {
+                "type": "string",
+                "description": "Double quoted document’s revision token"
+              },
+              "Location": {
+                "type": "string",
+                "format": "uri",
+                "description": "Document URI"
+              }
+            },
             "schema": {
               "$ref": "#/definitions/Pagination"
             }

@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
@@ -51,6 +52,13 @@ func NewDesignDocPutOK() *DesignDocPutOK {
 Request completed successfully
 */
 type DesignDocPutOK struct {
+	/*Double quoted document’s revision token
+	 */
+	ETag string
+	/*Document URI
+	 */
+	Location strfmt.URI
+
 	Payload *models.Pagination
 }
 
@@ -63,6 +71,17 @@ func (o *DesignDocPutOK) GetPayload() *models.Pagination {
 }
 
 func (o *DesignDocPutOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	// response header ETag
+	o.ETag = response.GetHeader("ETag")
+
+	// response header Location
+
+	location, err := formats.Parse("uri", response.GetHeader("Location"))
+	if err != nil {
+		return errors.InvalidType("Location", "header", "strfmt.URI", response.GetHeader("Location"))
+	}
+	o.Location = *(location.(*strfmt.URI))
 
 	o.Payload = new(models.Pagination)
 

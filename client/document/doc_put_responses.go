@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
@@ -78,9 +79,9 @@ type DocPutCreated struct {
 	/*Double quoted document’s revision token
 	 */
 	ETag string
-	/*chunked. Available if requested with query parameter open_revs
+	/*Document URI
 	 */
-	TransferEncoding string
+	Location strfmt.URI
 
 	Payload *models.DocumentOK
 }
@@ -98,8 +99,13 @@ func (o *DocPutCreated) readResponse(response runtime.ClientResponse, consumer r
 	// response header ETag
 	o.ETag = response.GetHeader("ETag")
 
-	// response header Transfer-Encoding
-	o.TransferEncoding = response.GetHeader("Transfer-Encoding")
+	// response header Location
+
+	location, err := formats.Parse("uri", response.GetHeader("Location"))
+	if err != nil {
+		return errors.InvalidType("Location", "header", "strfmt.URI", response.GetHeader("Location"))
+	}
+	o.Location = *(location.(*strfmt.URI))
 
 	o.Payload = new(models.DocumentOK)
 
