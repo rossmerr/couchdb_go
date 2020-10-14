@@ -5070,17 +5070,13 @@
       }
     },
     "Replication": {
-      "properties": {
-        "ok": {
-          "type": "boolean",
-          "description": "Replication status"
-        }
-      },
       "allOf": [
         {
           "$ref": "#/definitions/BasicDoc"
         },
-        {}
+        {
+          "$ref": "#/definitions/OK"
+        }
       ]
     },
     "ReplicationHistory": {
