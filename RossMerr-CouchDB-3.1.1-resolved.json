@@ -4494,6 +4494,10 @@
           "description": "View functions definition.",
           "properties": {}
         },
+        "indexes": {
+          "type": "object",
+          "properties": {}
+        },
         "autoupdate": {
           "type": "boolean",
           "description": "Indicates whether to automatically build indexes defined in this design document. Default is true."

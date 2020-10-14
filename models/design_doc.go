@@ -21,6 +21,9 @@ type DesignDoc struct {
 	// Filter functions definition
 	Filters interface{} `json:"filters,omitempty"`
 
+	// indexes
+	Indexes interface{} `json:"indexes,omitempty"`
+
 	// Defines Query Server to process design document functions
 	Language string `json:"language,omitempty"`
 

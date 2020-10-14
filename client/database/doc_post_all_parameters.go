@@ -186,7 +186,7 @@ type DocPostAllParams struct {
 	  Return records starting with the specified key.
 
 	*/
-	QueryStartKey *string
+	Startkey *string
 	/*StartkeyDocid
 	  Return records starting with the specified document ID. Ignored if startkey is not set.
 
@@ -506,15 +506,15 @@ func (o *DocPostAllParams) SetStartKeyDocID(startKeyDocID *string) {
 	o.StartKeyDocID = startKeyDocID
 }
 
-// WithQueryStartKey adds the startkey to the doc post all params
-func (o *DocPostAllParams) WithQueryStartKey(startkey *string) *DocPostAllParams {
-	o.SetQueryStartKey(startkey)
+// WithStartkey adds the startkey to the doc post all params
+func (o *DocPostAllParams) WithStartkey(startkey *string) *DocPostAllParams {
+	o.SetStartkey(startkey)
 	return o
 }
 
-// SetQueryStartKey adds the startkey to the doc post all params
-func (o *DocPostAllParams) SetQueryStartKey(startkey *string) {
-	o.QueryStartKey = startkey
+// SetStartkey adds the startkey to the doc post all params
+func (o *DocPostAllParams) SetStartkey(startkey *string) {
+	o.Startkey = startkey
 }
 
 // WithStartkeyDocid adds the startkeyDocid to the doc post all params
@@ -923,12 +923,12 @@ func (o *DocPostAllParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 
 	}
 
-	if o.QueryStartKey != nil {
+	if o.Startkey != nil {
 
 		// query param startkey
 		var qrStartkey string
-		if o.QueryStartKey != nil {
-			qrStartkey = *o.QueryStartKey
+		if o.Startkey != nil {
+			qrStartkey = *o.Startkey
 		}
 		qStartkey := qrStartkey
 		if qStartkey != "" {
