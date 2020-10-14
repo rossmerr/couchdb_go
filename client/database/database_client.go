@@ -27,6 +27,10 @@ type Client struct {
 
 // ClientService is the interface for Client methods
 type ClientService interface {
+	BulkDocs(params *BulkDocsParams) (*BulkDocsCreated, error)
+
+	BulkGet(params *BulkGetParams) (*BulkGetCreated, error)
+
 	DbSecurityGet(params *DbSecurityGetParams) (*DbSecurityGetOK, error)
 
 	Delete(params *DeleteParams) (*DeleteOK, *DeleteAccepted, error)
@@ -34,8 +38,6 @@ type ClientService interface {
 	DesignDocAllGet(params *DesignDocAllGetParams) (*DesignDocAllGetOK, error)
 
 	DesignDocAllPost(params *DesignDocAllPostParams) (*DesignDocAllPostOK, error)
-
-	DocBulkPostAll(params *DocBulkPostAllParams) (*DocBulkPostAllCreated, error)
 
 	DocGetAll(params *DocGetAllParams) (*DocGetAllOK, error)
 
@@ -50,6 +52,86 @@ type ClientService interface {
 	SbSecurityPut(params *SbSecurityPutParams) (*SbSecurityPutOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
+}
+
+/*
+  BulkDocs thes bulk document API allows you to create and update multiple documents at the same time within a single request
+
+  The basic operation is similar to creating or updating a single document, except that you batch the document structure and information.
+
+When creating new documents the document ID (_id) is optional.
+
+For updating existing documents, you must provide the document ID, revision information (_rev), and new document values.
+
+In case of batch deleting documents all fields as document ID, revision information and deletion status (_deleted) are required.
+
+*/
+func (a *Client) BulkDocs(params *BulkDocsParams) (*BulkDocsCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewBulkDocsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "bulkDocs",
+		Method:             "POST",
+		PathPattern:        "/{db}/_bulk_docs",
+		ProducesMediaTypes: []string{"application/json", "text/plain"},
+		ConsumesMediaTypes: []string{"application/json", "text/plain"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &BulkDocsReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*BulkDocsCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for bulkDocs: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  BulkGet this method can be called to query several documents in bulk
+
+  It is well suited for fetching a specific revision of documents, as replicators do for example, or for getting revision history.
+
+*/
+func (a *Client) BulkGet(params *BulkGetParams) (*BulkGetCreated, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewBulkGetParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "bulkGet",
+		Method:             "POST",
+		PathPattern:        "/{db}/_bulk_get",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json", "multipart/mixed", "multipart/related"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &BulkGetReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*BulkGetCreated)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for bulkGet: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
 }
 
 /*
@@ -224,49 +306,6 @@ func (a *Client) DesignDocAllPost(params *DesignDocAllPostParams) (*DesignDocAll
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for designDocAllPost: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
-  DocBulkPostAll thes bulk document API allows you to create and update multiple documents at the same time within a single request
-
-  The basic operation is similar to creating or updating a single document, except that you batch the document structure and information.
-
-When creating new documents the document ID (_id) is optional.
-
-For updating existing documents, you must provide the document ID, revision information (_rev), and new document values.
-
-In case of batch deleting documents all fields as document ID, revision information and deletion status (_deleted) are required.
-
-*/
-func (a *Client) DocBulkPostAll(params *DocBulkPostAllParams) (*DocBulkPostAllCreated, error) {
-	// TODO: Validate the params before sending
-	if params == nil {
-		params = NewDocBulkPostAllParams()
-	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "docBulkPostAll",
-		Method:             "POST",
-		PathPattern:        "/{db}/_bulk_get",
-		ProducesMediaTypes: []string{"application/json", "text/plain"},
-		ConsumesMediaTypes: []string{"application/json", "text/plain"},
-		Schemes:            []string{"http", "https"},
-		Params:             params,
-		Reader:             &DocBulkPostAllReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	})
-	if err != nil {
-		return nil, err
-	}
-	success, ok := result.(*DocBulkPostAllCreated)
-	if ok {
-		return success, nil
-	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for docBulkPostAll: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

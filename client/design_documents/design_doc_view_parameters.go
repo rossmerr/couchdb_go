@@ -105,7 +105,7 @@ type DesignDocViewParams struct {
 	  Stop returning records when the specified key is reached.
 
 	*/
-	QueryEndKey *string
+	Endkey *string
 	/*EndkeyDocid
 	  Stop returning records when the specified document ID is reached. Ignored if endkey is not set.
 
@@ -340,15 +340,15 @@ func (o *DesignDocViewParams) SetEndKeyDocID(endKeyDocID *string) {
 	o.EndKeyDocID = endKeyDocID
 }
 
-// WithQueryEndKey adds the endkey to the design doc view params
-func (o *DesignDocViewParams) WithQueryEndKey(endkey *string) *DesignDocViewParams {
-	o.SetQueryEndKey(endkey)
+// WithEndkey adds the endkey to the design doc view params
+func (o *DesignDocViewParams) WithEndkey(endkey *string) *DesignDocViewParams {
+	o.SetEndkey(endkey)
 	return o
 }
 
-// SetQueryEndKey adds the endkey to the design doc view params
-func (o *DesignDocViewParams) SetQueryEndKey(endkey *string) {
-	o.QueryEndKey = endkey
+// SetEndkey adds the endkey to the design doc view params
+func (o *DesignDocViewParams) SetEndkey(endkey *string) {
+	o.Endkey = endkey
 }
 
 // WithEndkeyDocid adds the endkeyDocid to the design doc view params
@@ -696,12 +696,12 @@ func (o *DesignDocViewParams) WriteToRequest(r runtime.ClientRequest, reg strfmt
 
 	}
 
-	if o.QueryEndKey != nil {
+	if o.Endkey != nil {
 
 		// query param endkey
 		var qrEndkey string
-		if o.QueryEndKey != nil {
-			qrEndkey = *o.QueryEndKey
+		if o.Endkey != nil {
+			qrEndkey = *o.Endkey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {

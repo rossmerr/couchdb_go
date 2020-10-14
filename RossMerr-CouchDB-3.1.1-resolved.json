@@ -1758,9 +1758,96 @@
         "tags": [
           "Database"
         ],
+        "summary": "This method can be called to query several documents in bulk.",
+        "description": "It is well suited for fetching a specific revision of documents, as replicators do for example, or for getting revision history.\n",
+        "operationId": "bulkGet",
+        "consumes": [
+          "application/json",
+          "multipart/related",
+          "multipart/mixed"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "List of document objects, with id, and optionally rev and atts_since",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "docs": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Document"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "name": "revs",
+            "in": "query",
+            "description": "Give the revisions history",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Request completed successfully",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Results"
+              }
+            }
+          },
+          "400": {
+            "description": "The request provided invalid JSON data or invalid query parameter",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Read permission required",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Requested database not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "415": {
+            "description": "Bad Content-Type value",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/{db}/_bulk_docs": {
+      "post": {
+        "tags": [
+          "Database"
+        ],
         "summary": "The bulk document API allows you to create and update multiple documents at the same time within a single request.",
         "description": "The basic operation is similar to creating or updating a single document, except that you batch the document structure and information.\n\nWhen creating new documents the document ID (_id) is optional.\n\nFor updating existing documents, you must provide the document ID, revision information (_rev), and new document values.\n\nIn case of batch deleting documents all fields as document ID, revision information and deletion status (_deleted) are required.\n",
-        "operationId": "docBulkPostAll",
+        "operationId": "bulkDocs",
         "consumes": [
           "application/json",
           "text/plain"
@@ -1788,20 +1875,11 @@
                 "docs": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "description": "Document ID"
-                      },
-                      "rev": {
-                        "type": "string",
-                        "description": "Revision MVCC token"
-                      }
-                    }
+                    "$ref": "#/definitions/Document"
                   }
                 }
-              }
+              },
+              "description": "List of documents objects"
             }
           }
         ],
@@ -1811,7 +1889,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/Results"
+                "$ref": "#/definitions/BulkResponse"
               }
             }
           },
@@ -4686,6 +4764,16 @@
     "Document": {
       "type": "object",
       "additionalProperties": {}
+    },
+    "BulkResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/DocumentOK"
+        },
+        {
+          "$ref": "#/definitions/ErrorResponse"
+        }
+      ]
     },
     "DocumentOK": {
       "allOf": [
