@@ -4956,6 +4956,14 @@
           "type": "boolean",
           "description": "Creates the target database. Required administrator’s privileges on target server."
         },
+        "create_target_params": {
+          "type": "object",
+          "properties": {
+            "partitioned": {
+              "type": "boolean"
+            }
+          }
+        },
         "doc_ids": {
           "type": "array",
           "description": "Array of document IDs to be synchronized",
@@ -4976,40 +4984,44 @@
           "description": "Address of a proxy server through which replication to the target should occur (protocol can be “http” or “socks5”)"
         },
         "source": {
-          "type": "string",
-          "description": "Fully qualified source database URL or an object which contains the full URL of the source database with additional parameters like headers. Eg: ‘http://example.com/source_db_name’ \n"
+          "description": "Fully qualified source object which contains the full URL of the source database with additional parameters like headers. Eg: ‘http://example.com/source_db_name’ \n",
+          "$ref": "#/definitions/Request"
         },
         "target": {
+          "description": "Fully qualified target object which contains the full URL of the target database with additional parameters like headers. Eg: ‘http://example.com/target_db_name’ \n",
+          "$ref": "#/definitions/Request"
+        }
+      }
+    },
+    "Request": {
+      "type": "object",
+      "properties": {
+        "headers": {
+          "type": "object",
+          "properties": {
+            "Authorization": {
+              "type": "string"
+            }
+          }
+        },
+        "url": {
           "type": "string",
-          "description": "Fully qualified target database URL or an object which contains the full URL of the target database with additional parameters like headers. Eg: ‘http://example.com/target_db_name’ \n"
+          "format": "uri"
         }
       }
     },
     "Replication": {
       "type": "object",
       "properties": {
-        "history": {
-          "type": "array",
-          "description": "Replication history",
-          "items": {
-            "$ref": "#/definitions/ReplicationHistory"
-          }
+        "id": {
+          "type": "string"
+        },
+        "rev": {
+          "type": "string"
         },
         "ok": {
           "type": "boolean",
           "description": "Replication status"
-        },
-        "replication_id_version": {
-          "type": "integer",
-          "description": "Replication protocol version"
-        },
-        "session_id": {
-          "type": "string",
-          "description": "Unique session ID"
-        },
-        "source_last_seq": {
-          "type": "integer",
-          "description": "Last sequence number read from source database"
         }
       }
     },

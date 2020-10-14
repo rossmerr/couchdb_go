@@ -6,6 +6,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -24,22 +25,25 @@ type Replicate struct {
 	// Creates the target database. Required administrator’s privileges on target server.
 	CreateTarget bool `json:"create_target,omitempty"`
 
+	// create target params
+	CreateTargetParams *ReplicateCreateTargetParams `json:"create_target_params,omitempty"`
+
 	// Array of document IDs to be synchronized
 	DocIds []string `json:"doc_ids"`
 
 	// The name of a filter function.
 	Filter string `json:"filter,omitempty"`
 
-	// Fully qualified source database URL or an object which contains the full URL of the source database with additional parameters like headers. Eg: ‘http://example.com/source_db_name’
+	// Fully qualified source object which contains the full URL of the source database with additional parameters like headers. Eg: ‘http://example.com/source_db_name’
 	//
-	Source string `json:"source,omitempty"`
+	Source *Request `json:"source,omitempty"`
 
 	// Address of a proxy server through which replication from the source should occur (protocol can be “http” or “socks5”)
 	SourceProxy string `json:"source_proxy,omitempty"`
 
-	// Fully qualified target database URL or an object which contains the full URL of the target database with additional parameters like headers. Eg: ‘http://example.com/target_db_name’
+	// Fully qualified target object which contains the full URL of the target database with additional parameters like headers. Eg: ‘http://example.com/target_db_name’
 	//
-	Target string `json:"target,omitempty"`
+	Target *Request `json:"target,omitempty"`
 
 	// Address of a proxy server through which replication to the target should occur (protocol can be “http” or “socks5”)
 	TargetProxy string `json:"target_proxy,omitempty"`
@@ -47,6 +51,77 @@ type Replicate struct {
 
 // Validate validates this replicate
 func (m *Replicate) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateCreateTargetParams(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSource(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTarget(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Replicate) validateCreateTargetParams(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.CreateTargetParams) { // not required
+		return nil
+	}
+
+	if m.CreateTargetParams != nil {
+		if err := m.CreateTargetParams.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("create_target_params")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Replicate) validateSource(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Source) { // not required
+		return nil
+	}
+
+	if m.Source != nil {
+		if err := m.Source.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("source")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Replicate) validateTarget(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Target) { // not required
+		return nil
+	}
+
+	if m.Target != nil {
+		if err := m.Target.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("target")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -61,6 +136,38 @@ func (m *Replicate) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Replicate) UnmarshalBinary(b []byte) error {
 	var res Replicate
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// ReplicateCreateTargetParams replicate create target params
+//
+// swagger:model ReplicateCreateTargetParams
+type ReplicateCreateTargetParams struct {
+
+	// partitioned
+	Partitioned bool `json:"partitioned,omitempty"`
+}
+
+// Validate validates this replicate create target params
+func (m *ReplicateCreateTargetParams) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *ReplicateCreateTargetParams) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *ReplicateCreateTargetParams) UnmarshalBinary(b []byte) error {
+	var res ReplicateCreateTargetParams
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
