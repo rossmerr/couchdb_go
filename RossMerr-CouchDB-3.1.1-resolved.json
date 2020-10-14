@@ -1807,10 +1807,7 @@
           "201": {
             "description": "Request completed successfully",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Results"
-              }
+              "$ref": "#/definitions/Results"
             }
           },
           "400": {

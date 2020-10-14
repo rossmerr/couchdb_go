@@ -72,21 +72,23 @@ func NewBulkGetCreated() *BulkGetCreated {
 Request completed successfully
 */
 type BulkGetCreated struct {
-	Payload []*models.Results
+	Payload *models.Results
 }
 
 func (o *BulkGetCreated) Error() string {
 	return fmt.Sprintf("[POST /{db}/_bulk_get][%d] bulkGetCreated  %+v", 201, o.Payload)
 }
 
-func (o *BulkGetCreated) GetPayload() []*models.Results {
+func (o *BulkGetCreated) GetPayload() *models.Results {
 	return o.Payload
 }
 
 func (o *BulkGetCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(models.Results)
+
 	// response payload
-	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 
