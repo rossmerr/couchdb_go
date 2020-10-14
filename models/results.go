@@ -157,11 +157,7 @@ type ResultsResultsItems0DocsItems0 struct {
 	Error struct {
 		ErrorResponse
 
-		// id
-		ID string `json:"id,omitempty"`
-
-		// rev
-		Rev string `json:"rev,omitempty"`
+		BasicDoc
 	} `json:"error,omitempty"`
 
 	// ok

@@ -19,7 +19,7 @@ import (
 type All struct {
 
 	// docs
-	Docs []*AllDocsItems0 `json:"docs"`
+	Docs []*BasicDoc `json:"docs"`
 }
 
 // Validate validates this all
@@ -72,41 +72,6 @@ func (m *All) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *All) UnmarshalBinary(b []byte) error {
 	var res All
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// AllDocsItems0 all docs items0
-//
-// swagger:model AllDocsItems0
-type AllDocsItems0 struct {
-
-	// id
-	ID string `json:"id,omitempty"`
-
-	// rev
-	Rev string `json:"rev,omitempty"`
-}
-
-// Validate validates this all docs items0
-func (m *AllDocsItems0) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *AllDocsItems0) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *AllDocsItems0) UnmarshalBinary(b []byte) error {
-	var res AllDocsItems0
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

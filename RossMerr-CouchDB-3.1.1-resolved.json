@@ -1789,7 +1789,7 @@
                 "docs": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/definitions/Document"
+                    "$ref": "#/definitions/BasicDoc"
                   }
                 }
               }
@@ -4642,15 +4642,7 @@
         "docs": {
           "type": "array",
           "items": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "rev": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/BasicDoc"
           }
         }
       }
@@ -4681,15 +4673,7 @@
                           "$ref": "#/definitions/ErrorResponse"
                         },
                         {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "string"
-                            },
-                            "rev": {
-                              "type": "string"
-                            }
-                          }
+                          "$ref": "#/definitions/BasicDoc"
                         }
                       ]
                     }
@@ -4781,17 +4765,7 @@
           "$ref": "#/definitions/OK"
         },
         {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string",
-              "description": "Document ID"
-            },
-            "rev": {
-              "type": "string",
-              "description": "Revision MVCC token"
-            }
-          }
+          "$ref": "#/definitions/BasicDoc"
         }
       ]
     },
@@ -5099,19 +5073,18 @@
       }
     },
     "Replication": {
-      "type": "object",
       "properties": {
-        "id": {
-          "type": "string"
-        },
-        "rev": {
-          "type": "string"
-        },
         "ok": {
           "type": "boolean",
           "description": "Replication status"
         }
-      }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/BasicDoc"
+        },
+        {}
+      ]
     },
     "ReplicationHistory": {
       "type": "object",
@@ -5203,6 +5176,17 @@
         }
       },
       "description": "they can read all types of documents from the DB, and they can write (and edit) documents to the DB except for design documents."
+    },
+    "BasicDoc": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "rev": {
+          "type": "string"
+        }
+      }
     }
   }
 }

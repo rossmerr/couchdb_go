@@ -17,11 +17,7 @@ import (
 type DocumentOK struct {
 	OK
 
-	// Document ID
-	ID string `json:"id,omitempty"`
-
-	// Revision MVCC token
-	Rev string `json:"rev,omitempty"`
+	BasicDoc
 }
 
 // UnmarshalJSON unmarshals this object from a JSON structure
@@ -34,18 +30,11 @@ func (m *DocumentOK) UnmarshalJSON(raw []byte) error {
 	m.OK = aO0
 
 	// AO1
-	var dataAO1 struct {
-		ID string `json:"id,omitempty"`
-
-		Rev string `json:"rev,omitempty"`
-	}
-	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
+	var aO1 BasicDoc
+	if err := swag.ReadJSON(raw, &aO1); err != nil {
 		return err
 	}
-
-	m.ID = dataAO1.ID
-
-	m.Rev = dataAO1.Rev
+	m.BasicDoc = aO1
 
 	return nil
 }
@@ -59,21 +48,12 @@ func (m DocumentOK) MarshalJSON() ([]byte, error) {
 		return nil, err
 	}
 	_parts = append(_parts, aO0)
-	var dataAO1 struct {
-		ID string `json:"id,omitempty"`
 
-		Rev string `json:"rev,omitempty"`
+	aO1, err := swag.WriteJSON(m.BasicDoc)
+	if err != nil {
+		return nil, err
 	}
-
-	dataAO1.ID = m.ID
-
-	dataAO1.Rev = m.Rev
-
-	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
-	if errAO1 != nil {
-		return nil, errAO1
-	}
-	_parts = append(_parts, jsonDataAO1)
+	_parts = append(_parts, aO1)
 	return swag.ConcatJSON(_parts...), nil
 }
 
@@ -83,6 +63,10 @@ func (m *DocumentOK) Validate(formats strfmt.Registry) error {
 
 	// validation for a type composition with OK
 	if err := m.OK.Validate(formats); err != nil {
+		res = append(res, err)
+	}
+	// validation for a type composition with BasicDoc
+	if err := m.BasicDoc.Validate(formats); err != nil {
 		res = append(res, err)
 	}
 

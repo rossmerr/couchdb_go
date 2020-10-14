@@ -10,19 +10,25 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// Replication replication
+// BasicDoc basic doc
 //
-// swagger:model Replication
-type Replication struct {
+// swagger:model BasicDoc
+type BasicDoc struct {
+
+	// id
+	ID string `json:"id,omitempty"`
+
+	// rev
+	Rev string `json:"rev,omitempty"`
 }
 
-// Validate validates this replication
-func (m *Replication) Validate(formats strfmt.Registry) error {
+// Validate validates this basic doc
+func (m *BasicDoc) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *Replication) MarshalBinary() ([]byte, error) {
+func (m *BasicDoc) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -30,8 +36,8 @@ func (m *Replication) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Replication) UnmarshalBinary(b []byte) error {
-	var res Replication
+func (m *BasicDoc) UnmarshalBinary(b []byte) error {
+	var res BasicDoc
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

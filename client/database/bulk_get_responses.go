@@ -8,7 +8,9 @@ package database
 import (
 	"fmt"
 	"io"
+	"strconv"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -229,11 +231,45 @@ swagger:model BulkGetBody
 type BulkGetBody struct {
 
 	// docs
-	Docs []models.Document `json:"docs"`
+	Docs []*models.BasicDoc `json:"docs"`
 }
 
 // Validate validates this bulk get body
 func (o *BulkGetBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateDocs(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *BulkGetBody) validateDocs(formats strfmt.Registry) error {
+
+	if swag.IsZero(o.Docs) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(o.Docs); i++ {
+		if swag.IsZero(o.Docs[i]) { // not required
+			continue
+		}
+
+		if o.Docs[i] != nil {
+			if err := o.Docs[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("body" + "." + "docs" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
