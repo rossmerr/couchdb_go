@@ -63,6 +63,11 @@ for the design doc put operation typically these are written to a http.Request
 */
 type DesignDocPutParams struct {
 
+	/*IfMatch
+	  Document’s revision. Alternative to rev query parameter or document key. Optional
+
+	*/
+	IfMatch *string
 	/*AttEncodingInfo
 	  Include encoding information in attachment stubs if include_docs is true and the particular attachment is compressed. Ignored if include_docs isn’t true. Default is false.
 
@@ -120,6 +125,11 @@ type DesignDocPutParams struct {
 
 	*/
 	Reduce *bool
+	/*Rev
+	  Document’s revision if updating an existing document. Alternative to If-Match header or document key. Optional
+
+	*/
+	Rev *string
 	/*Skip
 	  Skip this number of records before starting to return the results. Default is 0.
 
@@ -199,6 +209,17 @@ func (o *DesignDocPutParams) WithHTTPClient(client *http.Client) *DesignDocPutPa
 // SetHTTPClient adds the HTTPClient to the design doc put params
 func (o *DesignDocPutParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
+}
+
+// WithIfMatch adds the ifMatch to the design doc put params
+func (o *DesignDocPutParams) WithIfMatch(ifMatch *string) *DesignDocPutParams {
+	o.SetIfMatch(ifMatch)
+	return o
+}
+
+// SetIfMatch adds the ifMatch to the design doc put params
+func (o *DesignDocPutParams) SetIfMatch(ifMatch *string) {
+	o.IfMatch = ifMatch
 }
 
 // WithAttEncodingInfo adds the attEncodingInfo to the design doc put params
@@ -333,6 +354,17 @@ func (o *DesignDocPutParams) SetReduce(reduce *bool) {
 	o.Reduce = reduce
 }
 
+// WithRev adds the rev to the design doc put params
+func (o *DesignDocPutParams) WithRev(rev *string) *DesignDocPutParams {
+	o.SetRev(rev)
+	return o
+}
+
+// SetRev adds the rev to the design doc put params
+func (o *DesignDocPutParams) SetRev(rev *string) {
+	o.Rev = rev
+}
+
 // WithSkip adds the skip to the design doc put params
 func (o *DesignDocPutParams) WithSkip(skip *int64) *DesignDocPutParams {
 	o.SetSkip(skip)
@@ -428,6 +460,15 @@ func (o *DesignDocPutParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		return err
 	}
 	var res []error
+
+	if o.IfMatch != nil {
+
+		// header param If-Match
+		if err := r.SetHeaderParam("If-Match", *o.IfMatch); err != nil {
+			return err
+		}
+
+	}
 
 	if o.AttEncodingInfo != nil {
 
@@ -583,6 +624,22 @@ func (o *DesignDocPutParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		qReduce := swag.FormatBool(qrReduce)
 		if qReduce != "" {
 			if err := r.SetQueryParam("reduce", qReduce); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.Rev != nil {
+
+		// query param rev
+		var qrRev string
+		if o.Rev != nil {
+			qrRev = *o.Rev
+		}
+		qRev := qrRev
+		if qRev != "" {
+			if err := r.SetQueryParam("rev", qRev); err != nil {
 				return err
 			}
 		}

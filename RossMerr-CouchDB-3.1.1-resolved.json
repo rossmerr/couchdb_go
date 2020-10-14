@@ -3245,6 +3245,20 @@
             }
           },
           {
+            "name": "If-Match",
+            "in": "header",
+            "description": "Document’s revision. Alternative to rev query parameter or document key. Optional",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "rev",
+            "in": "query",
+            "description": "Document’s revision if updating an existing document. Alternative to If-Match header or document key. Optional",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "conflicts",
             "in": "query",
             "description": "Include conflicts information in response. Ignored if include_docs isn’t true. Default is false.",

@@ -196,7 +196,7 @@ type PartitionDesignDocViewParams struct {
 	  Return records starting with the specified key.
 
 	*/
-	QueryStartKey *string
+	Startkey *string
 	/*StartkeyDocid
 	  Return records starting with the specified document ID. Ignored if startkey is not set.
 
@@ -543,15 +543,15 @@ func (o *PartitionDesignDocViewParams) SetStartKeyDocID(startKeyDocID *string) {
 	o.StartKeyDocID = startKeyDocID
 }
 
-// WithQueryStartKey adds the startkey to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithQueryStartKey(startkey *string) *PartitionDesignDocViewParams {
-	o.SetQueryStartKey(startkey)
+// WithStartkey adds the startkey to the partition design doc view params
+func (o *PartitionDesignDocViewParams) WithStartkey(startkey *string) *PartitionDesignDocViewParams {
+	o.SetStartkey(startkey)
 	return o
 }
 
-// SetQueryStartKey adds the startkey to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetQueryStartKey(startkey *string) {
-	o.QueryStartKey = startkey
+// SetStartkey adds the startkey to the partition design doc view params
+func (o *PartitionDesignDocViewParams) SetStartkey(startkey *string) {
+	o.Startkey = startkey
 }
 
 // WithStartkeyDocid adds the startkeyDocid to the partition design doc view params
@@ -981,12 +981,12 @@ func (o *PartitionDesignDocViewParams) WriteToRequest(r runtime.ClientRequest, r
 
 	}
 
-	if o.QueryStartKey != nil {
+	if o.Startkey != nil {
 
 		// query param startkey
 		var qrStartkey string
-		if o.QueryStartKey != nil {
-			qrStartkey = *o.QueryStartKey
+		if o.Startkey != nil {
+			qrStartkey = *o.Startkey
 		}
 		qStartkey := qrStartkey
 		if qStartkey != "" {
