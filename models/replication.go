@@ -18,19 +18,19 @@ import (
 // swagger:model Replication
 type Replication struct {
 
-	// history
+	// Replication history
 	History []*ReplicationHistory `json:"history"`
 
-	// ok
+	// Replication status
 	Ok bool `json:"ok,omitempty"`
 
-	// replication id version
+	// Replication protocol version
 	ReplicationIDVersion int64 `json:"replication_id_version,omitempty"`
 
-	// session id
+	// Unique session ID
 	SessionID string `json:"session_id,omitempty"`
 
-	// source last seq
+	// Last sequence number read from source database
 	SourceLastSeq int64 `json:"source_last_seq,omitempty"`
 }
 

@@ -393,7 +393,7 @@
           "202": {
             "description": "Continuous replication request has been accepted",
             "schema": {
-              "$ref": "#/definitions/OK"
+              "$ref": "#/definitions/Replication"
             }
           },
           "400": {
@@ -4990,21 +4990,26 @@
       "properties": {
         "history": {
           "type": "array",
+          "description": "Replication history",
           "items": {
             "$ref": "#/definitions/ReplicationHistory"
           }
         },
         "ok": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Replication status"
         },
         "replication_id_version": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Replication protocol version"
         },
         "session_id": {
-          "type": "string"
+          "type": "string",
+          "description": "Unique session ID"
         },
         "source_last_seq": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Last sequence number read from source database"
         }
       }
     },

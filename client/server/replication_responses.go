@@ -108,20 +108,20 @@ func NewReplicationAccepted() *ReplicationAccepted {
 Continuous replication request has been accepted
 */
 type ReplicationAccepted struct {
-	Payload *models.OK
+	Payload *models.Replication
 }
 
 func (o *ReplicationAccepted) Error() string {
 	return fmt.Sprintf("[POST /_replicate][%d] replicationAccepted  %+v", 202, o.Payload)
 }
 
-func (o *ReplicationAccepted) GetPayload() *models.OK {
+func (o *ReplicationAccepted) GetPayload() *models.Replication {
 	return o.Payload
 }
 
 func (o *ReplicationAccepted) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OK)
+	o.Payload = new(models.Replication)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
