@@ -1810,7 +1810,7 @@
           }
         ],
         "responses": {
-          "201": {
+          "200": {
             "description": "Request completed successfully",
             "schema": {
               "$ref": "#/definitions/Results"

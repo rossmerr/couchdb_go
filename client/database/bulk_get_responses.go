@@ -26,8 +26,8 @@ type BulkGetReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *BulkGetReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-	case 201:
-		result := NewBulkGetCreated()
+	case 200:
+		result := NewBulkGetOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -62,28 +62,28 @@ func (o *BulkGetReader) ReadResponse(response runtime.ClientResponse, consumer r
 	}
 }
 
-// NewBulkGetCreated creates a BulkGetCreated with default headers values
-func NewBulkGetCreated() *BulkGetCreated {
-	return &BulkGetCreated{}
+// NewBulkGetOK creates a BulkGetOK with default headers values
+func NewBulkGetOK() *BulkGetOK {
+	return &BulkGetOK{}
 }
 
-/*BulkGetCreated handles this case with default header values.
+/*BulkGetOK handles this case with default header values.
 
 Request completed successfully
 */
-type BulkGetCreated struct {
+type BulkGetOK struct {
 	Payload *models.Results
 }
 
-func (o *BulkGetCreated) Error() string {
-	return fmt.Sprintf("[POST /{db}/_bulk_get][%d] bulkGetCreated  %+v", 201, o.Payload)
+func (o *BulkGetOK) Error() string {
+	return fmt.Sprintf("[POST /{db}/_bulk_get][%d] bulkGetOK  %+v", 200, o.Payload)
 }
 
-func (o *BulkGetCreated) GetPayload() *models.Results {
+func (o *BulkGetOK) GetPayload() *models.Results {
 	return o.Payload
 }
 
-func (o *BulkGetCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *BulkGetOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	o.Payload = new(models.Results)
 
