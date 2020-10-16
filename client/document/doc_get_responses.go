@@ -35,6 +35,12 @@ func (o *DocGetReader) ReadResponse(response runtime.ClientResponse, consumer ru
 			return nil, err
 		}
 		return nil, result
+	case 400:
+		result := NewDocGetBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 401:
 		result := NewDocGetUnauthorized()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -114,6 +120,39 @@ func (o *DocGetNotModified) Error() string {
 }
 
 func (o *DocGetNotModified) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
+// NewDocGetBadRequest creates a DocGetBadRequest with default headers values
+func NewDocGetBadRequest() *DocGetBadRequest {
+	return &DocGetBadRequest{}
+}
+
+/*DocGetBadRequest handles this case with default header values.
+
+The format of the request or revision was invalid
+*/
+type DocGetBadRequest struct {
+	Payload *models.ErrorResponse
+}
+
+func (o *DocGetBadRequest) Error() string {
+	return fmt.Sprintf("[GET /{db}/{docid}][%d] docGetBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *DocGetBadRequest) GetPayload() *models.ErrorResponse {
+	return o.Payload
+}
+
+func (o *DocGetBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.ErrorResponse)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

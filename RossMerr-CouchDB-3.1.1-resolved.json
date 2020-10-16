@@ -979,6 +979,12 @@
           "304": {
             "description": "Document wasn’t modified since specified revision"
           },
+          "400": {
+            "description": "The format of the request or revision was invalid",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
           "401": {
             "description": "Read privilege required",
             "schema": {
@@ -3201,11 +3207,17 @@
               }
             },
             "schema": {
-              "$ref": "#/definitions/Document"
+              "$ref": "#/definitions/DesignDoc"
             }
           },
           "304": {
             "description": "Document wasn’t modified since specified revision"
+          },
+          "400": {
+            "description": "The format of the request or revision was invalid",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           },
           "401": {
             "description": "Read privilege required",
@@ -3455,8 +3467,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Request completed successfully",
+          "201": {
+            "description": "Document created and stored on disk",
             "headers": {
               "ETag": {
                 "type": "string",
@@ -3469,11 +3481,46 @@
               }
             },
             "schema": {
-              "$ref": "#/definitions/Pagination"
+              "$ref": "#/definitions/DocumentOK"
+            }
+          },
+          "202": {
+            "description": "Document data accepted, but not yet stored on disk",
+            "headers": {
+              "ETag": {
+                "type": "string",
+                "description": "Double quoted document’s revision token"
+              },
+              "Location": {
+                "type": "string",
+                "format": "uri",
+                "description": "Document URI"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/DocumentOK"
+            }
+          },
+          "400": {
+            "description": "Invalid request body or parameters",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Write privileges required",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "404": {
-            "description": "Requested database not found",
+            "description": "Specified database or document ID doesn’t exists",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "409": {
+            "description": "Document with the specified ID already exists or specified revision is not latest for target document",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }

@@ -35,7 +35,7 @@ type ClientService interface {
 
 	DesignDocInfo(params *DesignDocInfoParams) (*DesignDocInfoOK, error)
 
-	DesignDocPut(params *DesignDocPutParams) (*DesignDocPutOK, error)
+	DesignDocPut(params *DesignDocPutParams) (*DesignDocPutCreated, *DesignDocPutAccepted, error)
 
 	DesignDocSearch(params *DesignDocSearchParams) (*DesignDocSearchOK, error)
 
@@ -195,7 +195,7 @@ func (a *Client) DesignDocInfo(params *DesignDocInfoParams) (*DesignDocInfoOK, e
 that for filters, lists, shows and updates fields objects are mapping of function name to string function source code. For views mapping is the same except that values are objects with map and reduce (optional) keys which also contains functions source code.
 
 */
-func (a *Client) DesignDocPut(params *DesignDocPutParams) (*DesignDocPutOK, error) {
+func (a *Client) DesignDocPut(params *DesignDocPutParams) (*DesignDocPutCreated, *DesignDocPutAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDesignDocPutParams()
@@ -214,15 +214,16 @@ func (a *Client) DesignDocPut(params *DesignDocPutParams) (*DesignDocPutOK, erro
 		Client:             params.HTTPClient,
 	})
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	success, ok := result.(*DesignDocPutOK)
-	if ok {
-		return success, nil
+	switch value := result.(type) {
+	case *DesignDocPutCreated:
+		return value, nil, nil
+	case *DesignDocPutAccepted:
+		return nil, value, nil
 	}
-	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for designDocPut: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for design_documents: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

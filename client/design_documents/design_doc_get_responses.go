@@ -35,6 +35,12 @@ func (o *DesignDocGetReader) ReadResponse(response runtime.ClientResponse, consu
 			return nil, err
 		}
 		return nil, result
+	case 400:
+		result := NewDesignDocGetBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 401:
 		result := NewDesignDocGetUnauthorized()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -70,14 +76,14 @@ type DesignDocGetOK struct {
 	 */
 	TransferEncoding string
 
-	Payload models.Document
+	Payload *models.DesignDoc
 }
 
 func (o *DesignDocGetOK) Error() string {
 	return fmt.Sprintf("[GET /{db}/_design/{ddoc}][%d] designDocGetOK  %+v", 200, o.Payload)
 }
 
-func (o *DesignDocGetOK) GetPayload() models.Document {
+func (o *DesignDocGetOK) GetPayload() *models.DesignDoc {
 	return o.Payload
 }
 
@@ -89,8 +95,10 @@ func (o *DesignDocGetOK) readResponse(response runtime.ClientResponse, consumer 
 	// response header Transfer-Encoding
 	o.TransferEncoding = response.GetHeader("Transfer-Encoding")
 
+	o.Payload = new(models.DesignDoc)
+
 	// response payload
-	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 
@@ -114,6 +122,39 @@ func (o *DesignDocGetNotModified) Error() string {
 }
 
 func (o *DesignDocGetNotModified) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
+// NewDesignDocGetBadRequest creates a DesignDocGetBadRequest with default headers values
+func NewDesignDocGetBadRequest() *DesignDocGetBadRequest {
+	return &DesignDocGetBadRequest{}
+}
+
+/*DesignDocGetBadRequest handles this case with default header values.
+
+The format of the request or revision was invalid
+*/
+type DesignDocGetBadRequest struct {
+	Payload *models.ErrorResponse
+}
+
+func (o *DesignDocGetBadRequest) Error() string {
+	return fmt.Sprintf("[GET /{db}/_design/{ddoc}][%d] designDocGetBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *DesignDocGetBadRequest) GetPayload() *models.ErrorResponse {
+	return o.Payload
+}
+
+func (o *DesignDocGetBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.ErrorResponse)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
