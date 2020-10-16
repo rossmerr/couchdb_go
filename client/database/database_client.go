@@ -29,7 +29,7 @@ type Client struct {
 type ClientService interface {
 	BulkDocs(params *BulkDocsParams) (*BulkDocsCreated, error)
 
-	BulkGet(params *BulkGetParams) (*BulkGetCreated, error)
+	BulkGet(params *BulkGetParams) (*BulkGetOK, error)
 
 	DbSecurityGet(params *DbSecurityGetParams) (*DbSecurityGetOK, error)
 
@@ -103,7 +103,7 @@ func (a *Client) BulkDocs(params *BulkDocsParams) (*BulkDocsCreated, error) {
   It is well suited for fetching a specific revision of documents, as replicators do for example, or for getting revision history.
 
 */
-func (a *Client) BulkGet(params *BulkGetParams) (*BulkGetCreated, error) {
+func (a *Client) BulkGet(params *BulkGetParams) (*BulkGetOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewBulkGetParams()
@@ -124,7 +124,7 @@ func (a *Client) BulkGet(params *BulkGetParams) (*BulkGetCreated, error) {
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*BulkGetCreated)
+	success, ok := result.(*BulkGetOK)
 	if ok {
 		return success, nil
 	}
