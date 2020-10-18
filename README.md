@@ -28,7 +28,7 @@ params := document.NewDocGetParams()
 params.WithDb("db").WithDocid("docid")
 
 // GET /{db}/{docid}
-response, err := s.client.Document.DocGet(params)
+response, err := client.Document.DocGet(params)
 if err != nil {
     return nil, fmt.Errorf("couchdb not found: %w", err)
 }
