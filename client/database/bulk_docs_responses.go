@@ -13,7 +13,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"github.com/RossMerr/couchdb_go/models"
+	"github.com/rossmerr/couchdb_go/models"
 )
 
 // BulkDocsReader is a Reader for the BulkDocs structure.

@@ -16,7 +16,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"github.com/RossMerr/couchdb_go/models"
+	"github.com/rossmerr/couchdb_go/models"
 )
 
 // NewDesignDocViewPostParams creates a new DesignDocViewPostParams object
@@ -109,7 +109,7 @@ type DesignDocViewPostParams struct {
 	  Stop returning records when the specified key is reached.
 
 	*/
-	Endkey *string
+	QueryEndKey *string
 	/*EndkeyDocid
 	  Stop returning records when the specified document ID is reached. Ignored if endkey is not set.
 
@@ -355,15 +355,15 @@ func (o *DesignDocViewPostParams) SetEndKeyDocID(endKeyDocID *string) {
 	o.EndKeyDocID = endKeyDocID
 }
 
-// WithEndkey adds the endkey to the design doc view post params
-func (o *DesignDocViewPostParams) WithEndkey(endkey *string) *DesignDocViewPostParams {
-	o.SetEndkey(endkey)
+// WithQueryEndKey adds the endkey to the design doc view post params
+func (o *DesignDocViewPostParams) WithQueryEndKey(endkey *string) *DesignDocViewPostParams {
+	o.SetQueryEndKey(endkey)
 	return o
 }
 
-// SetEndkey adds the endkey to the design doc view post params
-func (o *DesignDocViewPostParams) SetEndkey(endkey *string) {
-	o.Endkey = endkey
+// SetQueryEndKey adds the endkey to the design doc view post params
+func (o *DesignDocViewPostParams) SetQueryEndKey(endkey *string) {
+	o.QueryEndKey = endkey
 }
 
 // WithEndkeyDocid adds the endkeyDocid to the design doc view post params
@@ -717,12 +717,12 @@ func (o *DesignDocViewPostParams) WriteToRequest(r runtime.ClientRequest, reg st
 
 	}
 
-	if o.Endkey != nil {
+	if o.QueryEndKey != nil {
 
 		// query param endkey
 		var qrEndkey string
-		if o.Endkey != nil {
-			qrEndkey = *o.Endkey
+		if o.QueryEndKey != nil {
+			qrEndkey = *o.QueryEndKey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {

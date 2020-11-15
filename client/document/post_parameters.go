@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/RossMerr/couchdb_go/models"
+	"github.com/rossmerr/couchdb_go/models"
 )
 
 // NewPostParams creates a new PostParams object

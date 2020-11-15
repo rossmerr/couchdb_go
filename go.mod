@@ -1,4 +1,4 @@
-module github.com/RossMerr/couchdb_go
+module github.com/rossmerr/couchdb_go
 
 go 1.15
 
