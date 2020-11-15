@@ -10,11 +10,11 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/RossMerr/couchdb_go/client/database"
-	"github.com/RossMerr/couchdb_go/client/design_documents"
-	"github.com/RossMerr/couchdb_go/client/document"
-	"github.com/RossMerr/couchdb_go/client/partition"
-	"github.com/RossMerr/couchdb_go/client/server"
+	"github.com/rossmerr/couchdb_go/client/database"
+	"github.com/rossmerr/couchdb_go/client/design_documents"
+	"github.com/rossmerr/couchdb_go/client/document"
+	"github.com/rossmerr/couchdb_go/client/partition"
+	"github.com/rossmerr/couchdb_go/client/server"
 )
 
 // Default couchdb go HTTP client.
