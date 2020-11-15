@@ -8,7 +8,7 @@ Import couchdb_go
 
 ``` go
 import (
-    apiclient "github.com/RossMerr/couchdb_go/client"
+    apiclient "github.com/rossmerr/couchdb_go/client"
     httptransport "github.com/go-openapi/runtime/client"
 )
 ```
