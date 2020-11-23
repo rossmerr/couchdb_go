@@ -96,6 +96,11 @@ type PartitionDocGetAllParams struct {
 
 	*/
 	GroupLevel *int64
+	/*IncludeDocs
+	  Include the associated document with each row. Default is false.
+
+	*/
+	IncludeDocs *bool
 	/*InclusiveEnd
 	  Specifies whether the specified end key should be included in the result. Default is true.
 
@@ -272,6 +277,17 @@ func (o *PartitionDocGetAllParams) WithGroupLevel(groupLevel *int64) *PartitionD
 // SetGroupLevel adds the groupLevel to the partition doc get all params
 func (o *PartitionDocGetAllParams) SetGroupLevel(groupLevel *int64) {
 	o.GroupLevel = groupLevel
+}
+
+// WithIncludeDocs adds the includeDocs to the partition doc get all params
+func (o *PartitionDocGetAllParams) WithIncludeDocs(includeDocs *bool) *PartitionDocGetAllParams {
+	o.SetIncludeDocs(includeDocs)
+	return o
+}
+
+// SetIncludeDocs adds the includeDocs to the partition doc get all params
+func (o *PartitionDocGetAllParams) SetIncludeDocs(includeDocs *bool) {
+	o.IncludeDocs = includeDocs
 }
 
 // WithInclusiveEnd adds the inclusiveEnd to the partition doc get all params
@@ -509,6 +525,22 @@ func (o *PartitionDocGetAllParams) WriteToRequest(r runtime.ClientRequest, reg s
 		qGroupLevel := swag.FormatInt64(qrGroupLevel)
 		if qGroupLevel != "" {
 			if err := r.SetQueryParam("group_level", qGroupLevel); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	if o.IncludeDocs != nil {
+
+		// query param include_docs
+		var qrIncludeDocs bool
+		if o.IncludeDocs != nil {
+			qrIncludeDocs = *o.IncludeDocs
+		}
+		qIncludeDocs := swag.FormatBool(qrIncludeDocs)
+		if qIncludeDocs != "" {
+			if err := r.SetQueryParam("include_docs", qIncludeDocs); err != nil {
 				return err
 			}
 		}

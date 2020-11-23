@@ -2459,6 +2459,13 @@
             "type": "integer"
           },
           {
+            "name": "include_docs",
+            "in": "query",
+            "description": "Include the associated document with each row. Default is false.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
             "name": "attachments",
             "in": "query",
             "description": "Include the Base64-encoded content of attachments in the documents that are included if include_docs is true. Ignored if include_docs isn’t true. Default is false.",
