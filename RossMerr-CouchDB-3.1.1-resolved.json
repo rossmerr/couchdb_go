@@ -4783,18 +4783,16 @@
           "type": "string"
         },
         "value": {
-          "type": "object",
-          "properties": {
-            "rev": {
-              "type": "string",
-              "description": "Revision MVCC token"
-            }
-          }
+          "$ref": "#/definitions/Object"
         },
         "doc": {
           "$ref": "#/definitions/Document"
         }
       }
+    },
+    "Object": {
+      "type": "object",
+      "additionalProperties": {}
     },
     "Document": {
       "type": "object",

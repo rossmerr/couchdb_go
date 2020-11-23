@@ -6,7 +6,6 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -26,38 +25,11 @@ type Row struct {
 	Key string `json:"key,omitempty"`
 
 	// value
-	Value *RowValue `json:"value,omitempty"`
+	Value Object `json:"value,omitempty"`
 }
 
 // Validate validates this row
 func (m *Row) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateValue(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *Row) validateValue(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Value) { // not required
-		return nil
-	}
-
-	if m.Value != nil {
-		if err := m.Value.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("value")
-			}
-			return err
-		}
-	}
-
 	return nil
 }
 
@@ -72,38 +44,6 @@ func (m *Row) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Row) UnmarshalBinary(b []byte) error {
 	var res Row
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// RowValue row value
-//
-// swagger:model RowValue
-type RowValue struct {
-
-	// Revision MVCC token
-	Rev string `json:"rev,omitempty"`
-}
-
-// Validate validates this row value
-func (m *RowValue) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *RowValue) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *RowValue) UnmarshalBinary(b []byte) error {
-	var res RowValue
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
