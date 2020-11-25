@@ -140,7 +140,7 @@ type PartitionDesignDocViewParams struct {
 	  Return only documents where the key matches one of the keys specified in the array.
 
 	*/
-	Keys []string
+	Keys *string
 	/*Limit
 	  Limit the number of the returned documents to the specified number.
 
@@ -196,7 +196,7 @@ type PartitionDesignDocViewParams struct {
 	  Return records starting with the specified key.
 
 	*/
-	QueryStartKey *string
+	Startkey *string
 	/*StartkeyDocid
 	  Return records starting with the specified document ID. Ignored if startkey is not set.
 
@@ -423,13 +423,13 @@ func (o *PartitionDesignDocViewParams) SetKey(key *string) {
 }
 
 // WithKeys adds the keys to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithKeys(keys []string) *PartitionDesignDocViewParams {
+func (o *PartitionDesignDocViewParams) WithKeys(keys *string) *PartitionDesignDocViewParams {
 	o.SetKeys(keys)
 	return o
 }
 
 // SetKeys adds the keys to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetKeys(keys []string) {
+func (o *PartitionDesignDocViewParams) SetKeys(keys *string) {
 	o.Keys = keys
 }
 
@@ -543,15 +543,15 @@ func (o *PartitionDesignDocViewParams) SetStartKeyDocID(startKeyDocID *string) {
 	o.StartKeyDocID = startKeyDocID
 }
 
-// WithQueryStartKey adds the startkey to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithQueryStartKey(startkey *string) *PartitionDesignDocViewParams {
-	o.SetQueryStartKey(startkey)
+// WithStartkey adds the startkey to the partition design doc view params
+func (o *PartitionDesignDocViewParams) WithStartkey(startkey *string) *PartitionDesignDocViewParams {
+	o.SetStartkey(startkey)
 	return o
 }
 
-// SetQueryStartKey adds the startkey to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetQueryStartKey(startkey *string) {
-	o.QueryStartKey = startkey
+// SetStartkey adds the startkey to the partition design doc view params
+func (o *PartitionDesignDocViewParams) SetStartkey(startkey *string) {
+	o.Startkey = startkey
 }
 
 // WithStartkeyDocid adds the startkeyDocid to the partition design doc view params
@@ -824,12 +824,20 @@ func (o *PartitionDesignDocViewParams) WriteToRequest(r runtime.ClientRequest, r
 
 	}
 
-	valuesKeys := o.Keys
+	if o.Keys != nil {
 
-	joinedKeys := swag.JoinByFormat(valuesKeys, "multi")
-	// query array param keys
-	if err := r.SetQueryParam("keys", joinedKeys...); err != nil {
-		return err
+		// query param keys
+		var qrKeys string
+		if o.Keys != nil {
+			qrKeys = *o.Keys
+		}
+		qKeys := qrKeys
+		if qKeys != "" {
+			if err := r.SetQueryParam("keys", qKeys); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	if o.Limit != nil {
@@ -981,12 +989,12 @@ func (o *PartitionDesignDocViewParams) WriteToRequest(r runtime.ClientRequest, r
 
 	}
 
-	if o.QueryStartKey != nil {
+	if o.Startkey != nil {
 
 		// query param startkey
 		var qrStartkey string
-		if o.QueryStartKey != nil {
-			qrStartkey = *o.QueryStartKey
+		if o.Startkey != nil {
+			qrStartkey = *o.Startkey
 		}
 		qStartkey := qrStartkey
 		if qStartkey != "" {
