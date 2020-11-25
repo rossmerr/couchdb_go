@@ -75,7 +75,7 @@ type AllDBsParams struct {
 	  Stop returning databases when the specified key is reached.
 
 	*/
-	Endkey *string
+	QueryEndKey *string
 	/*Limit
 	  Limit the number of the returned databases to the specified number.
 
@@ -95,7 +95,7 @@ type AllDBsParams struct {
 	  Return databases starting with the specified key.
 
 	*/
-	QueryStartKey *string
+	Startkey *string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -157,15 +157,15 @@ func (o *AllDBsParams) SetEndKey(endKey *string) {
 	o.EndKey = endKey
 }
 
-// WithEndkey adds the endkey to the all d bs params
-func (o *AllDBsParams) WithEndkey(endkey *string) *AllDBsParams {
-	o.SetEndkey(endkey)
+// WithQueryEndKey adds the endkey to the all d bs params
+func (o *AllDBsParams) WithQueryEndKey(endkey *string) *AllDBsParams {
+	o.SetQueryEndKey(endkey)
 	return o
 }
 
-// SetEndkey adds the endkey to the all d bs params
-func (o *AllDBsParams) SetEndkey(endkey *string) {
-	o.Endkey = endkey
+// SetQueryEndKey adds the endkey to the all d bs params
+func (o *AllDBsParams) SetQueryEndKey(endkey *string) {
+	o.QueryEndKey = endkey
 }
 
 // WithLimit adds the limit to the all d bs params
@@ -201,15 +201,15 @@ func (o *AllDBsParams) SetStartKey(startKey *string) {
 	o.StartKey = startKey
 }
 
-// WithQueryStartKey adds the startkey to the all d bs params
-func (o *AllDBsParams) WithQueryStartKey(startkey *string) *AllDBsParams {
-	o.SetQueryStartKey(startkey)
+// WithStartkey adds the startkey to the all d bs params
+func (o *AllDBsParams) WithStartkey(startkey *string) *AllDBsParams {
+	o.SetStartkey(startkey)
 	return o
 }
 
-// SetQueryStartKey adds the startkey to the all d bs params
-func (o *AllDBsParams) SetQueryStartKey(startkey *string) {
-	o.QueryStartKey = startkey
+// SetStartkey adds the startkey to the all d bs params
+func (o *AllDBsParams) SetStartkey(startkey *string) {
+	o.Startkey = startkey
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -252,12 +252,12 @@ func (o *AllDBsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regist
 
 	}
 
-	if o.Endkey != nil {
+	if o.QueryEndKey != nil {
 
 		// query param endkey
 		var qrEndkey string
-		if o.Endkey != nil {
-			qrEndkey = *o.Endkey
+		if o.QueryEndKey != nil {
+			qrEndkey = *o.QueryEndKey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {
@@ -316,12 +316,12 @@ func (o *AllDBsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regist
 
 	}
 
-	if o.QueryStartKey != nil {
+	if o.Startkey != nil {
 
 		// query param startkey
 		var qrStartkey string
-		if o.QueryStartKey != nil {
-			qrStartkey = *o.QueryStartKey
+		if o.Startkey != nil {
+			qrStartkey = *o.Startkey
 		}
 		qStartkey := qrStartkey
 		if qStartkey != "" {

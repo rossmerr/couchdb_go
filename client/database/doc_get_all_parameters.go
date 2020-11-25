@@ -100,7 +100,7 @@ type DocGetAllParams struct {
 	  Stop returning records when the specified key is reached.
 
 	*/
-	QueryEndKey *string
+	Endkey *string
 	/*EndkeyDocid
 	  Stop returning records when the specified document ID is reached. Ignored if endkey is not set.
 
@@ -186,7 +186,7 @@ type DocGetAllParams struct {
 	  Return records starting with the specified key.
 
 	*/
-	QueryStartKey *string
+	Startkey *string
 	/*StartkeyDocid
 	  Return records starting with the specified document ID. Ignored if startkey is not set.
 
@@ -319,15 +319,15 @@ func (o *DocGetAllParams) SetEndKeyDocID(endKeyDocID *string) {
 	o.EndKeyDocID = endKeyDocID
 }
 
-// WithQueryEndKey adds the endkey to the doc get all params
-func (o *DocGetAllParams) WithQueryEndKey(endkey *string) *DocGetAllParams {
-	o.SetQueryEndKey(endkey)
+// WithEndkey adds the endkey to the doc get all params
+func (o *DocGetAllParams) WithEndkey(endkey *string) *DocGetAllParams {
+	o.SetEndkey(endkey)
 	return o
 }
 
-// SetQueryEndKey adds the endkey to the doc get all params
-func (o *DocGetAllParams) SetQueryEndKey(endkey *string) {
-	o.QueryEndKey = endkey
+// SetEndkey adds the endkey to the doc get all params
+func (o *DocGetAllParams) SetEndkey(endkey *string) {
+	o.Endkey = endkey
 }
 
 // WithEndkeyDocid adds the endkeyDocid to the doc get all params
@@ -506,15 +506,15 @@ func (o *DocGetAllParams) SetStartKeyDocID(startKeyDocID *string) {
 	o.StartKeyDocID = startKeyDocID
 }
 
-// WithQueryStartKey adds the startkey to the doc get all params
-func (o *DocGetAllParams) WithQueryStartKey(startkey *string) *DocGetAllParams {
-	o.SetQueryStartKey(startkey)
+// WithStartkey adds the startkey to the doc get all params
+func (o *DocGetAllParams) WithStartkey(startkey *string) *DocGetAllParams {
+	o.SetStartkey(startkey)
 	return o
 }
 
-// SetQueryStartKey adds the startkey to the doc get all params
-func (o *DocGetAllParams) SetQueryStartKey(startkey *string) {
-	o.QueryStartKey = startkey
+// SetStartkey adds the startkey to the doc get all params
+func (o *DocGetAllParams) SetStartkey(startkey *string) {
+	o.Startkey = startkey
 }
 
 // WithStartkeyDocid adds the startkeyDocid to the doc get all params
@@ -659,12 +659,12 @@ func (o *DocGetAllParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 
 	}
 
-	if o.QueryEndKey != nil {
+	if o.Endkey != nil {
 
 		// query param endkey
 		var qrEndkey string
-		if o.QueryEndKey != nil {
-			qrEndkey = *o.QueryEndKey
+		if o.Endkey != nil {
+			qrEndkey = *o.Endkey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {
@@ -923,12 +923,12 @@ func (o *DocGetAllParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 
 	}
 
-	if o.QueryStartKey != nil {
+	if o.Startkey != nil {
 
 		// query param startkey
 		var qrStartkey string
-		if o.QueryStartKey != nil {
-			qrStartkey = *o.QueryStartKey
+		if o.Startkey != nil {
+			qrStartkey = *o.Startkey
 		}
 		qStartkey := qrStartkey
 		if qStartkey != "" {

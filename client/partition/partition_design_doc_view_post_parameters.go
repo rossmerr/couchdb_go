@@ -15,51 +15,53 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+
+	"github.com/rossmerr/couchdb_go/models"
 )
 
-// NewPartitionDesignDocViewParams creates a new PartitionDesignDocViewParams object
+// NewPartitionDesignDocViewPostParams creates a new PartitionDesignDocViewPostParams object
 // with the default values initialized.
-func NewPartitionDesignDocViewParams() *PartitionDesignDocViewParams {
+func NewPartitionDesignDocViewPostParams() *PartitionDesignDocViewPostParams {
 	var ()
-	return &PartitionDesignDocViewParams{
+	return &PartitionDesignDocViewPostParams{
 
 		timeout: cr.DefaultTimeout,
 	}
 }
 
-// NewPartitionDesignDocViewParamsWithTimeout creates a new PartitionDesignDocViewParams object
+// NewPartitionDesignDocViewPostParamsWithTimeout creates a new PartitionDesignDocViewPostParams object
 // with the default values initialized, and the ability to set a timeout on a request
-func NewPartitionDesignDocViewParamsWithTimeout(timeout time.Duration) *PartitionDesignDocViewParams {
+func NewPartitionDesignDocViewPostParamsWithTimeout(timeout time.Duration) *PartitionDesignDocViewPostParams {
 	var ()
-	return &PartitionDesignDocViewParams{
+	return &PartitionDesignDocViewPostParams{
 
 		timeout: timeout,
 	}
 }
 
-// NewPartitionDesignDocViewParamsWithContext creates a new PartitionDesignDocViewParams object
+// NewPartitionDesignDocViewPostParamsWithContext creates a new PartitionDesignDocViewPostParams object
 // with the default values initialized, and the ability to set a context for a request
-func NewPartitionDesignDocViewParamsWithContext(ctx context.Context) *PartitionDesignDocViewParams {
+func NewPartitionDesignDocViewPostParamsWithContext(ctx context.Context) *PartitionDesignDocViewPostParams {
 	var ()
-	return &PartitionDesignDocViewParams{
+	return &PartitionDesignDocViewPostParams{
 
 		Context: ctx,
 	}
 }
 
-// NewPartitionDesignDocViewParamsWithHTTPClient creates a new PartitionDesignDocViewParams object
+// NewPartitionDesignDocViewPostParamsWithHTTPClient creates a new PartitionDesignDocViewPostParams object
 // with the default values initialized, and the ability to set a custom HTTPClient for a request
-func NewPartitionDesignDocViewParamsWithHTTPClient(client *http.Client) *PartitionDesignDocViewParams {
+func NewPartitionDesignDocViewPostParamsWithHTTPClient(client *http.Client) *PartitionDesignDocViewPostParams {
 	var ()
-	return &PartitionDesignDocViewParams{
+	return &PartitionDesignDocViewPostParams{
 		HTTPClient: client,
 	}
 }
 
-/*PartitionDesignDocViewParams contains all the parameters to send to the API endpoint
-for the partition design doc view operation typically these are written to a http.Request
+/*PartitionDesignDocViewPostParams contains all the parameters to send to the API endpoint
+for the partition design doc view post operation typically these are written to a http.Request
 */
-type PartitionDesignDocViewParams struct {
+type PartitionDesignDocViewPostParams struct {
 
 	/*AttEncodingInfo
 	  Include encoding information in attachment stubs if include_docs is true and the particular attachment is compressed. Ignored if include_docs isn’t true. Default is false.
@@ -71,6 +73,8 @@ type PartitionDesignDocViewParams struct {
 
 	*/
 	Attachments *bool
+	/*Body*/
+	Body *models.Keys
 	/*Conflicts
 	  Include conflicts information in response. Ignored if include_docs isn’t true. Default is false.
 
@@ -105,7 +109,7 @@ type PartitionDesignDocViewParams struct {
 	  Stop returning records when the specified key is reached.
 
 	*/
-	QueryEndKey *string
+	Endkey *string
 	/*EndkeyDocid
 	  Stop returning records when the specified document ID is reached. Ignored if endkey is not set.
 
@@ -196,7 +200,7 @@ type PartitionDesignDocViewParams struct {
 	  Return records starting with the specified key.
 
 	*/
-	QueryStartKey *string
+	Startkey *string
 	/*StartkeyDocid
 	  Return records starting with the specified document ID. Ignored if startkey is not set.
 
@@ -224,382 +228,393 @@ type PartitionDesignDocViewParams struct {
 	HTTPClient *http.Client
 }
 
-// WithTimeout adds the timeout to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithTimeout(timeout time.Duration) *PartitionDesignDocViewParams {
+// WithTimeout adds the timeout to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithTimeout(timeout time.Duration) *PartitionDesignDocViewPostParams {
 	o.SetTimeout(timeout)
 	return o
 }
 
-// SetTimeout adds the timeout to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetTimeout(timeout time.Duration) {
+// SetTimeout adds the timeout to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetTimeout(timeout time.Duration) {
 	o.timeout = timeout
 }
 
-// WithContext adds the context to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithContext(ctx context.Context) *PartitionDesignDocViewParams {
+// WithContext adds the context to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithContext(ctx context.Context) *PartitionDesignDocViewPostParams {
 	o.SetContext(ctx)
 	return o
 }
 
-// SetContext adds the context to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetContext(ctx context.Context) {
+// SetContext adds the context to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetContext(ctx context.Context) {
 	o.Context = ctx
 }
 
-// WithHTTPClient adds the HTTPClient to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithHTTPClient(client *http.Client) *PartitionDesignDocViewParams {
+// WithHTTPClient adds the HTTPClient to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithHTTPClient(client *http.Client) *PartitionDesignDocViewPostParams {
 	o.SetHTTPClient(client)
 	return o
 }
 
-// SetHTTPClient adds the HTTPClient to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetHTTPClient(client *http.Client) {
+// SetHTTPClient adds the HTTPClient to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAttEncodingInfo adds the attEncodingInfo to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithAttEncodingInfo(attEncodingInfo *bool) *PartitionDesignDocViewParams {
+// WithAttEncodingInfo adds the attEncodingInfo to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithAttEncodingInfo(attEncodingInfo *bool) *PartitionDesignDocViewPostParams {
 	o.SetAttEncodingInfo(attEncodingInfo)
 	return o
 }
 
-// SetAttEncodingInfo adds the attEncodingInfo to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetAttEncodingInfo(attEncodingInfo *bool) {
+// SetAttEncodingInfo adds the attEncodingInfo to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetAttEncodingInfo(attEncodingInfo *bool) {
 	o.AttEncodingInfo = attEncodingInfo
 }
 
-// WithAttachments adds the attachments to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithAttachments(attachments *bool) *PartitionDesignDocViewParams {
+// WithAttachments adds the attachments to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithAttachments(attachments *bool) *PartitionDesignDocViewPostParams {
 	o.SetAttachments(attachments)
 	return o
 }
 
-// SetAttachments adds the attachments to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetAttachments(attachments *bool) {
+// SetAttachments adds the attachments to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetAttachments(attachments *bool) {
 	o.Attachments = attachments
 }
 
-// WithConflicts adds the conflicts to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithConflicts(conflicts *bool) *PartitionDesignDocViewParams {
+// WithBody adds the body to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithBody(body *models.Keys) *PartitionDesignDocViewPostParams {
+	o.SetBody(body)
+	return o
+}
+
+// SetBody adds the body to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetBody(body *models.Keys) {
+	o.Body = body
+}
+
+// WithConflicts adds the conflicts to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithConflicts(conflicts *bool) *PartitionDesignDocViewPostParams {
 	o.SetConflicts(conflicts)
 	return o
 }
 
-// SetConflicts adds the conflicts to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetConflicts(conflicts *bool) {
+// SetConflicts adds the conflicts to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetConflicts(conflicts *bool) {
 	o.Conflicts = conflicts
 }
 
-// WithDb adds the db to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithDb(db string) *PartitionDesignDocViewParams {
+// WithDb adds the db to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithDb(db string) *PartitionDesignDocViewPostParams {
 	o.SetDb(db)
 	return o
 }
 
-// SetDb adds the db to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetDb(db string) {
+// SetDb adds the db to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetDb(db string) {
 	o.Db = db
 }
 
-// WithDdoc adds the ddoc to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithDdoc(ddoc string) *PartitionDesignDocViewParams {
+// WithDdoc adds the ddoc to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithDdoc(ddoc string) *PartitionDesignDocViewPostParams {
 	o.SetDdoc(ddoc)
 	return o
 }
 
-// SetDdoc adds the ddoc to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetDdoc(ddoc string) {
+// SetDdoc adds the ddoc to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetDdoc(ddoc string) {
 	o.Ddoc = ddoc
 }
 
-// WithDescending adds the descending to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithDescending(descending *bool) *PartitionDesignDocViewParams {
+// WithDescending adds the descending to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithDescending(descending *bool) *PartitionDesignDocViewPostParams {
 	o.SetDescending(descending)
 	return o
 }
 
-// SetDescending adds the descending to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetDescending(descending *bool) {
+// SetDescending adds the descending to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetDescending(descending *bool) {
 	o.Descending = descending
 }
 
-// WithEndKey adds the endKey to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithEndKey(endKey *string) *PartitionDesignDocViewParams {
+// WithEndKey adds the endKey to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithEndKey(endKey *string) *PartitionDesignDocViewPostParams {
 	o.SetEndKey(endKey)
 	return o
 }
 
-// SetEndKey adds the endKey to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetEndKey(endKey *string) {
+// SetEndKey adds the endKey to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetEndKey(endKey *string) {
 	o.EndKey = endKey
 }
 
-// WithEndKeyDocID adds the endKeyDocID to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithEndKeyDocID(endKeyDocID *string) *PartitionDesignDocViewParams {
+// WithEndKeyDocID adds the endKeyDocID to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithEndKeyDocID(endKeyDocID *string) *PartitionDesignDocViewPostParams {
 	o.SetEndKeyDocID(endKeyDocID)
 	return o
 }
 
-// SetEndKeyDocID adds the endKeyDocId to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetEndKeyDocID(endKeyDocID *string) {
+// SetEndKeyDocID adds the endKeyDocId to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetEndKeyDocID(endKeyDocID *string) {
 	o.EndKeyDocID = endKeyDocID
 }
 
-// WithQueryEndKey adds the endkey to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithQueryEndKey(endkey *string) *PartitionDesignDocViewParams {
-	o.SetQueryEndKey(endkey)
+// WithEndkey adds the endkey to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithEndkey(endkey *string) *PartitionDesignDocViewPostParams {
+	o.SetEndkey(endkey)
 	return o
 }
 
-// SetQueryEndKey adds the endkey to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetQueryEndKey(endkey *string) {
-	o.QueryEndKey = endkey
+// SetEndkey adds the endkey to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetEndkey(endkey *string) {
+	o.Endkey = endkey
 }
 
-// WithEndkeyDocid adds the endkeyDocid to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithEndkeyDocid(endkeyDocid *string) *PartitionDesignDocViewParams {
+// WithEndkeyDocid adds the endkeyDocid to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithEndkeyDocid(endkeyDocid *string) *PartitionDesignDocViewPostParams {
 	o.SetEndkeyDocid(endkeyDocid)
 	return o
 }
 
-// SetEndkeyDocid adds the endkeyDocid to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetEndkeyDocid(endkeyDocid *string) {
+// SetEndkeyDocid adds the endkeyDocid to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetEndkeyDocid(endkeyDocid *string) {
 	o.EndkeyDocid = endkeyDocid
 }
 
-// WithGroup adds the group to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithGroup(group *bool) *PartitionDesignDocViewParams {
+// WithGroup adds the group to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithGroup(group *bool) *PartitionDesignDocViewPostParams {
 	o.SetGroup(group)
 	return o
 }
 
-// SetGroup adds the group to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetGroup(group *bool) {
+// SetGroup adds the group to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetGroup(group *bool) {
 	o.Group = group
 }
 
-// WithGroupLevel adds the groupLevel to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithGroupLevel(groupLevel *int64) *PartitionDesignDocViewParams {
+// WithGroupLevel adds the groupLevel to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithGroupLevel(groupLevel *int64) *PartitionDesignDocViewPostParams {
 	o.SetGroupLevel(groupLevel)
 	return o
 }
 
-// SetGroupLevel adds the groupLevel to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetGroupLevel(groupLevel *int64) {
+// SetGroupLevel adds the groupLevel to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetGroupLevel(groupLevel *int64) {
 	o.GroupLevel = groupLevel
 }
 
-// WithIncludeDocs adds the includeDocs to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithIncludeDocs(includeDocs *bool) *PartitionDesignDocViewParams {
+// WithIncludeDocs adds the includeDocs to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithIncludeDocs(includeDocs *bool) *PartitionDesignDocViewPostParams {
 	o.SetIncludeDocs(includeDocs)
 	return o
 }
 
-// SetIncludeDocs adds the includeDocs to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetIncludeDocs(includeDocs *bool) {
+// SetIncludeDocs adds the includeDocs to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetIncludeDocs(includeDocs *bool) {
 	o.IncludeDocs = includeDocs
 }
 
-// WithInclusiveEnd adds the inclusiveEnd to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithInclusiveEnd(inclusiveEnd *bool) *PartitionDesignDocViewParams {
+// WithInclusiveEnd adds the inclusiveEnd to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithInclusiveEnd(inclusiveEnd *bool) *PartitionDesignDocViewPostParams {
 	o.SetInclusiveEnd(inclusiveEnd)
 	return o
 }
 
-// SetInclusiveEnd adds the inclusiveEnd to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetInclusiveEnd(inclusiveEnd *bool) {
+// SetInclusiveEnd adds the inclusiveEnd to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetInclusiveEnd(inclusiveEnd *bool) {
 	o.InclusiveEnd = inclusiveEnd
 }
 
-// WithKey adds the key to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithKey(key *string) *PartitionDesignDocViewParams {
+// WithKey adds the key to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithKey(key *string) *PartitionDesignDocViewPostParams {
 	o.SetKey(key)
 	return o
 }
 
-// SetKey adds the key to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetKey(key *string) {
+// SetKey adds the key to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetKey(key *string) {
 	o.Key = key
 }
 
-// WithKeys adds the keys to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithKeys(keys []string) *PartitionDesignDocViewParams {
+// WithKeys adds the keys to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithKeys(keys []string) *PartitionDesignDocViewPostParams {
 	o.SetKeys(keys)
 	return o
 }
 
-// SetKeys adds the keys to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetKeys(keys []string) {
+// SetKeys adds the keys to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetKeys(keys []string) {
 	o.Keys = keys
 }
 
-// WithLimit adds the limit to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithLimit(limit *int64) *PartitionDesignDocViewParams {
+// WithLimit adds the limit to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithLimit(limit *int64) *PartitionDesignDocViewPostParams {
 	o.SetLimit(limit)
 	return o
 }
 
-// SetLimit adds the limit to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetLimit(limit *int64) {
+// SetLimit adds the limit to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetLimit(limit *int64) {
 	o.Limit = limit
 }
 
-// WithPartition adds the partition to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithPartition(partition string) *PartitionDesignDocViewParams {
+// WithPartition adds the partition to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithPartition(partition string) *PartitionDesignDocViewPostParams {
 	o.SetPartition(partition)
 	return o
 }
 
-// SetPartition adds the partition to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetPartition(partition string) {
+// SetPartition adds the partition to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetPartition(partition string) {
 	o.Partition = partition
 }
 
-// WithReduce adds the reduce to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithReduce(reduce *bool) *PartitionDesignDocViewParams {
+// WithReduce adds the reduce to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithReduce(reduce *bool) *PartitionDesignDocViewPostParams {
 	o.SetReduce(reduce)
 	return o
 }
 
-// SetReduce adds the reduce to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetReduce(reduce *bool) {
+// SetReduce adds the reduce to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetReduce(reduce *bool) {
 	o.Reduce = reduce
 }
 
-// WithRevsInfo adds the revsInfo to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithRevsInfo(revsInfo *bool) *PartitionDesignDocViewParams {
+// WithRevsInfo adds the revsInfo to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithRevsInfo(revsInfo *bool) *PartitionDesignDocViewPostParams {
 	o.SetRevsInfo(revsInfo)
 	return o
 }
 
-// SetRevsInfo adds the revsInfo to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetRevsInfo(revsInfo *bool) {
+// SetRevsInfo adds the revsInfo to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetRevsInfo(revsInfo *bool) {
 	o.RevsInfo = revsInfo
 }
 
-// WithSkip adds the skip to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithSkip(skip *int64) *PartitionDesignDocViewParams {
+// WithSkip adds the skip to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithSkip(skip *int64) *PartitionDesignDocViewPostParams {
 	o.SetSkip(skip)
 	return o
 }
 
-// SetSkip adds the skip to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetSkip(skip *int64) {
+// SetSkip adds the skip to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetSkip(skip *int64) {
 	o.Skip = skip
 }
 
-// WithSorted adds the sorted to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithSorted(sorted *bool) *PartitionDesignDocViewParams {
+// WithSorted adds the sorted to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithSorted(sorted *bool) *PartitionDesignDocViewPostParams {
 	o.SetSorted(sorted)
 	return o
 }
 
-// SetSorted adds the sorted to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetSorted(sorted *bool) {
+// SetSorted adds the sorted to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetSorted(sorted *bool) {
 	o.Sorted = sorted
 }
 
-// WithStable adds the stable to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithStable(stable *bool) *PartitionDesignDocViewParams {
+// WithStable adds the stable to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithStable(stable *bool) *PartitionDesignDocViewPostParams {
 	o.SetStable(stable)
 	return o
 }
 
-// SetStable adds the stable to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetStable(stable *bool) {
+// SetStable adds the stable to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetStable(stable *bool) {
 	o.Stable = stable
 }
 
-// WithStale adds the stale to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithStale(stale *string) *PartitionDesignDocViewParams {
+// WithStale adds the stale to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithStale(stale *string) *PartitionDesignDocViewPostParams {
 	o.SetStale(stale)
 	return o
 }
 
-// SetStale adds the stale to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetStale(stale *string) {
+// SetStale adds the stale to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetStale(stale *string) {
 	o.Stale = stale
 }
 
-// WithStartKey adds the startKey to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithStartKey(startKey *string) *PartitionDesignDocViewParams {
+// WithStartKey adds the startKey to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithStartKey(startKey *string) *PartitionDesignDocViewPostParams {
 	o.SetStartKey(startKey)
 	return o
 }
 
-// SetStartKey adds the startKey to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetStartKey(startKey *string) {
+// SetStartKey adds the startKey to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetStartKey(startKey *string) {
 	o.StartKey = startKey
 }
 
-// WithStartKeyDocID adds the startKeyDocID to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithStartKeyDocID(startKeyDocID *string) *PartitionDesignDocViewParams {
+// WithStartKeyDocID adds the startKeyDocID to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithStartKeyDocID(startKeyDocID *string) *PartitionDesignDocViewPostParams {
 	o.SetStartKeyDocID(startKeyDocID)
 	return o
 }
 
-// SetStartKeyDocID adds the startKeyDocId to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetStartKeyDocID(startKeyDocID *string) {
+// SetStartKeyDocID adds the startKeyDocId to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetStartKeyDocID(startKeyDocID *string) {
 	o.StartKeyDocID = startKeyDocID
 }
 
-// WithQueryStartKey adds the startkey to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithQueryStartKey(startkey *string) *PartitionDesignDocViewParams {
-	o.SetQueryStartKey(startkey)
+// WithStartkey adds the startkey to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithStartkey(startkey *string) *PartitionDesignDocViewPostParams {
+	o.SetStartkey(startkey)
 	return o
 }
 
-// SetQueryStartKey adds the startkey to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetQueryStartKey(startkey *string) {
-	o.QueryStartKey = startkey
+// SetStartkey adds the startkey to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetStartkey(startkey *string) {
+	o.Startkey = startkey
 }
 
-// WithStartkeyDocid adds the startkeyDocid to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithStartkeyDocid(startkeyDocid *string) *PartitionDesignDocViewParams {
+// WithStartkeyDocid adds the startkeyDocid to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithStartkeyDocid(startkeyDocid *string) *PartitionDesignDocViewPostParams {
 	o.SetStartkeyDocid(startkeyDocid)
 	return o
 }
 
-// SetStartkeyDocid adds the startkeyDocid to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetStartkeyDocid(startkeyDocid *string) {
+// SetStartkeyDocid adds the startkeyDocid to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetStartkeyDocid(startkeyDocid *string) {
 	o.StartkeyDocid = startkeyDocid
 }
 
-// WithUpdate adds the update to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithUpdate(update *string) *PartitionDesignDocViewParams {
+// WithUpdate adds the update to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithUpdate(update *string) *PartitionDesignDocViewPostParams {
 	o.SetUpdate(update)
 	return o
 }
 
-// SetUpdate adds the update to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetUpdate(update *string) {
+// SetUpdate adds the update to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetUpdate(update *string) {
 	o.Update = update
 }
 
-// WithUpdateSeq adds the updateSeq to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithUpdateSeq(updateSeq *bool) *PartitionDesignDocViewParams {
+// WithUpdateSeq adds the updateSeq to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithUpdateSeq(updateSeq *bool) *PartitionDesignDocViewPostParams {
 	o.SetUpdateSeq(updateSeq)
 	return o
 }
 
-// SetUpdateSeq adds the updateSeq to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetUpdateSeq(updateSeq *bool) {
+// SetUpdateSeq adds the updateSeq to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetUpdateSeq(updateSeq *bool) {
 	o.UpdateSeq = updateSeq
 }
 
-// WithView adds the view to the partition design doc view params
-func (o *PartitionDesignDocViewParams) WithView(view string) *PartitionDesignDocViewParams {
+// WithView adds the view to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithView(view string) *PartitionDesignDocViewPostParams {
 	o.SetView(view)
 	return o
 }
 
-// SetView adds the view to the partition design doc view params
-func (o *PartitionDesignDocViewParams) SetView(view string) {
+// SetView adds the view to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetView(view string) {
 	o.View = view
 }
 
 // WriteToRequest writes these params to a swagger request
-func (o *PartitionDesignDocViewParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
+func (o *PartitionDesignDocViewPostParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
 	if err := r.SetTimeout(o.timeout); err != nil {
 		return err
@@ -636,6 +651,12 @@ func (o *PartitionDesignDocViewParams) WriteToRequest(r runtime.ClientRequest, r
 			}
 		}
 
+	}
+
+	if o.Body != nil {
+		if err := r.SetBodyParam(o.Body); err != nil {
+			return err
+		}
 	}
 
 	if o.Conflicts != nil {
@@ -712,12 +733,12 @@ func (o *PartitionDesignDocViewParams) WriteToRequest(r runtime.ClientRequest, r
 
 	}
 
-	if o.QueryEndKey != nil {
+	if o.Endkey != nil {
 
 		// query param endkey
 		var qrEndkey string
-		if o.QueryEndKey != nil {
-			qrEndkey = *o.QueryEndKey
+		if o.Endkey != nil {
+			qrEndkey = *o.Endkey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {
@@ -981,12 +1002,12 @@ func (o *PartitionDesignDocViewParams) WriteToRequest(r runtime.ClientRequest, r
 
 	}
 
-	if o.QueryStartKey != nil {
+	if o.Startkey != nil {
 
 		// query param startkey
 		var qrStartkey string
-		if o.QueryStartKey != nil {
-			qrStartkey = *o.QueryStartKey
+		if o.Startkey != nil {
+			qrStartkey = *o.Startkey
 		}
 		qStartkey := qrStartkey
 		if qStartkey != "" {
