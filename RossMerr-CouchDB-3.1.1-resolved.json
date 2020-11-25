@@ -2730,7 +2730,7 @@
             "description": "Return only documents where the key matches one of the keys specified in the array.",
             "required": false,
             "type": "string",
-            "format": "json"
+            "format": "jsonArray"
           },
           {
             "name": "limit",
