@@ -95,7 +95,7 @@ type AllDBsParams struct {
 	  Return databases starting with the specified key.
 
 	*/
-	Startkey *string
+	QueryStartKey *string
 
 	timeout    time.Duration
 	Context    context.Context
@@ -201,15 +201,15 @@ func (o *AllDBsParams) SetStartKey(startKey *string) {
 	o.StartKey = startKey
 }
 
-// WithStartkey adds the startkey to the all d bs params
-func (o *AllDBsParams) WithStartkey(startkey *string) *AllDBsParams {
-	o.SetStartkey(startkey)
+// WithQueryStartKey adds the startkey to the all d bs params
+func (o *AllDBsParams) WithQueryStartKey(startkey *string) *AllDBsParams {
+	o.SetQueryStartKey(startkey)
 	return o
 }
 
-// SetStartkey adds the startkey to the all d bs params
-func (o *AllDBsParams) SetStartkey(startkey *string) {
-	o.Startkey = startkey
+// SetQueryStartKey adds the startkey to the all d bs params
+func (o *AllDBsParams) SetQueryStartKey(startkey *string) {
+	o.QueryStartKey = startkey
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -316,12 +316,12 @@ func (o *AllDBsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regist
 
 	}
 
-	if o.Startkey != nil {
+	if o.QueryStartKey != nil {
 
 		// query param startkey
 		var qrStartkey string
-		if o.Startkey != nil {
-			qrStartkey = *o.Startkey
+		if o.QueryStartKey != nil {
+			qrStartkey = *o.QueryStartKey
 		}
 		qStartkey := qrStartkey
 		if qStartkey != "" {
