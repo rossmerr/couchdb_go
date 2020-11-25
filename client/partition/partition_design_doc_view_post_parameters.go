@@ -144,7 +144,7 @@ type PartitionDesignDocViewPostParams struct {
 	  Return only documents where the key matches one of the keys specified in the array.
 
 	*/
-	Keys []string
+	Keys *string
 	/*Limit
 	  Limit the number of the returned documents to the specified number.
 
@@ -438,13 +438,13 @@ func (o *PartitionDesignDocViewPostParams) SetKey(key *string) {
 }
 
 // WithKeys adds the keys to the partition design doc view post params
-func (o *PartitionDesignDocViewPostParams) WithKeys(keys []string) *PartitionDesignDocViewPostParams {
+func (o *PartitionDesignDocViewPostParams) WithKeys(keys *string) *PartitionDesignDocViewPostParams {
 	o.SetKeys(keys)
 	return o
 }
 
 // SetKeys adds the keys to the partition design doc view post params
-func (o *PartitionDesignDocViewPostParams) SetKeys(keys []string) {
+func (o *PartitionDesignDocViewPostParams) SetKeys(keys *string) {
 	o.Keys = keys
 }
 
@@ -845,12 +845,20 @@ func (o *PartitionDesignDocViewPostParams) WriteToRequest(r runtime.ClientReques
 
 	}
 
-	valuesKeys := o.Keys
+	if o.Keys != nil {
 
-	joinedKeys := swag.JoinByFormat(valuesKeys, "multi")
-	// query array param keys
-	if err := r.SetQueryParam("keys", joinedKeys...); err != nil {
-		return err
+		// query param keys
+		var qrKeys string
+		if o.Keys != nil {
+			qrKeys = *o.Keys
+		}
+		qKeys := qrKeys
+		if qKeys != "" {
+			if err := r.SetQueryParam("keys", qKeys); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	if o.Limit != nil {

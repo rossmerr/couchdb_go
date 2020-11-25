@@ -2729,8 +2729,289 @@
             "in": "query",
             "description": "Return only documents where the key matches one of the keys specified in the array.",
             "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit the number of the returned documents to the specified number.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "reduce",
+            "in": "query",
+            "description": "Use the reduction function. Default is true when a reduce function is defined.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "description": "Skip this number of records before starting to return the results. Default is 0.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "sorted",
+            "in": "query",
+            "description": "Sort returned rows (see Sorting Returned Rows). Setting this to false offers a performance boost. The total_rows and offset fields are not available when this is set to false. Default is true.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "stable",
+            "in": "query",
+            "description": "Whether or not the view results should be returned from a stable set of shards. Default is false.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "stale",
+            "in": "query",
+            "description": "Allow the results from a stale view to be used. Supported values: ok and update_after. ok is equivalent to stable=true&update=false. update_after is equivalent to stable=true&update=lazy. The default behavior is equivalent to stable=false&update=true. Note that this parameter is deprecated. Use stable and update instead. See Views Generation for more details.\n",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startkey",
+            "in": "query",
+            "description": "Return records starting with the specified key.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start_key",
+            "in": "query",
+            "description": "Alias for startkey.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "startkey_docid",
+            "in": "query",
+            "description": "Return records starting with the specified document ID. Ignored if startkey is not set.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start_key_doc_id",
+            "in": "query",
+            "description": "Alias for startkey_docid param",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "update",
+            "in": "query",
+            "description": "Whether or not the view in question should be updated prior to responding to the user. Supported values: true, false, lazy. Default is true.\n",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "update_seq",
+            "in": "query",
+            "description": "Whether to include in the response an update_seq value indicating the sequence id of the database the view reflects. Default is false.",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "headers": {
+              "ETag": {
+                "type": "string",
+                "description": "Response signature"
+              },
+              "Transfer-Encoding": {
+                "type": "string",
+                "description": "chunked"
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/Pagination"
+            }
+          },
+          "304": {
+            "description": "Document wasn’t modified since specified revision"
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Read permission required",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Specified database, design document or view is missed",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Partition"
+        ],
+        "summary": "Executes the specified view function from the specified design document.",
+        "operationId": "partitionDesignDocViewPost",
+        "consumes": [
+          "application/json",
+          "text/plain"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
             "type": "string",
-            "format": "jsonArray"
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
+          },
+          {
+            "name": "partition",
+            "in": "path",
+            "description": "Partition name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "ddoc",
+            "in": "path",
+            "description": "Design document id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "view",
+            "in": "path",
+            "description": "View function name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Keys"
+            }
+          },
+          {
+            "name": "conflicts",
+            "in": "query",
+            "description": "Include conflicts information in response. Ignored if include_docs isn’t true. Default is false.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "descending",
+            "in": "query",
+            "description": "Return the documents in descending order by key. Default is false.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "endkey",
+            "in": "query",
+            "description": "Stop returning records when the specified key is reached.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "end_key",
+            "in": "query",
+            "description": "Alias for endkey param",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endkey_docid",
+            "in": "query",
+            "description": "Stop returning records when the specified document ID is reached. Ignored if endkey is not set.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "end_key_doc_id",
+            "in": "query",
+            "description": "Alias for endkey_docid.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "group",
+            "in": "query",
+            "description": "Group the results using the reduce function to a group or single row. Implies reduce is true and the maximum group_level. Default is false.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "group_level",
+            "in": "query",
+            "description": "Specify the group level to be used. Implies group is true.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "include_docs",
+            "in": "query",
+            "description": "Include the associated document with each row. Default is false.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "attachments",
+            "in": "query",
+            "description": "Include the Base64-encoded content of attachments in the documents that are included if include_docs is true. Ignored if include_docs isn’t true. Default is false.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "att_encoding_info",
+            "in": "query",
+            "description": "Include encoding information in attachment stubs if include_docs is true and the particular attachment is compressed. Ignored if include_docs isn’t true. Default is false.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "inclusive_end",
+            "in": "query",
+            "description": "Specifies whether the specified end key should be included in the result. Default is true.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "revs_info",
+            "in": "query",
+            "description": "Includes detailed information for all known document revisions. Default is false",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "key",
+            "in": "query",
+            "description": "eturn only documents that match the specified key.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "keys",
+            "in": "query",
+            "description": "Return only documents where the key matches one of the keys specified in the array.",
+            "required": false,
+            "type": "string"
           },
           {
             "name": "limit",

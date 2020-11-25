@@ -31,6 +31,8 @@ type ClientService interface {
 
 	PartitionDesignDocView(params *PartitionDesignDocViewParams) (*PartitionDesignDocViewOK, error)
 
+	PartitionDesignDocViewPost(params *PartitionDesignDocViewPostParams) (*PartitionDesignDocViewPostOK, error)
+
 	PartitionDocGetAll(params *PartitionDocGetAllParams) (*PartitionDocGetAllOK, error)
 
 	PartitionInfo(params *PartitionInfoParams) (*PartitionInfoOK, error)
@@ -116,6 +118,40 @@ func (a *Client) PartitionDesignDocView(params *PartitionDesignDocViewParams) (*
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for partitionDesignDocView: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  PartitionDesignDocViewPost executes the specified view function from the specified design document
+*/
+func (a *Client) PartitionDesignDocViewPost(params *PartitionDesignDocViewPostParams) (*PartitionDesignDocViewPostOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPartitionDesignDocViewPostParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "partitionDesignDocViewPost",
+		Method:             "POST",
+		PathPattern:        "/{db}/_partition/{partition}/_design/{ddoc}/_view/{view}",
+		ProducesMediaTypes: []string{"application/json", "text/plain"},
+		ConsumesMediaTypes: []string{"application/json", "text/plain"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &PartitionDesignDocViewPostReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PartitionDesignDocViewPostOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for partitionDesignDocViewPost: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
