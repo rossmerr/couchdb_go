@@ -1550,6 +1550,14 @@
             "pattern": "^[a-z][a-z0-9_$()+/-]*$"
           },
           {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Keys"
+            }
+          },
+          {
             "name": "conflicts",
             "in": "query",
             "description": "Include conflicts information in response. Ignored if include_docs isn’t true. Default is false.",
