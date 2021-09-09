@@ -25,31 +25,34 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
+// ClientOption is the option for Client methods
+type ClientOption func(*runtime.ClientOperation)
+
 // ClientService is the interface for Client methods
 type ClientService interface {
-	BulkDocs(params *BulkDocsParams) (*BulkDocsCreated, error)
+	BulkDocs(params *BulkDocsParams, opts ...ClientOption) (*BulkDocsCreated, error)
 
-	BulkGet(params *BulkGetParams) (*BulkGetOK, error)
+	BulkGet(params *BulkGetParams, opts ...ClientOption) (*BulkGetOK, error)
 
-	DbSecurityGet(params *DbSecurityGetParams) (*DbSecurityGetOK, error)
+	DbSecurityGet(params *DbSecurityGetParams, opts ...ClientOption) (*DbSecurityGetOK, error)
 
-	Delete(params *DeleteParams) (*DeleteOK, *DeleteAccepted, error)
+	Delete(params *DeleteParams, opts ...ClientOption) (*DeleteOK, *DeleteAccepted, error)
 
-	DesignDocAllGet(params *DesignDocAllGetParams) (*DesignDocAllGetOK, error)
+	DesignDocAllGet(params *DesignDocAllGetParams, opts ...ClientOption) (*DesignDocAllGetOK, error)
 
-	DesignDocAllPost(params *DesignDocAllPostParams) (*DesignDocAllPostOK, error)
+	DesignDocAllPost(params *DesignDocAllPostParams, opts ...ClientOption) (*DesignDocAllPostOK, error)
 
-	DocGetAll(params *DocGetAllParams) (*DocGetAllOK, error)
+	DocGetAll(params *DocGetAllParams, opts ...ClientOption) (*DocGetAllOK, error)
 
-	DocPostAll(params *DocPostAllParams) (*DocPostAllOK, error)
+	DocPostAll(params *DocPostAllParams, opts ...ClientOption) (*DocPostAllOK, error)
 
-	Exists(params *ExistsParams) (*ExistsOK, error)
+	Exists(params *ExistsParams, opts ...ClientOption) (*ExistsOK, error)
 
-	Get(params *GetParams) (*GetOK, error)
+	Get(params *GetParams, opts ...ClientOption) (*GetOK, error)
 
-	Put(params *PutParams) (*PutCreated, *PutAccepted, error)
+	Put(params *PutParams, opts ...ClientOption) (*PutCreated, *PutAccepted, error)
 
-	SbSecurityPut(params *SbSecurityPutParams) (*SbSecurityPutOK, error)
+	SbSecurityPut(params *SbSecurityPutParams, opts ...ClientOption) (*SbSecurityPutOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -66,13 +69,12 @@ For updating existing documents, you must provide the document ID, revision info
 In case of batch deleting documents all fields as document ID, revision information and deletion status (_deleted) are required.
 
 */
-func (a *Client) BulkDocs(params *BulkDocsParams) (*BulkDocsCreated, error) {
+func (a *Client) BulkDocs(params *BulkDocsParams, opts ...ClientOption) (*BulkDocsCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewBulkDocsParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "bulkDocs",
 		Method:             "POST",
 		PathPattern:        "/{db}/_bulk_docs",
@@ -83,7 +85,12 @@ func (a *Client) BulkDocs(params *BulkDocsParams) (*BulkDocsCreated, error) {
 		Reader:             &BulkDocsReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -103,13 +110,12 @@ func (a *Client) BulkDocs(params *BulkDocsParams) (*BulkDocsCreated, error) {
   It is well suited for fetching a specific revision of documents, as replicators do for example, or for getting revision history.
 
 */
-func (a *Client) BulkGet(params *BulkGetParams) (*BulkGetOK, error) {
+func (a *Client) BulkGet(params *BulkGetParams, opts ...ClientOption) (*BulkGetOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewBulkGetParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "bulkGet",
 		Method:             "POST",
 		PathPattern:        "/{db}/_bulk_get",
@@ -120,7 +126,12 @@ func (a *Client) BulkGet(params *BulkGetParams) (*BulkGetOK, error) {
 		Reader:             &BulkGetReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -163,13 +174,12 @@ If the security object for a database has never been set, then the value returne
 Also note, that security objects are not regular versioned documents (that is, they are not under MVCC rules). This is a design choice to speed up authorization checks (avoids traversing a database’s documents B-Tree).
 
 */
-func (a *Client) DbSecurityGet(params *DbSecurityGetParams) (*DbSecurityGetOK, error) {
+func (a *Client) DbSecurityGet(params *DbSecurityGetParams, opts ...ClientOption) (*DbSecurityGetOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDbSecurityGetParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "dbSecurityGet",
 		Method:             "GET",
 		PathPattern:        "/{db}/_security",
@@ -180,7 +190,12 @@ func (a *Client) DbSecurityGet(params *DbSecurityGetParams) (*DbSecurityGetOK, e
 		Reader:             &DbSecurityGetReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -203,13 +218,12 @@ URL includes a ?rev= parameter. This suggests that one wants to delete a documen
 the document id to the URL.
 
 */
-func (a *Client) Delete(params *DeleteParams) (*DeleteOK, *DeleteAccepted, error) {
+func (a *Client) Delete(params *DeleteParams, opts ...ClientOption) (*DeleteOK, *DeleteAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeleteParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "delete",
 		Method:             "DELETE",
 		PathPattern:        "/{db}",
@@ -220,7 +234,12 @@ func (a *Client) Delete(params *DeleteParams) (*DeleteOK, *DeleteAccepted, error
 		Reader:             &DeleteReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -241,13 +260,12 @@ func (a *Client) Delete(params *DeleteParams) (*DeleteOK, *DeleteAccepted, error
   The information is returned as a JSON structure containing meta information about the return structure, including a list of all design documents and basic contents, consisting the ID, revision and key. The key is the design document’s _id.
 
 */
-func (a *Client) DesignDocAllGet(params *DesignDocAllGetParams) (*DesignDocAllGetOK, error) {
+func (a *Client) DesignDocAllGet(params *DesignDocAllGetParams, opts ...ClientOption) (*DesignDocAllGetOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDesignDocAllGetParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "designDocAllGet",
 		Method:             "GET",
 		PathPattern:        "/{db}/_design_docs",
@@ -258,7 +276,12 @@ func (a *Client) DesignDocAllGet(params *DesignDocAllGetParams) (*DesignDocAllGe
 		Reader:             &DesignDocAllGetReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -278,13 +301,12 @@ func (a *Client) DesignDocAllGet(params *DesignDocAllGetParams) (*DesignDocAllGe
   API but allows for the query string parameters to be supplied as keys in a JSON object in the body of the POST request.
 
 */
-func (a *Client) DesignDocAllPost(params *DesignDocAllPostParams) (*DesignDocAllPostOK, error) {
+func (a *Client) DesignDocAllPost(params *DesignDocAllPostParams, opts ...ClientOption) (*DesignDocAllPostOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDesignDocAllPostParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "designDocAllPost",
 		Method:             "POST",
 		PathPattern:        "/{db}/_design_docs",
@@ -295,7 +317,12 @@ func (a *Client) DesignDocAllPost(params *DesignDocAllPostParams) (*DesignDocAll
 		Reader:             &DesignDocAllPostReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -318,13 +345,12 @@ documentation for a complete description of the available query parameters and t
 the returned data.
 
 */
-func (a *Client) DocGetAll(params *DocGetAllParams) (*DocGetAllOK, error) {
+func (a *Client) DocGetAll(params *DocGetAllParams, opts ...ClientOption) (*DocGetAllOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDocGetAllParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "docGetAll",
 		Method:             "GET",
 		PathPattern:        "/{db}/_all_docs",
@@ -335,7 +361,12 @@ func (a *Client) DocGetAll(params *DocGetAllParams) (*DocGetAllOK, error) {
 		Reader:             &DocGetAllReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -357,13 +388,12 @@ GET /{db}/_all_docs API but allows for the query string parameters to be supplie
 JSON object in the body of the POST request.
 
 */
-func (a *Client) DocPostAll(params *DocPostAllParams) (*DocPostAllOK, error) {
+func (a *Client) DocPostAll(params *DocPostAllParams, opts ...ClientOption) (*DocPostAllOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDocPostAllParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "docPostAll",
 		Method:             "POST",
 		PathPattern:        "/{db}/_all_docs",
@@ -374,7 +404,12 @@ func (a *Client) DocPostAll(params *DocPostAllParams) (*DocPostAllOK, error) {
 		Reader:             &DocPostAllReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -394,13 +429,12 @@ func (a *Client) DocPostAll(params *DocPostAllParams) (*DocPostAllOK, error) {
   Since the response body is empty, using the HEAD method is a lightweight way to check if the database exists already or not.
 
 */
-func (a *Client) Exists(params *ExistsParams) (*ExistsOK, error) {
+func (a *Client) Exists(params *ExistsParams, opts ...ClientOption) (*ExistsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewExistsParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "exists",
 		Method:             "HEAD",
 		PathPattern:        "/{db}",
@@ -411,7 +445,12 @@ func (a *Client) Exists(params *ExistsParams) (*ExistsOK, error) {
 		Reader:             &ExistsReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -432,13 +471,12 @@ func (a *Client) Exists(params *ExistsParams) (*ExistsOK, error) {
 available inventory in the system
 
 */
-func (a *Client) Get(params *GetParams) (*GetOK, error) {
+func (a *Client) Get(params *GetParams, opts ...ClientOption) (*GetOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewGetParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "get",
 		Method:             "GET",
 		PathPattern:        "/{db}",
@@ -449,7 +487,12 @@ func (a *Client) Get(params *GetParams) (*GetOK, error) {
 		Reader:             &GetReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -475,13 +518,12 @@ Name must begin with a lowercase letter (a-z)
 If you’re familiar with Regular Expressions, the rules above could be written as
 
 */
-func (a *Client) Put(params *PutParams) (*PutCreated, *PutAccepted, error) {
+func (a *Client) Put(params *PutParams, opts ...ClientOption) (*PutCreated, *PutAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPutParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "put",
 		Method:             "PUT",
 		PathPattern:        "/{db}",
@@ -492,7 +534,12 @@ func (a *Client) Put(params *PutParams) (*PutCreated, *PutAccepted, error) {
 		Reader:             &PutReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -510,13 +557,12 @@ func (a *Client) Put(params *PutParams) (*PutCreated, *PutAccepted, error) {
 /*
   SbSecurityPut sets the security object for the given database
 */
-func (a *Client) SbSecurityPut(params *SbSecurityPutParams) (*SbSecurityPutOK, error) {
+func (a *Client) SbSecurityPut(params *SbSecurityPutParams, opts ...ClientOption) (*SbSecurityPutOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewSbSecurityPutParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "sbSecurityPut",
 		Method:             "PUT",
 		PathPattern:        "/{db}/_security",
@@ -527,7 +573,12 @@ func (a *Client) SbSecurityPut(params *SbSecurityPutParams) (*SbSecurityPutOK, e
 		Reader:             &SbSecurityPutReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}

@@ -59,7 +59,6 @@ func (o *ReplicationReader) ReadResponse(response runtime.ClientResponse, consum
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -70,7 +69,7 @@ func NewReplicationOK() *ReplicationOK {
 	return &ReplicationOK{}
 }
 
-/*ReplicationOK handles this case with default header values.
+/* ReplicationOK describes a response with status code 200, with default header values.
 
 Replication request successfully completed
 */
@@ -81,7 +80,6 @@ type ReplicationOK struct {
 func (o *ReplicationOK) Error() string {
 	return fmt.Sprintf("[POST /_replicate][%d] replicationOK  %+v", 200, o.Payload)
 }
-
 func (o *ReplicationOK) GetPayload() *models.Replication {
 	return o.Payload
 }
@@ -103,7 +101,7 @@ func NewReplicationAccepted() *ReplicationAccepted {
 	return &ReplicationAccepted{}
 }
 
-/*ReplicationAccepted handles this case with default header values.
+/* ReplicationAccepted describes a response with status code 202, with default header values.
 
 Continuous replication request has been accepted
 */
@@ -114,7 +112,6 @@ type ReplicationAccepted struct {
 func (o *ReplicationAccepted) Error() string {
 	return fmt.Sprintf("[POST /_replicate][%d] replicationAccepted  %+v", 202, o.Payload)
 }
-
 func (o *ReplicationAccepted) GetPayload() *models.Replication {
 	return o.Payload
 }
@@ -136,7 +133,7 @@ func NewReplicationBadRequest() *ReplicationBadRequest {
 	return &ReplicationBadRequest{}
 }
 
-/*ReplicationBadRequest handles this case with default header values.
+/* ReplicationBadRequest describes a response with status code 400, with default header values.
 
 Invalid JSON data
 */
@@ -147,7 +144,6 @@ type ReplicationBadRequest struct {
 func (o *ReplicationBadRequest) Error() string {
 	return fmt.Sprintf("[POST /_replicate][%d] replicationBadRequest  %+v", 400, o.Payload)
 }
-
 func (o *ReplicationBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -169,7 +165,7 @@ func NewReplicationUnauthorized() *ReplicationUnauthorized {
 	return &ReplicationUnauthorized{}
 }
 
-/*ReplicationUnauthorized handles this case with default header values.
+/* ReplicationUnauthorized describes a response with status code 401, with default header values.
 
 CouchDB Server Administrator privileges required
 */
@@ -180,7 +176,6 @@ type ReplicationUnauthorized struct {
 func (o *ReplicationUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /_replicate][%d] replicationUnauthorized  %+v", 401, o.Payload)
 }
-
 func (o *ReplicationUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -202,7 +197,7 @@ func NewReplicationNotFound() *ReplicationNotFound {
 	return &ReplicationNotFound{}
 }
 
-/*ReplicationNotFound handles this case with default header values.
+/* ReplicationNotFound describes a response with status code 404, with default header values.
 
 Either the source or target DB is not found or attempt to cancel unknown replication task
 */
@@ -213,7 +208,6 @@ type ReplicationNotFound struct {
 func (o *ReplicationNotFound) Error() string {
 	return fmt.Sprintf("[POST /_replicate][%d] replicationNotFound  %+v", 404, o.Payload)
 }
-
 func (o *ReplicationNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -235,7 +229,7 @@ func NewReplicationInternalServerError() *ReplicationInternalServerError {
 	return &ReplicationInternalServerError{}
 }
 
-/*ReplicationInternalServerError handles this case with default header values.
+/* ReplicationInternalServerError describes a response with status code 500, with default header values.
 
 JSON specification was invalid
 */
@@ -246,7 +240,6 @@ type ReplicationInternalServerError struct {
 func (o *ReplicationInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /_replicate][%d] replicationInternalServerError  %+v", 500, o.Payload)
 }
-
 func (o *ReplicationInternalServerError) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }

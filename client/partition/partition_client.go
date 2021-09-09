@@ -25,17 +25,20 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
+// ClientOption is the option for Client methods
+type ClientOption func(*runtime.ClientOperation)
+
 // ClientService is the interface for Client methods
 type ClientService interface {
-	PartitionDesignDocSearch(params *PartitionDesignDocSearchParams) (*PartitionDesignDocSearchOK, error)
+	PartitionDesignDocSearch(params *PartitionDesignDocSearchParams, opts ...ClientOption) (*PartitionDesignDocSearchOK, error)
 
-	PartitionDesignDocView(params *PartitionDesignDocViewParams) (*PartitionDesignDocViewOK, error)
+	PartitionDesignDocView(params *PartitionDesignDocViewParams, opts ...ClientOption) (*PartitionDesignDocViewOK, error)
 
-	PartitionDesignDocViewPost(params *PartitionDesignDocViewPostParams) (*PartitionDesignDocViewPostOK, error)
+	PartitionDesignDocViewPost(params *PartitionDesignDocViewPostParams, opts ...ClientOption) (*PartitionDesignDocViewPostOK, error)
 
-	PartitionDocGetAll(params *PartitionDocGetAllParams) (*PartitionDocGetAllOK, error)
+	PartitionDocGetAll(params *PartitionDocGetAllParams, opts ...ClientOption) (*PartitionDocGetAllOK, error)
 
-	PartitionInfo(params *PartitionInfoParams) (*PartitionInfoOK, error)
+	PartitionInfo(params *PartitionInfoParams, opts ...ClientOption) (*PartitionInfoOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -56,13 +59,12 @@ Faceting and grouping are not supported on partitioned searches, so the followin
 Do not combine the bookmark and stale options. These options constrain the choice of shard replicas to use for the response. When used together, the options might cause problems when contact is attempted with replicas that are slow or not available.
 
 */
-func (a *Client) PartitionDesignDocSearch(params *PartitionDesignDocSearchParams) (*PartitionDesignDocSearchOK, error) {
+func (a *Client) PartitionDesignDocSearch(params *PartitionDesignDocSearchParams, opts ...ClientOption) (*PartitionDesignDocSearchOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPartitionDesignDocSearchParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "partitionDesignDocSearch",
 		Method:             "GET",
 		PathPattern:        "/{db}/_partition/{partition}/_design/{ddoc}/_search/{index}",
@@ -73,7 +75,12 @@ func (a *Client) PartitionDesignDocSearch(params *PartitionDesignDocSearchParams
 		Reader:             &PartitionDesignDocSearchReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -90,13 +97,12 @@ func (a *Client) PartitionDesignDocSearch(params *PartitionDesignDocSearchParams
 /*
   PartitionDesignDocView executes the specified view function from the specified design document
 */
-func (a *Client) PartitionDesignDocView(params *PartitionDesignDocViewParams) (*PartitionDesignDocViewOK, error) {
+func (a *Client) PartitionDesignDocView(params *PartitionDesignDocViewParams, opts ...ClientOption) (*PartitionDesignDocViewOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPartitionDesignDocViewParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "partitionDesignDocView",
 		Method:             "GET",
 		PathPattern:        "/{db}/_partition/{partition}/_design/{ddoc}/_view/{view}",
@@ -107,7 +113,12 @@ func (a *Client) PartitionDesignDocView(params *PartitionDesignDocViewParams) (*
 		Reader:             &PartitionDesignDocViewReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -124,13 +135,12 @@ func (a *Client) PartitionDesignDocView(params *PartitionDesignDocViewParams) (*
 /*
   PartitionDesignDocViewPost executes the specified view function from the specified design document
 */
-func (a *Client) PartitionDesignDocViewPost(params *PartitionDesignDocViewPostParams) (*PartitionDesignDocViewPostOK, error) {
+func (a *Client) PartitionDesignDocViewPost(params *PartitionDesignDocViewPostParams, opts ...ClientOption) (*PartitionDesignDocViewPostOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPartitionDesignDocViewPostParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "partitionDesignDocViewPost",
 		Method:             "POST",
 		PathPattern:        "/{db}/_partition/{partition}/_design/{ddoc}/_view/{view}",
@@ -141,7 +151,12 @@ func (a *Client) PartitionDesignDocViewPost(params *PartitionDesignDocViewPostPa
 		Reader:             &PartitionDesignDocViewPostReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -163,13 +178,12 @@ func (a *Client) PartitionDesignDocViewPost(params *PartitionDesignDocViewPostPa
 Refer to the view endpoint documentation for a complete description of the available query parameters and the format of the returned data.
 
 */
-func (a *Client) PartitionDocGetAll(params *PartitionDocGetAllParams) (*PartitionDocGetAllOK, error) {
+func (a *Client) PartitionDocGetAll(params *PartitionDocGetAllParams, opts ...ClientOption) (*PartitionDocGetAllOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPartitionDocGetAllParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "partitionDocGetAll",
 		Method:             "GET",
 		PathPattern:        "/{db}/_partition/{partition}/_all_docs",
@@ -180,7 +194,12 @@ func (a *Client) PartitionDocGetAll(params *PartitionDocGetAllParams) (*Partitio
 		Reader:             &PartitionDocGetAllReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -197,13 +216,12 @@ func (a *Client) PartitionDocGetAll(params *PartitionDocGetAllParams) (*Partitio
 /*
   PartitionInfo this endpoint returns information describing the provided partition it includes document and deleted document counts along with external and active data sizes
 */
-func (a *Client) PartitionInfo(params *PartitionInfoParams) (*PartitionInfoOK, error) {
+func (a *Client) PartitionInfo(params *PartitionInfoParams, opts ...ClientOption) (*PartitionInfoOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPartitionInfoParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "partitionInfo",
 		Method:             "GET",
 		PathPattern:        "/{db}/_partition/{partition}",
@@ -214,7 +232,12 @@ func (a *Client) PartitionInfo(params *PartitionInfoParams) (*PartitionInfoOK, e
 		Reader:             &PartitionInfoReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}

@@ -6,6 +6,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -67,6 +69,25 @@ func (m *BulkResponse) Validate(formats strfmt.Registry) error {
 	}
 	// validation for a type composition with ErrorResponse
 	if err := m.ErrorResponse.Validate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+// ContextValidate validate this bulk response based on the context it is used
+func (m *BulkResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	// validation for a type composition with DocumentOK
+	if err := m.DocumentOK.ContextValidate(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+	// validation for a type composition with ErrorResponse
+	if err := m.ErrorResponse.ContextValidate(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 

@@ -53,7 +53,6 @@ func (o *DocGetReader) ReadResponse(response runtime.ClientResponse, consumer ru
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -64,15 +63,17 @@ func NewDocGetOK() *DocGetOK {
 	return &DocGetOK{}
 }
 
-/*DocGetOK handles this case with default header values.
+/* DocGetOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
 type DocGetOK struct {
-	/*Double quoted document’s revision token
+
+	/* Double quoted document’s revision token
 	 */
 	ETag string
-	/*chunked. Available if requested with query parameter open_revs
+
+	/* chunked. Available if requested with query parameter open_revs
 	 */
 	TransferEncoding string
 
@@ -82,18 +83,25 @@ type DocGetOK struct {
 func (o *DocGetOK) Error() string {
 	return fmt.Sprintf("[GET /{db}/{docid}][%d] docGetOK  %+v", 200, o.Payload)
 }
-
 func (o *DocGetOK) GetPayload() models.Document {
 	return o.Payload
 }
 
 func (o *DocGetOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	// response header ETag
-	o.ETag = response.GetHeader("ETag")
+	// hydrates response header ETag
+	hdrETag := response.GetHeader("ETag")
 
-	// response header Transfer-Encoding
-	o.TransferEncoding = response.GetHeader("Transfer-Encoding")
+	if hdrETag != "" {
+		o.ETag = hdrETag
+	}
+
+	// hydrates response header Transfer-Encoding
+	hdrTransferEncoding := response.GetHeader("Transfer-Encoding")
+
+	if hdrTransferEncoding != "" {
+		o.TransferEncoding = hdrTransferEncoding
+	}
 
 	// response payload
 	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
@@ -108,7 +116,7 @@ func NewDocGetNotModified() *DocGetNotModified {
 	return &DocGetNotModified{}
 }
 
-/*DocGetNotModified handles this case with default header values.
+/* DocGetNotModified describes a response with status code 304, with default header values.
 
 Document wasn’t modified since specified revision
 */
@@ -129,7 +137,7 @@ func NewDocGetBadRequest() *DocGetBadRequest {
 	return &DocGetBadRequest{}
 }
 
-/*DocGetBadRequest handles this case with default header values.
+/* DocGetBadRequest describes a response with status code 400, with default header values.
 
 The format of the request or revision was invalid
 */
@@ -140,7 +148,6 @@ type DocGetBadRequest struct {
 func (o *DocGetBadRequest) Error() string {
 	return fmt.Sprintf("[GET /{db}/{docid}][%d] docGetBadRequest  %+v", 400, o.Payload)
 }
-
 func (o *DocGetBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -162,7 +169,7 @@ func NewDocGetUnauthorized() *DocGetUnauthorized {
 	return &DocGetUnauthorized{}
 }
 
-/*DocGetUnauthorized handles this case with default header values.
+/* DocGetUnauthorized describes a response with status code 401, with default header values.
 
 Read privilege required
 */
@@ -173,7 +180,6 @@ type DocGetUnauthorized struct {
 func (o *DocGetUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /{db}/{docid}][%d] docGetUnauthorized  %+v", 401, o.Payload)
 }
-
 func (o *DocGetUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -195,7 +201,7 @@ func NewDocGetNotFound() *DocGetNotFound {
 	return &DocGetNotFound{}
 }
 
-/*DocGetNotFound handles this case with default header values.
+/* DocGetNotFound describes a response with status code 404, with default header values.
 
 Document not found
 */
@@ -206,7 +212,6 @@ type DocGetNotFound struct {
 func (o *DocGetNotFound) Error() string {
 	return fmt.Sprintf("[GET /{db}/{docid}][%d] docGetNotFound  %+v", 404, o.Payload)
 }
-
 func (o *DocGetNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }

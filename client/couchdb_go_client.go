@@ -14,7 +14,7 @@ import (
 	"github.com/rossmerr/couchdb_go/client/design_documents"
 	"github.com/rossmerr/couchdb_go/client/document"
 	"github.com/rossmerr/couchdb_go/client/partition"
-	"github.com/rossmerr/couchdb_go/client/server"
+	serverops "github.com/rossmerr/couchdb_go/client/server"
 )
 
 // Default couchdb go HTTP client.
@@ -63,7 +63,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *CouchdbGo 
 	cli.DesignDocuments = design_documents.New(transport, formats)
 	cli.Document = document.New(transport, formats)
 	cli.Partition = partition.New(transport, formats)
-	cli.Server = server.New(transport, formats)
+	cli.Server = serverops.New(transport, formats)
 	return cli
 }
 
@@ -116,7 +116,7 @@ type CouchdbGo struct {
 
 	Partition partition.ClientService
 
-	Server server.ClientService
+	Server serverops.ClientService
 
 	Transport runtime.ClientTransport
 }

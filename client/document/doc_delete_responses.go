@@ -59,7 +59,6 @@ func (o *DocDeleteReader) ReadResponse(response runtime.ClientResponse, consumer
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -70,12 +69,13 @@ func NewDocDeleteOK() *DocDeleteOK {
 	return &DocDeleteOK{}
 }
 
-/*DocDeleteOK handles this case with default header values.
+/* DocDeleteOK describes a response with status code 200, with default header values.
 
 Document successfully removed
 */
 type DocDeleteOK struct {
-	/*Double quoted document’s revision token
+
+	/* Double quoted document’s revision token
 	 */
 	ETag string
 
@@ -85,15 +85,18 @@ type DocDeleteOK struct {
 func (o *DocDeleteOK) Error() string {
 	return fmt.Sprintf("[DELETE /{db}/{docid}][%d] docDeleteOK  %+v", 200, o.Payload)
 }
-
 func (o *DocDeleteOK) GetPayload() *models.DocumentOK {
 	return o.Payload
 }
 
 func (o *DocDeleteOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	// response header ETag
-	o.ETag = response.GetHeader("ETag")
+	// hydrates response header ETag
+	hdrETag := response.GetHeader("ETag")
+
+	if hdrETag != "" {
+		o.ETag = hdrETag
+	}
 
 	o.Payload = new(models.DocumentOK)
 
@@ -110,12 +113,13 @@ func NewDocDeleteAccepted() *DocDeleteAccepted {
 	return &DocDeleteAccepted{}
 }
 
-/*DocDeleteAccepted handles this case with default header values.
+/* DocDeleteAccepted describes a response with status code 202, with default header values.
 
 Request was accepted, but changes are not yet stored on disk
 */
 type DocDeleteAccepted struct {
-	/*Double quoted document’s revision token
+
+	/* Double quoted document’s revision token
 	 */
 	ETag string
 
@@ -125,15 +129,18 @@ type DocDeleteAccepted struct {
 func (o *DocDeleteAccepted) Error() string {
 	return fmt.Sprintf("[DELETE /{db}/{docid}][%d] docDeleteAccepted  %+v", 202, o.Payload)
 }
-
 func (o *DocDeleteAccepted) GetPayload() *models.DocumentOK {
 	return o.Payload
 }
 
 func (o *DocDeleteAccepted) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	// response header ETag
-	o.ETag = response.GetHeader("ETag")
+	// hydrates response header ETag
+	hdrETag := response.GetHeader("ETag")
+
+	if hdrETag != "" {
+		o.ETag = hdrETag
+	}
 
 	o.Payload = new(models.DocumentOK)
 
@@ -150,7 +157,7 @@ func NewDocDeleteBadRequest() *DocDeleteBadRequest {
 	return &DocDeleteBadRequest{}
 }
 
-/*DocDeleteBadRequest handles this case with default header values.
+/* DocDeleteBadRequest describes a response with status code 400, with default header values.
 
 Invalid request body or parameters
 */
@@ -161,7 +168,6 @@ type DocDeleteBadRequest struct {
 func (o *DocDeleteBadRequest) Error() string {
 	return fmt.Sprintf("[DELETE /{db}/{docid}][%d] docDeleteBadRequest  %+v", 400, o.Payload)
 }
-
 func (o *DocDeleteBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -183,7 +189,7 @@ func NewDocDeleteUnauthorized() *DocDeleteUnauthorized {
 	return &DocDeleteUnauthorized{}
 }
 
-/*DocDeleteUnauthorized handles this case with default header values.
+/* DocDeleteUnauthorized describes a response with status code 401, with default header values.
 
 Write privileges required
 */
@@ -194,7 +200,6 @@ type DocDeleteUnauthorized struct {
 func (o *DocDeleteUnauthorized) Error() string {
 	return fmt.Sprintf("[DELETE /{db}/{docid}][%d] docDeleteUnauthorized  %+v", 401, o.Payload)
 }
-
 func (o *DocDeleteUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -216,7 +221,7 @@ func NewDocDeleteNotFound() *DocDeleteNotFound {
 	return &DocDeleteNotFound{}
 }
 
-/*DocDeleteNotFound handles this case with default header values.
+/* DocDeleteNotFound describes a response with status code 404, with default header values.
 
 Specified database or document ID doesn’t exists
 */
@@ -227,7 +232,6 @@ type DocDeleteNotFound struct {
 func (o *DocDeleteNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /{db}/{docid}][%d] docDeleteNotFound  %+v", 404, o.Payload)
 }
-
 func (o *DocDeleteNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -249,7 +253,7 @@ func NewDocDeleteConflict() *DocDeleteConflict {
 	return &DocDeleteConflict{}
 }
 
-/*DocDeleteConflict handles this case with default header values.
+/* DocDeleteConflict describes a response with status code 409, with default header values.
 
 Specified revision is not the latest for target document
 */
@@ -260,7 +264,6 @@ type DocDeleteConflict struct {
 func (o *DocDeleteConflict) Error() string {
 	return fmt.Sprintf("[DELETE /{db}/{docid}][%d] docDeleteConflict  %+v", 409, o.Payload)
 }
-
 func (o *DocDeleteConflict) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }

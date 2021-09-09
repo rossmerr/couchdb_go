@@ -15,71 +15,89 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+
+	"github.com/rossmerr/couchdb_go/models"
 )
 
-// NewBulkGetParams creates a new BulkGetParams object
-// with the default values initialized.
+// NewBulkGetParams creates a new BulkGetParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewBulkGetParams() *BulkGetParams {
-	var ()
 	return &BulkGetParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewBulkGetParamsWithTimeout creates a new BulkGetParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewBulkGetParamsWithTimeout(timeout time.Duration) *BulkGetParams {
-	var ()
 	return &BulkGetParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewBulkGetParamsWithContext creates a new BulkGetParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewBulkGetParamsWithContext(ctx context.Context) *BulkGetParams {
-	var ()
 	return &BulkGetParams{
-
 		Context: ctx,
 	}
 }
 
 // NewBulkGetParamsWithHTTPClient creates a new BulkGetParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewBulkGetParamsWithHTTPClient(client *http.Client) *BulkGetParams {
-	var ()
 	return &BulkGetParams{
 		HTTPClient: client,
 	}
 }
 
-/*BulkGetParams contains all the parameters to send to the API endpoint
-for the bulk get operation typically these are written to a http.Request
+/* BulkGetParams contains all the parameters to send to the API endpoint
+   for the bulk get operation.
+
+   Typically these are written to a http.Request.
 */
 type BulkGetParams struct {
 
-	/*Body
-	  List of document objects, with id, and optionally rev and atts_since
+	/* Body.
 
+	   List of document objects, with id, and optionally rev and atts_since
 	*/
-	Body BulkGetBody
-	/*Db
-	  Database name
+	Body *models.Body1
 
+	/* Db.
+
+	   Database name
 	*/
 	Db string
-	/*Revs
-	  Give the revisions history
 
+	/* Revs.
+
+	   Give the revisions history
 	*/
 	Revs *bool
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the bulk get params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *BulkGetParams) WithDefaults() *BulkGetParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the bulk get params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *BulkGetParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the bulk get params
@@ -116,13 +134,13 @@ func (o *BulkGetParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithBody adds the body to the bulk get params
-func (o *BulkGetParams) WithBody(body BulkGetBody) *BulkGetParams {
+func (o *BulkGetParams) WithBody(body *models.Body1) *BulkGetParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the bulk get params
-func (o *BulkGetParams) SetBody(body BulkGetBody) {
+func (o *BulkGetParams) SetBody(body *models.Body1) {
 	o.Body = body
 }
 
@@ -155,9 +173,10 @@ func (o *BulkGetParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regis
 		return err
 	}
 	var res []error
-
-	if err := r.SetBodyParam(o.Body); err != nil {
-		return err
+	if o.Body != nil {
+		if err := r.SetBodyParam(o.Body); err != nil {
+			return err
+		}
 	}
 
 	// path param db
@@ -169,16 +188,17 @@ func (o *BulkGetParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regis
 
 		// query param revs
 		var qrRevs bool
+
 		if o.Revs != nil {
 			qrRevs = *o.Revs
 		}
 		qRevs := swag.FormatBool(qrRevs)
 		if qRevs != "" {
+
 			if err := r.SetQueryParam("revs", qRevs); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if len(res) > 0 {

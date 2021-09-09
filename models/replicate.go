@@ -6,6 +6,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -72,7 +74,6 @@ func (m *Replicate) Validate(formats strfmt.Registry) error {
 }
 
 func (m *Replicate) validateCreateTargetParams(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.CreateTargetParams) { // not required
 		return nil
 	}
@@ -90,7 +91,6 @@ func (m *Replicate) validateCreateTargetParams(formats strfmt.Registry) error {
 }
 
 func (m *Replicate) validateSource(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Source) { // not required
 		return nil
 	}
@@ -108,13 +108,76 @@ func (m *Replicate) validateSource(formats strfmt.Registry) error {
 }
 
 func (m *Replicate) validateTarget(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Target) { // not required
 		return nil
 	}
 
 	if m.Target != nil {
 		if err := m.Target.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("target")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this replicate based on the context it is used
+func (m *Replicate) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateCreateTargetParams(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSource(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateTarget(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Replicate) contextValidateCreateTargetParams(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.CreateTargetParams != nil {
+		if err := m.CreateTargetParams.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("create_target_params")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Replicate) contextValidateSource(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Source != nil {
+		if err := m.Source.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("source")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Replicate) contextValidateTarget(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Target != nil {
+		if err := m.Target.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("target")
 			}
@@ -136,38 +199,6 @@ func (m *Replicate) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Replicate) UnmarshalBinary(b []byte) error {
 	var res Replicate
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// ReplicateCreateTargetParams replicate create target params
-//
-// swagger:model ReplicateCreateTargetParams
-type ReplicateCreateTargetParams struct {
-
-	// partitioned
-	Partitioned bool `json:"partitioned,omitempty"`
-}
-
-// Validate validates this replicate create target params
-func (m *ReplicateCreateTargetParams) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *ReplicateCreateTargetParams) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *ReplicateCreateTargetParams) UnmarshalBinary(b []byte) error {
-	var res ReplicateCreateTargetParams
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

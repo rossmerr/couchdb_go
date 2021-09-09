@@ -11,7 +11,6 @@ import (
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 
 	"github.com/rossmerr/couchdb_go/models"
 )
@@ -36,7 +35,6 @@ func (o *UpReader) ReadResponse(response runtime.ClientResponse, consumer runtim
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -47,25 +45,24 @@ func NewUpOK() *UpOK {
 	return &UpOK{}
 }
 
-/*UpOK handles this case with default header values.
+/* UpOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
 type UpOK struct {
-	Payload *UpOKBody
+	Payload *models.InlineResponse2004
 }
 
 func (o *UpOK) Error() string {
 	return fmt.Sprintf("[GET /_up][%d] upOK  %+v", 200, o.Payload)
 }
-
-func (o *UpOK) GetPayload() *UpOKBody {
+func (o *UpOK) GetPayload() *models.InlineResponse2004 {
 	return o.Payload
 }
 
 func (o *UpOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(UpOKBody)
+	o.Payload = new(models.InlineResponse2004)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -80,7 +77,7 @@ func NewUpNotFound() *UpNotFound {
 	return &UpNotFound{}
 }
 
-/*UpNotFound handles this case with default header values.
+/* UpNotFound describes a response with status code 404, with default header values.
 
 The server is unavailable for requests at this time.
 */
@@ -91,7 +88,6 @@ type UpNotFound struct {
 func (o *UpNotFound) Error() string {
 	return fmt.Sprintf("[GET /_up][%d] upNotFound  %+v", 404, o.Payload)
 }
-
 func (o *UpNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -105,37 +101,5 @@ func (o *UpNotFound) readResponse(response runtime.ClientResponse, consumer runt
 		return err
 	}
 
-	return nil
-}
-
-/*UpOKBody up o k body
-swagger:model UpOKBody
-*/
-type UpOKBody struct {
-
-	// status
-	Status string `json:"status,omitempty"`
-}
-
-// Validate validates this up o k body
-func (o *UpOKBody) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (o *UpOKBody) MarshalBinary() ([]byte, error) {
-	if o == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(o)
-}
-
-// UnmarshalBinary interface implementation
-func (o *UpOKBody) UnmarshalBinary(b []byte) error {
-	var res UpOKBody
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*o = res
 	return nil
 }

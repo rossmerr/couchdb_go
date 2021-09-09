@@ -11,7 +11,6 @@ import (
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 
 	"github.com/rossmerr/couchdb_go/models"
 )
@@ -42,7 +41,6 @@ func (o *BulkDocsReader) ReadResponse(response runtime.ClientResponse, consumer 
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -53,7 +51,7 @@ func NewBulkDocsCreated() *BulkDocsCreated {
 	return &BulkDocsCreated{}
 }
 
-/*BulkDocsCreated handles this case with default header values.
+/* BulkDocsCreated describes a response with status code 201, with default header values.
 
 Document(s) have been created or updated
 */
@@ -64,7 +62,6 @@ type BulkDocsCreated struct {
 func (o *BulkDocsCreated) Error() string {
 	return fmt.Sprintf("[POST /{db}/_bulk_docs][%d] bulkDocsCreated  %+v", 201, o.Payload)
 }
-
 func (o *BulkDocsCreated) GetPayload() []*models.BulkResponse {
 	return o.Payload
 }
@@ -84,7 +81,7 @@ func NewBulkDocsBadRequest() *BulkDocsBadRequest {
 	return &BulkDocsBadRequest{}
 }
 
-/*BulkDocsBadRequest handles this case with default header values.
+/* BulkDocsBadRequest describes a response with status code 400, with default header values.
 
 The request provided invalid JSON data
 */
@@ -95,7 +92,6 @@ type BulkDocsBadRequest struct {
 func (o *BulkDocsBadRequest) Error() string {
 	return fmt.Sprintf("[POST /{db}/_bulk_docs][%d] bulkDocsBadRequest  %+v", 400, o.Payload)
 }
-
 func (o *BulkDocsBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -117,7 +113,7 @@ func NewBulkDocsNotFound() *BulkDocsNotFound {
 	return &BulkDocsNotFound{}
 }
 
-/*BulkDocsNotFound handles this case with default header values.
+/* BulkDocsNotFound describes a response with status code 404, with default header values.
 
 Requested database not found
 */
@@ -128,7 +124,6 @@ type BulkDocsNotFound struct {
 func (o *BulkDocsNotFound) Error() string {
 	return fmt.Sprintf("[POST /{db}/_bulk_docs][%d] bulkDocsNotFound  %+v", 404, o.Payload)
 }
-
 func (o *BulkDocsNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -142,37 +137,5 @@ func (o *BulkDocsNotFound) readResponse(response runtime.ClientResponse, consume
 		return err
 	}
 
-	return nil
-}
-
-/*BulkDocsBody List of documents objects
-swagger:model BulkDocsBody
-*/
-type BulkDocsBody struct {
-
-	// docs
-	Docs []models.Document `json:"docs"`
-}
-
-// Validate validates this bulk docs body
-func (o *BulkDocsBody) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (o *BulkDocsBody) MarshalBinary() ([]byte, error) {
-	if o == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(o)
-}
-
-// UnmarshalBinary interface implementation
-func (o *BulkDocsBody) UnmarshalBinary(b []byte) error {
-	var res BulkDocsBody
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*o = res
 	return nil
 }

@@ -11,7 +11,8 @@ import (
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
+
+	"github.com/rossmerr/couchdb_go/models"
 )
 
 // MembershipReader is a Reader for the Membership structure.
@@ -28,7 +29,6 @@ func (o *MembershipReader) ReadResponse(response runtime.ClientResponse, consume
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -39,65 +39,29 @@ func NewMembershipOK() *MembershipOK {
 	return &MembershipOK{}
 }
 
-/*MembershipOK handles this case with default header values.
+/* MembershipOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
 type MembershipOK struct {
-	Payload *MembershipOKBody
+	Payload *models.InlineResponse2002
 }
 
 func (o *MembershipOK) Error() string {
 	return fmt.Sprintf("[GET /_membership][%d] membershipOK  %+v", 200, o.Payload)
 }
-
-func (o *MembershipOK) GetPayload() *MembershipOKBody {
+func (o *MembershipOK) GetPayload() *models.InlineResponse2002 {
 	return o.Payload
 }
 
 func (o *MembershipOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(MembershipOKBody)
+	o.Payload = new(models.InlineResponse2002)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 
-	return nil
-}
-
-/*MembershipOKBody membership o k body
-swagger:model MembershipOKBody
-*/
-type MembershipOKBody struct {
-
-	// all nodes
-	AllNodes []string `json:"all_nodes"`
-
-	// cluster nodes
-	ClusterNodes []string `json:"cluster_nodes"`
-}
-
-// Validate validates this membership o k body
-func (o *MembershipOKBody) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (o *MembershipOKBody) MarshalBinary() ([]byte, error) {
-	if o == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(o)
-}
-
-// UnmarshalBinary interface implementation
-func (o *MembershipOKBody) UnmarshalBinary(b []byte) error {
-	var res MembershipOKBody
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*o = res
 	return nil
 }

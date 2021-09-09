@@ -60,7 +60,6 @@ func (o *DocPutReader) ReadResponse(response runtime.ClientResponse, consumer ru
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -71,16 +70,20 @@ func NewDocPutCreated() *DocPutCreated {
 	return &DocPutCreated{}
 }
 
-/*DocPutCreated handles this case with default header values.
+/* DocPutCreated describes a response with status code 201, with default header values.
 
 Document created and stored on disk
 */
 type DocPutCreated struct {
-	/*Double quoted document’s revision token
+
+	/* Double quoted document’s revision token
 	 */
 	ETag string
-	/*Document URI
-	 */
+
+	/* Document URI
+
+	   Format: uri
+	*/
 	Location strfmt.URI
 
 	Payload *models.DocumentOK
@@ -89,23 +92,29 @@ type DocPutCreated struct {
 func (o *DocPutCreated) Error() string {
 	return fmt.Sprintf("[PUT /{db}/{docid}][%d] docPutCreated  %+v", 201, o.Payload)
 }
-
 func (o *DocPutCreated) GetPayload() *models.DocumentOK {
 	return o.Payload
 }
 
 func (o *DocPutCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	// response header ETag
-	o.ETag = response.GetHeader("ETag")
+	// hydrates response header ETag
+	hdrETag := response.GetHeader("ETag")
 
-	// response header Location
-
-	location, err := formats.Parse("uri", response.GetHeader("Location"))
-	if err != nil {
-		return errors.InvalidType("Location", "header", "strfmt.URI", response.GetHeader("Location"))
+	if hdrETag != "" {
+		o.ETag = hdrETag
 	}
-	o.Location = *(location.(*strfmt.URI))
+
+	// hydrates response header Location
+	hdrLocation := response.GetHeader("Location")
+
+	if hdrLocation != "" {
+		vallocation, err := formats.Parse("uri", hdrLocation)
+		if err != nil {
+			return errors.InvalidType("Location", "header", "strfmt.URI", hdrLocation)
+		}
+		o.Location = *(vallocation.(*strfmt.URI))
+	}
 
 	o.Payload = new(models.DocumentOK)
 
@@ -122,15 +131,17 @@ func NewDocPutAccepted() *DocPutAccepted {
 	return &DocPutAccepted{}
 }
 
-/*DocPutAccepted handles this case with default header values.
+/* DocPutAccepted describes a response with status code 202, with default header values.
 
 Document data accepted, but not yet stored on disk
 */
 type DocPutAccepted struct {
-	/*Double quoted document’s revision token
+
+	/* Double quoted document’s revision token
 	 */
 	ETag string
-	/*chunked. Available if requested with query parameter open_revs
+
+	/* chunked. Available if requested with query parameter open_revs
 	 */
 	TransferEncoding string
 
@@ -140,18 +151,25 @@ type DocPutAccepted struct {
 func (o *DocPutAccepted) Error() string {
 	return fmt.Sprintf("[PUT /{db}/{docid}][%d] docPutAccepted  %+v", 202, o.Payload)
 }
-
 func (o *DocPutAccepted) GetPayload() *models.DocumentOK {
 	return o.Payload
 }
 
 func (o *DocPutAccepted) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	// response header ETag
-	o.ETag = response.GetHeader("ETag")
+	// hydrates response header ETag
+	hdrETag := response.GetHeader("ETag")
 
-	// response header Transfer-Encoding
-	o.TransferEncoding = response.GetHeader("Transfer-Encoding")
+	if hdrETag != "" {
+		o.ETag = hdrETag
+	}
+
+	// hydrates response header Transfer-Encoding
+	hdrTransferEncoding := response.GetHeader("Transfer-Encoding")
+
+	if hdrTransferEncoding != "" {
+		o.TransferEncoding = hdrTransferEncoding
+	}
 
 	o.Payload = new(models.DocumentOK)
 
@@ -168,7 +186,7 @@ func NewDocPutBadRequest() *DocPutBadRequest {
 	return &DocPutBadRequest{}
 }
 
-/*DocPutBadRequest handles this case with default header values.
+/* DocPutBadRequest describes a response with status code 400, with default header values.
 
 Invalid request body or parameters
 */
@@ -179,7 +197,6 @@ type DocPutBadRequest struct {
 func (o *DocPutBadRequest) Error() string {
 	return fmt.Sprintf("[PUT /{db}/{docid}][%d] docPutBadRequest  %+v", 400, o.Payload)
 }
-
 func (o *DocPutBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -201,7 +218,7 @@ func NewDocPutUnauthorized() *DocPutUnauthorized {
 	return &DocPutUnauthorized{}
 }
 
-/*DocPutUnauthorized handles this case with default header values.
+/* DocPutUnauthorized describes a response with status code 401, with default header values.
 
 Write privileges required
 */
@@ -212,7 +229,6 @@ type DocPutUnauthorized struct {
 func (o *DocPutUnauthorized) Error() string {
 	return fmt.Sprintf("[PUT /{db}/{docid}][%d] docPutUnauthorized  %+v", 401, o.Payload)
 }
-
 func (o *DocPutUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -234,7 +250,7 @@ func NewDocPutNotFound() *DocPutNotFound {
 	return &DocPutNotFound{}
 }
 
-/*DocPutNotFound handles this case with default header values.
+/* DocPutNotFound describes a response with status code 404, with default header values.
 
 Specified database or document ID doesn’t exists
 */
@@ -245,7 +261,6 @@ type DocPutNotFound struct {
 func (o *DocPutNotFound) Error() string {
 	return fmt.Sprintf("[PUT /{db}/{docid}][%d] docPutNotFound  %+v", 404, o.Payload)
 }
-
 func (o *DocPutNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -267,7 +282,7 @@ func NewDocPutConflict() *DocPutConflict {
 	return &DocPutConflict{}
 }
 
-/*DocPutConflict handles this case with default header values.
+/* DocPutConflict describes a response with status code 409, with default header values.
 
 Document with the specified ID already exists or specified revision is not latest for target document
 */
@@ -278,7 +293,6 @@ type DocPutConflict struct {
 func (o *DocPutConflict) Error() string {
 	return fmt.Sprintf("[PUT /{db}/{docid}][%d] docPutConflict  %+v", 409, o.Payload)
 }
-
 func (o *DocPutConflict) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }

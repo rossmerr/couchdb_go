@@ -16,69 +16,85 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewDesignDocSearchInfoParams creates a new DesignDocSearchInfoParams object
-// with the default values initialized.
+// NewDesignDocSearchInfoParams creates a new DesignDocSearchInfoParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewDesignDocSearchInfoParams() *DesignDocSearchInfoParams {
-	var ()
 	return &DesignDocSearchInfoParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewDesignDocSearchInfoParamsWithTimeout creates a new DesignDocSearchInfoParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewDesignDocSearchInfoParamsWithTimeout(timeout time.Duration) *DesignDocSearchInfoParams {
-	var ()
 	return &DesignDocSearchInfoParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewDesignDocSearchInfoParamsWithContext creates a new DesignDocSearchInfoParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewDesignDocSearchInfoParamsWithContext(ctx context.Context) *DesignDocSearchInfoParams {
-	var ()
 	return &DesignDocSearchInfoParams{
-
 		Context: ctx,
 	}
 }
 
 // NewDesignDocSearchInfoParamsWithHTTPClient creates a new DesignDocSearchInfoParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewDesignDocSearchInfoParamsWithHTTPClient(client *http.Client) *DesignDocSearchInfoParams {
-	var ()
 	return &DesignDocSearchInfoParams{
 		HTTPClient: client,
 	}
 }
 
-/*DesignDocSearchInfoParams contains all the parameters to send to the API endpoint
-for the design doc search info operation typically these are written to a http.Request
+/* DesignDocSearchInfoParams contains all the parameters to send to the API endpoint
+   for the design doc search info operation.
+
+   Typically these are written to a http.Request.
 */
 type DesignDocSearchInfoParams struct {
 
-	/*Db
-	  Database name
+	/* Db.
 
+	   Database name
 	*/
 	Db string
-	/*Ddoc
-	  Design document id
 
+	/* Ddoc.
+
+	   Design document id
 	*/
 	Ddoc string
-	/*Index
-	  Search index name
 
+	/* Index.
+
+	   Search index name
 	*/
 	Index string
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the design doc search info params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DesignDocSearchInfoParams) WithDefaults() *DesignDocSearchInfoParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the design doc search info params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DesignDocSearchInfoParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the design doc search info params

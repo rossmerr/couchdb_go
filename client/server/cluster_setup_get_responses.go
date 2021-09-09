@@ -6,15 +6,13 @@ package server
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
+
+	"github.com/rossmerr/couchdb_go/models"
 )
 
 // ClusterSetupGetReader is a Reader for the ClusterSetupGet structure.
@@ -31,7 +29,6 @@ func (o *ClusterSetupGetReader) ReadResponse(response runtime.ClientResponse, co
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -42,124 +39,29 @@ func NewClusterSetupGetOK() *ClusterSetupGetOK {
 	return &ClusterSetupGetOK{}
 }
 
-/*ClusterSetupGetOK handles this case with default header values.
+/* ClusterSetupGetOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
 type ClusterSetupGetOK struct {
-	Payload *ClusterSetupGetOKBody
+	Payload *models.InlineResponse2001
 }
 
 func (o *ClusterSetupGetOK) Error() string {
 	return fmt.Sprintf("[GET /_cluster_setup][%d] clusterSetupGetOK  %+v", 200, o.Payload)
 }
-
-func (o *ClusterSetupGetOK) GetPayload() *ClusterSetupGetOKBody {
+func (o *ClusterSetupGetOK) GetPayload() *models.InlineResponse2001 {
 	return o.Payload
 }
 
 func (o *ClusterSetupGetOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(ClusterSetupGetOKBody)
+	o.Payload = new(models.InlineResponse2001)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 
-	return nil
-}
-
-/*ClusterSetupGetOKBody cluster setup get o k body
-swagger:model ClusterSetupGetOKBody
-*/
-type ClusterSetupGetOKBody struct {
-
-	// Current state of the node and/or cluster (see below)
-	// Enum: [cluster_disabled single_node_disabled single_node_enabled cluster_enabled cluster_finished]
-	State string `json:"state,omitempty"`
-}
-
-// Validate validates this cluster setup get o k body
-func (o *ClusterSetupGetOKBody) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := o.validateState(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-var clusterSetupGetOKBodyTypeStatePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["cluster_disabled","single_node_disabled","single_node_enabled","cluster_enabled","cluster_finished"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		clusterSetupGetOKBodyTypeStatePropEnum = append(clusterSetupGetOKBodyTypeStatePropEnum, v)
-	}
-}
-
-const (
-
-	// ClusterSetupGetOKBodyStateClusterDisabled captures enum value "cluster_disabled"
-	ClusterSetupGetOKBodyStateClusterDisabled string = "cluster_disabled"
-
-	// ClusterSetupGetOKBodyStateSingleNodeDisabled captures enum value "single_node_disabled"
-	ClusterSetupGetOKBodyStateSingleNodeDisabled string = "single_node_disabled"
-
-	// ClusterSetupGetOKBodyStateSingleNodeEnabled captures enum value "single_node_enabled"
-	ClusterSetupGetOKBodyStateSingleNodeEnabled string = "single_node_enabled"
-
-	// ClusterSetupGetOKBodyStateClusterEnabled captures enum value "cluster_enabled"
-	ClusterSetupGetOKBodyStateClusterEnabled string = "cluster_enabled"
-
-	// ClusterSetupGetOKBodyStateClusterFinished captures enum value "cluster_finished"
-	ClusterSetupGetOKBodyStateClusterFinished string = "cluster_finished"
-)
-
-// prop value enum
-func (o *ClusterSetupGetOKBody) validateStateEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, clusterSetupGetOKBodyTypeStatePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (o *ClusterSetupGetOKBody) validateState(formats strfmt.Registry) error {
-
-	if swag.IsZero(o.State) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := o.validateStateEnum("clusterSetupGetOK"+"."+"state", "body", o.State); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (o *ClusterSetupGetOKBody) MarshalBinary() ([]byte, error) {
-	if o == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(o)
-}
-
-// UnmarshalBinary interface implementation
-func (o *ClusterSetupGetOKBody) UnmarshalBinary(b []byte) error {
-	var res ClusterSetupGetOKBody
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*o = res
 	return nil
 }

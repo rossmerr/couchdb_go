@@ -9,10 +9,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 
 	"github.com/rossmerr/couchdb_go/models"
 )
@@ -37,7 +35,6 @@ func (o *DBsInfoReader) ReadResponse(response runtime.ClientResponse, consumer r
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -48,19 +45,18 @@ func NewDBsInfoOK() *DBsInfoOK {
 	return &DBsInfoOK{}
 }
 
-/*DBsInfoOK handles this case with default header values.
+/* DBsInfoOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
 type DBsInfoOK struct {
-	Payload []*DBsInfoOKBodyItems0
+	Payload []*models.InlineResponse200
 }
 
 func (o *DBsInfoOK) Error() string {
 	return fmt.Sprintf("[POST /_dbs_info][%d] dBsInfoOK  %+v", 200, o.Payload)
 }
-
-func (o *DBsInfoOK) GetPayload() []*DBsInfoOKBodyItems0 {
+func (o *DBsInfoOK) GetPayload() []*models.InlineResponse200 {
 	return o.Payload
 }
 
@@ -79,7 +75,7 @@ func NewDBsInfoBadRequest() *DBsInfoBadRequest {
 	return &DBsInfoBadRequest{}
 }
 
-/*DBsInfoBadRequest handles this case with default header values.
+/* DBsInfoBadRequest describes a response with status code 400, with default header values.
 
 Missing keys or exceeded keys in request
 */
@@ -90,7 +86,6 @@ type DBsInfoBadRequest struct {
 func (o *DBsInfoBadRequest) Error() string {
 	return fmt.Sprintf("[POST /_dbs_info][%d] dBsInfoBadRequest  %+v", 400, o.Payload)
 }
-
 func (o *DBsInfoBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -104,67 +99,5 @@ func (o *DBsInfoBadRequest) readResponse(response runtime.ClientResponse, consum
 		return err
 	}
 
-	return nil
-}
-
-/*DBsInfoOKBodyItems0 d bs info o k body items0
-swagger:model DBsInfoOKBodyItems0
-*/
-type DBsInfoOKBodyItems0 struct {
-
-	// info
-	Info *models.Database `json:"info,omitempty"`
-
-	// key
-	Key string `json:"key,omitempty"`
-}
-
-// Validate validates this d bs info o k body items0
-func (o *DBsInfoOKBodyItems0) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := o.validateInfo(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (o *DBsInfoOKBodyItems0) validateInfo(formats strfmt.Registry) error {
-
-	if swag.IsZero(o.Info) { // not required
-		return nil
-	}
-
-	if o.Info != nil {
-		if err := o.Info.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("info")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (o *DBsInfoOKBodyItems0) MarshalBinary() ([]byte, error) {
-	if o == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(o)
-}
-
-// UnmarshalBinary interface implementation
-func (o *DBsInfoOKBodyItems0) UnmarshalBinary(b []byte) error {
-	var res DBsInfoOKBodyItems0
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*o = res
 	return nil
 }

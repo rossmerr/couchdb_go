@@ -17,144 +17,175 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NewDesignDocAllGetParams creates a new DesignDocAllGetParams object
-// with the default values initialized.
+// NewDesignDocAllGetParams creates a new DesignDocAllGetParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewDesignDocAllGetParams() *DesignDocAllGetParams {
-	var ()
 	return &DesignDocAllGetParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewDesignDocAllGetParamsWithTimeout creates a new DesignDocAllGetParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewDesignDocAllGetParamsWithTimeout(timeout time.Duration) *DesignDocAllGetParams {
-	var ()
 	return &DesignDocAllGetParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewDesignDocAllGetParamsWithContext creates a new DesignDocAllGetParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewDesignDocAllGetParamsWithContext(ctx context.Context) *DesignDocAllGetParams {
-	var ()
 	return &DesignDocAllGetParams{
-
 		Context: ctx,
 	}
 }
 
 // NewDesignDocAllGetParamsWithHTTPClient creates a new DesignDocAllGetParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewDesignDocAllGetParamsWithHTTPClient(client *http.Client) *DesignDocAllGetParams {
-	var ()
 	return &DesignDocAllGetParams{
 		HTTPClient: client,
 	}
 }
 
-/*DesignDocAllGetParams contains all the parameters to send to the API endpoint
-for the design doc all get operation typically these are written to a http.Request
+/* DesignDocAllGetParams contains all the parameters to send to the API endpoint
+   for the design doc all get operation.
+
+   Typically these are written to a http.Request.
 */
 type DesignDocAllGetParams struct {
 
-	/*Conflicts
-	  Include conflicts information in response. Ignored if include_docs isn’t true. Default is false.
+	/* Conflicts.
 
+	   Include conflicts information in response. Ignored if include_docs isn’t true. Default is false.
 	*/
 	Conflicts *bool
-	/*Db
-	  Database name
 
+	/* Db.
+
+	   Database name
 	*/
 	Db string
-	/*Descending
-	  Return the documents in descending order by key. Default is false.
 
+	/* Descending.
+
+	   Return the documents in descending order by key. Default is false.
 	*/
 	Descending *bool
-	/*EndKey
-	  Alias for endkey param.
 
+	/* EndKey.
+
+	   Alias for endkey param.
 	*/
 	EndKey *string
-	/*EndKeyDocID
-	  Alias for endkey_docid param.
 
+	/* EndKeyDocID.
+
+	   Alias for endkey_docid param.
 	*/
 	EndKeyDocID *string
-	/*Endkey
-	  Stop returning records when the specified key is reached. Optional.
 
+	/* Endkey.
+
+	   Stop returning records when the specified key is reached. Optional.
 	*/
 	Endkey *string
-	/*EndkeyDocid
-	  Stop returning records when the specified design document ID is reached. Optional.
 
+	/* EndkeyDocid.
+
+	   Stop returning records when the specified design document ID is reached. Optional.
 	*/
 	EndkeyDocid *string
-	/*IncludeDocs
-	  Include the full content of the design documents in the return. Default is false.
 
+	/* IncludeDocs.
+
+	   Include the full content of the design documents in the return. Default is false.
 	*/
 	IncludeDocs *bool
-	/*InclusiveEnd
-	  Specifies whether the specified end key should be included in the result. Default is true.
 
+	/* InclusiveEnd.
+
+	   Specifies whether the specified end key should be included in the result. Default is true.
 	*/
 	InclusiveEnd *bool
-	/*Key
-	  Return only design documents that match the specified key. Optional.
 
+	/* Key.
+
+	   Return only design documents that match the specified key. Optional.
 	*/
 	Key *string
-	/*Keys
-	  Return only design documents that match the specified keys. Optional.
 
+	/* Keys.
+
+	   Return only design documents that match the specified keys. Optional.
 	*/
 	Keys *string
-	/*Limit
-	  Limit the number of the returned design documents to the specified number. Optional.
 
+	/* Limit.
+
+	   Limit the number of the returned design documents to the specified number. Optional.
 	*/
 	Limit *int64
-	/*Skip
-	  Skip this number of records before starting to return the results. Default is 0.
 
+	/* Skip.
+
+	   Skip this number of records before starting to return the results. Default is 0.
 	*/
 	Skip *int64
-	/*StartKey
-	  Alias for startkey param.
 
+	/* StartKey.
+
+	   Alias for startkey param.
 	*/
 	StartKey *string
-	/*StartKeyDocID
-	  Alias for startkey_docid param
 
+	/* StartKeyDocID.
+
+	   Alias for startkey_docid param
 	*/
 	StartKeyDocID *string
-	/*Startkey
-	  Return records starting with the specified key. Optional.
 
+	/* Startkey.
+
+	   Return records starting with the specified key. Optional.
 	*/
 	Startkey *string
-	/*StartkeyDocid
-	  Return records starting with the specified design document ID. Optional.
 
+	/* StartkeyDocid.
+
+	   Return records starting with the specified design document ID. Optional.
 	*/
 	StartkeyDocid *string
-	/*UpdateSeq
-	  Whether to include in the response an update_seq value indicating the sequence id of the database the view reflects. Default is false.
 
+	/* UpdateSeq.
+
+	   Whether to include in the response an update_seq value indicating the sequence id of the database the view reflects. Default is false.
 	*/
 	UpdateSeq *bool
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the design doc all get params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DesignDocAllGetParams) WithDefaults() *DesignDocAllGetParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the design doc all get params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DesignDocAllGetParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the design doc all get params
@@ -400,16 +431,17 @@ func (o *DesignDocAllGetParams) WriteToRequest(r runtime.ClientRequest, reg strf
 
 		// query param conflicts
 		var qrConflicts bool
+
 		if o.Conflicts != nil {
 			qrConflicts = *o.Conflicts
 		}
 		qConflicts := swag.FormatBool(qrConflicts)
 		if qConflicts != "" {
+
 			if err := r.SetQueryParam("conflicts", qConflicts); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	// path param db
@@ -421,256 +453,272 @@ func (o *DesignDocAllGetParams) WriteToRequest(r runtime.ClientRequest, reg strf
 
 		// query param descending
 		var qrDescending bool
+
 		if o.Descending != nil {
 			qrDescending = *o.Descending
 		}
 		qDescending := swag.FormatBool(qrDescending)
 		if qDescending != "" {
+
 			if err := r.SetQueryParam("descending", qDescending); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.EndKey != nil {
 
 		// query param end_key
 		var qrEndKey string
+
 		if o.EndKey != nil {
 			qrEndKey = *o.EndKey
 		}
 		qEndKey := qrEndKey
 		if qEndKey != "" {
+
 			if err := r.SetQueryParam("end_key", qEndKey); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.EndKeyDocID != nil {
 
 		// query param end_key_doc_id
 		var qrEndKeyDocID string
+
 		if o.EndKeyDocID != nil {
 			qrEndKeyDocID = *o.EndKeyDocID
 		}
 		qEndKeyDocID := qrEndKeyDocID
 		if qEndKeyDocID != "" {
+
 			if err := r.SetQueryParam("end_key_doc_id", qEndKeyDocID); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Endkey != nil {
 
 		// query param endkey
 		var qrEndkey string
+
 		if o.Endkey != nil {
 			qrEndkey = *o.Endkey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {
+
 			if err := r.SetQueryParam("endkey", qEndkey); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.EndkeyDocid != nil {
 
 		// query param endkey_docid
 		var qrEndkeyDocid string
+
 		if o.EndkeyDocid != nil {
 			qrEndkeyDocid = *o.EndkeyDocid
 		}
 		qEndkeyDocid := qrEndkeyDocid
 		if qEndkeyDocid != "" {
+
 			if err := r.SetQueryParam("endkey_docid", qEndkeyDocid); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.IncludeDocs != nil {
 
 		// query param include_docs
 		var qrIncludeDocs bool
+
 		if o.IncludeDocs != nil {
 			qrIncludeDocs = *o.IncludeDocs
 		}
 		qIncludeDocs := swag.FormatBool(qrIncludeDocs)
 		if qIncludeDocs != "" {
+
 			if err := r.SetQueryParam("include_docs", qIncludeDocs); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.InclusiveEnd != nil {
 
 		// query param inclusive_end
 		var qrInclusiveEnd bool
+
 		if o.InclusiveEnd != nil {
 			qrInclusiveEnd = *o.InclusiveEnd
 		}
 		qInclusiveEnd := swag.FormatBool(qrInclusiveEnd)
 		if qInclusiveEnd != "" {
+
 			if err := r.SetQueryParam("inclusive_end", qInclusiveEnd); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Key != nil {
 
 		// query param key
 		var qrKey string
+
 		if o.Key != nil {
 			qrKey = *o.Key
 		}
 		qKey := qrKey
 		if qKey != "" {
+
 			if err := r.SetQueryParam("key", qKey); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Keys != nil {
 
 		// query param keys
 		var qrKeys string
+
 		if o.Keys != nil {
 			qrKeys = *o.Keys
 		}
 		qKeys := qrKeys
 		if qKeys != "" {
+
 			if err := r.SetQueryParam("keys", qKeys); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Limit != nil {
 
 		// query param limit
 		var qrLimit int64
+
 		if o.Limit != nil {
 			qrLimit = *o.Limit
 		}
 		qLimit := swag.FormatInt64(qrLimit)
 		if qLimit != "" {
+
 			if err := r.SetQueryParam("limit", qLimit); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Skip != nil {
 
 		// query param skip
 		var qrSkip int64
+
 		if o.Skip != nil {
 			qrSkip = *o.Skip
 		}
 		qSkip := swag.FormatInt64(qrSkip)
 		if qSkip != "" {
+
 			if err := r.SetQueryParam("skip", qSkip); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.StartKey != nil {
 
 		// query param start_key
 		var qrStartKey string
+
 		if o.StartKey != nil {
 			qrStartKey = *o.StartKey
 		}
 		qStartKey := qrStartKey
 		if qStartKey != "" {
+
 			if err := r.SetQueryParam("start_key", qStartKey); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.StartKeyDocID != nil {
 
 		// query param start_key_doc_id
 		var qrStartKeyDocID string
+
 		if o.StartKeyDocID != nil {
 			qrStartKeyDocID = *o.StartKeyDocID
 		}
 		qStartKeyDocID := qrStartKeyDocID
 		if qStartKeyDocID != "" {
+
 			if err := r.SetQueryParam("start_key_doc_id", qStartKeyDocID); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Startkey != nil {
 
 		// query param startkey
 		var qrStartkey string
+
 		if o.Startkey != nil {
 			qrStartkey = *o.Startkey
 		}
 		qStartkey := qrStartkey
 		if qStartkey != "" {
+
 			if err := r.SetQueryParam("startkey", qStartkey); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.StartkeyDocid != nil {
 
 		// query param startkey_docid
 		var qrStartkeyDocid string
+
 		if o.StartkeyDocid != nil {
 			qrStartkeyDocid = *o.StartkeyDocid
 		}
 		qStartkeyDocid := qrStartkeyDocid
 		if qStartkeyDocid != "" {
+
 			if err := r.SetQueryParam("startkey_docid", qStartkeyDocid); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.UpdateSeq != nil {
 
 		// query param update_seq
 		var qrUpdateSeq bool
+
 		if o.UpdateSeq != nil {
 			qrUpdateSeq = *o.UpdateSeq
 		}
 		qUpdateSeq := swag.FormatBool(qrUpdateSeq)
 		if qUpdateSeq != "" {
+
 			if err := r.SetQueryParam("update_seq", qUpdateSeq); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if len(res) > 0 {

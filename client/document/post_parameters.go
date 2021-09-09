@@ -18,67 +18,83 @@ import (
 	"github.com/rossmerr/couchdb_go/models"
 )
 
-// NewPostParams creates a new PostParams object
-// with the default values initialized.
+// NewPostParams creates a new PostParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewPostParams() *PostParams {
-	var ()
 	return &PostParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewPostParamsWithTimeout creates a new PostParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewPostParamsWithTimeout(timeout time.Duration) *PostParams {
-	var ()
 	return &PostParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewPostParamsWithContext creates a new PostParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewPostParamsWithContext(ctx context.Context) *PostParams {
-	var ()
 	return &PostParams{
-
 		Context: ctx,
 	}
 }
 
 // NewPostParamsWithHTTPClient creates a new PostParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewPostParamsWithHTTPClient(client *http.Client) *PostParams {
-	var ()
 	return &PostParams{
 		HTTPClient: client,
 	}
 }
 
-/*PostParams contains all the parameters to send to the API endpoint
-for the post operation typically these are written to a http.Request
+/* PostParams contains all the parameters to send to the API endpoint
+   for the post operation.
+
+   Typically these are written to a http.Request.
 */
 type PostParams struct {
 
-	/*Batch
-	  Stores document in batch mode Possible values: ok. Optional
+	/* Batch.
 
+	   Stores document in batch mode Possible values: ok. Optional
 
 	*/
 	Batch *string
-	/*Body*/
-	Body models.Document
-	/*Db
-	  Database name
 
+	// Body.
+	Body models.Document
+
+	/* Db.
+
+	   Database name
 	*/
 	Db string
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the post params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *PostParams) WithDefaults() *PostParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the post params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *PostParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the post params
@@ -159,18 +175,18 @@ func (o *PostParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry
 
 		// query param batch
 		var qrBatch string
+
 		if o.Batch != nil {
 			qrBatch = *o.Batch
 		}
 		qBatch := qrBatch
 		if qBatch != "" {
+
 			if err := r.SetQueryParam("batch", qBatch); err != nil {
 				return err
 			}
 		}
-
 	}
-
 	if o.Body != nil {
 		if err := r.SetBodyParam(o.Body); err != nil {
 			return err

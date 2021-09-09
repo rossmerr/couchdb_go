@@ -53,7 +53,6 @@ func (o *DesignDocViewReader) ReadResponse(response runtime.ClientResponse, cons
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -64,15 +63,17 @@ func NewDesignDocViewOK() *DesignDocViewOK {
 	return &DesignDocViewOK{}
 }
 
-/*DesignDocViewOK handles this case with default header values.
+/* DesignDocViewOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
 type DesignDocViewOK struct {
-	/*Response signature
+
+	/* Response signature
 	 */
 	ETag string
-	/*chunked
+
+	/* chunked
 	 */
 	TransferEncoding string
 
@@ -82,18 +83,25 @@ type DesignDocViewOK struct {
 func (o *DesignDocViewOK) Error() string {
 	return fmt.Sprintf("[GET /{db}/_design/{ddoc}/_view/{view}][%d] designDocViewOK  %+v", 200, o.Payload)
 }
-
 func (o *DesignDocViewOK) GetPayload() *models.Pagination {
 	return o.Payload
 }
 
 func (o *DesignDocViewOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	// response header ETag
-	o.ETag = response.GetHeader("ETag")
+	// hydrates response header ETag
+	hdrETag := response.GetHeader("ETag")
 
-	// response header Transfer-Encoding
-	o.TransferEncoding = response.GetHeader("Transfer-Encoding")
+	if hdrETag != "" {
+		o.ETag = hdrETag
+	}
+
+	// hydrates response header Transfer-Encoding
+	hdrTransferEncoding := response.GetHeader("Transfer-Encoding")
+
+	if hdrTransferEncoding != "" {
+		o.TransferEncoding = hdrTransferEncoding
+	}
 
 	o.Payload = new(models.Pagination)
 
@@ -110,7 +118,7 @@ func NewDesignDocViewNotModified() *DesignDocViewNotModified {
 	return &DesignDocViewNotModified{}
 }
 
-/*DesignDocViewNotModified handles this case with default header values.
+/* DesignDocViewNotModified describes a response with status code 304, with default header values.
 
 Document wasn’t modified since specified revision
 */
@@ -131,7 +139,7 @@ func NewDesignDocViewBadRequest() *DesignDocViewBadRequest {
 	return &DesignDocViewBadRequest{}
 }
 
-/*DesignDocViewBadRequest handles this case with default header values.
+/* DesignDocViewBadRequest describes a response with status code 400, with default header values.
 
 Invalid request
 */
@@ -142,7 +150,6 @@ type DesignDocViewBadRequest struct {
 func (o *DesignDocViewBadRequest) Error() string {
 	return fmt.Sprintf("[GET /{db}/_design/{ddoc}/_view/{view}][%d] designDocViewBadRequest  %+v", 400, o.Payload)
 }
-
 func (o *DesignDocViewBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -164,7 +171,7 @@ func NewDesignDocViewUnauthorized() *DesignDocViewUnauthorized {
 	return &DesignDocViewUnauthorized{}
 }
 
-/*DesignDocViewUnauthorized handles this case with default header values.
+/* DesignDocViewUnauthorized describes a response with status code 401, with default header values.
 
 Read permission required
 */
@@ -175,7 +182,6 @@ type DesignDocViewUnauthorized struct {
 func (o *DesignDocViewUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /{db}/_design/{ddoc}/_view/{view}][%d] designDocViewUnauthorized  %+v", 401, o.Payload)
 }
-
 func (o *DesignDocViewUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -197,7 +203,7 @@ func NewDesignDocViewNotFound() *DesignDocViewNotFound {
 	return &DesignDocViewNotFound{}
 }
 
-/*DesignDocViewNotFound handles this case with default header values.
+/* DesignDocViewNotFound describes a response with status code 404, with default header values.
 
 Specified database, design document or view is missed
 */
@@ -208,7 +214,6 @@ type DesignDocViewNotFound struct {
 func (o *DesignDocViewNotFound) Error() string {
 	return fmt.Sprintf("[GET /{db}/_design/{ddoc}/_view/{view}][%d] designDocViewNotFound  %+v", 404, o.Payload)
 }
-
 func (o *DesignDocViewNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }

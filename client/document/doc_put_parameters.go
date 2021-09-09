@@ -19,90 +19,110 @@ import (
 	"github.com/rossmerr/couchdb_go/models"
 )
 
-// NewDocPutParams creates a new DocPutParams object
-// with the default values initialized.
+// NewDocPutParams creates a new DocPutParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewDocPutParams() *DocPutParams {
-	var ()
 	return &DocPutParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewDocPutParamsWithTimeout creates a new DocPutParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewDocPutParamsWithTimeout(timeout time.Duration) *DocPutParams {
-	var ()
 	return &DocPutParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewDocPutParamsWithContext creates a new DocPutParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewDocPutParamsWithContext(ctx context.Context) *DocPutParams {
-	var ()
 	return &DocPutParams{
-
 		Context: ctx,
 	}
 }
 
 // NewDocPutParamsWithHTTPClient creates a new DocPutParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewDocPutParamsWithHTTPClient(client *http.Client) *DocPutParams {
-	var ()
 	return &DocPutParams{
 		HTTPClient: client,
 	}
 }
 
-/*DocPutParams contains all the parameters to send to the API endpoint
-for the doc put operation typically these are written to a http.Request
+/* DocPutParams contains all the parameters to send to the API endpoint
+   for the doc put operation.
+
+   Typically these are written to a http.Request.
 */
 type DocPutParams struct {
 
-	/*IfMatch
-	  Document’s revision. Alternative to rev query parameter or document key. Optional
+	/* IfMatch.
 
+	   Document’s revision. Alternative to rev query parameter or document key. Optional
 	*/
 	IfMatch *string
-	/*Batch
-	  Stores document in batch mode. Possible values: ok. Optional
 
+	/* Batch.
+
+	   Stores document in batch mode. Possible values: ok. Optional
 
 	*/
 	Batch *string
-	/*Body*/
-	Body models.Document
-	/*Db
-	  Database name
 
+	// Body.
+	Body models.Document
+
+	/* Db.
+
+	   Database name
 	*/
 	Db string
-	/*Docid
-	  DDocument ID
 
+	/* Docid.
+
+	   DDocument ID
 	*/
 	Docid string
-	/*NewEdits
-	  Prevents insertion of a conflicting document. Possible values: true (default) and false. If false,
+
+	/* NewEdits.
+
+	     Prevents insertion of a conflicting document. Possible values: true (default) and false. If false,
 	a well-formed _rev must be included in the document. new_edits=false is used by the replicator
 	to insert documents into the target database even if that leads to the creation of conflicts. Optional
 
-
 	*/
 	NewEdits *bool
-	/*Rev
-	  Document’s revision if updating an existing document. Alternative to If-Match header or document key. Optional
 
+	/* Rev.
+
+	   Document’s revision if updating an existing document. Alternative to If-Match header or document key. Optional
 	*/
 	Rev *string
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the doc put params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DocPutParams) WithDefaults() *DocPutParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the doc put params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DocPutParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the doc put params
@@ -229,25 +249,24 @@ func (o *DocPutParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regist
 		if err := r.SetHeaderParam("If-Match", *o.IfMatch); err != nil {
 			return err
 		}
-
 	}
 
 	if o.Batch != nil {
 
 		// query param batch
 		var qrBatch string
+
 		if o.Batch != nil {
 			qrBatch = *o.Batch
 		}
 		qBatch := qrBatch
 		if qBatch != "" {
+
 			if err := r.SetQueryParam("batch", qBatch); err != nil {
 				return err
 			}
 		}
-
 	}
-
 	if o.Body != nil {
 		if err := r.SetBodyParam(o.Body); err != nil {
 			return err
@@ -268,32 +287,34 @@ func (o *DocPutParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regist
 
 		// query param new_edits
 		var qrNewEdits bool
+
 		if o.NewEdits != nil {
 			qrNewEdits = *o.NewEdits
 		}
 		qNewEdits := swag.FormatBool(qrNewEdits)
 		if qNewEdits != "" {
+
 			if err := r.SetQueryParam("new_edits", qNewEdits); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Rev != nil {
 
 		// query param rev
 		var qrRev string
+
 		if o.Rev != nil {
 			qrRev = *o.Rev
 		}
 		qRev := qrRev
 		if qRev != "" {
+
 			if err := r.SetQueryParam("rev", qRev); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if len(res) > 0 {

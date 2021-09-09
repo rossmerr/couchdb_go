@@ -35,7 +35,6 @@ func (o *PartitionDocGetAllReader) ReadResponse(response runtime.ClientResponse,
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -46,7 +45,7 @@ func NewPartitionDocGetAllOK() *PartitionDocGetAllOK {
 	return &PartitionDocGetAllOK{}
 }
 
-/*PartitionDocGetAllOK handles this case with default header values.
+/* PartitionDocGetAllOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
@@ -57,7 +56,6 @@ type PartitionDocGetAllOK struct {
 func (o *PartitionDocGetAllOK) Error() string {
 	return fmt.Sprintf("[GET /{db}/_partition/{partition}/_all_docs][%d] partitionDocGetAllOK  %+v", 200, o.Payload)
 }
-
 func (o *PartitionDocGetAllOK) GetPayload() *models.Pagination {
 	return o.Payload
 }
@@ -79,7 +77,7 @@ func NewPartitionDocGetAllNotFound() *PartitionDocGetAllNotFound {
 	return &PartitionDocGetAllNotFound{}
 }
 
-/*PartitionDocGetAllNotFound handles this case with default header values.
+/* PartitionDocGetAllNotFound describes a response with status code 404, with default header values.
 
 Requested database not found
 */
@@ -90,7 +88,6 @@ type PartitionDocGetAllNotFound struct {
 func (o *PartitionDocGetAllNotFound) Error() string {
 	return fmt.Sprintf("[GET /{db}/_partition/{partition}/_all_docs][%d] partitionDocGetAllNotFound  %+v", 404, o.Payload)
 }
-
 func (o *PartitionDocGetAllNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }

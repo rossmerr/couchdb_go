@@ -6,6 +6,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"strconv"
 
 	"github.com/go-openapi/errors"
@@ -19,7 +20,7 @@ import (
 type Results struct {
 
 	// results
-	Results []*ResultsResultsItems0 `json:"results"`
+	Results []*ResultsResults `json:"results"`
 }
 
 // Validate validates this results
@@ -37,7 +38,6 @@ func (m *Results) Validate(formats strfmt.Registry) error {
 }
 
 func (m *Results) validateResults(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Results) { // not required
 		return nil
 	}
@@ -61,41 +61,11 @@ func (m *Results) validateResults(formats strfmt.Registry) error {
 	return nil
 }
 
-// MarshalBinary interface implementation
-func (m *Results) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *Results) UnmarshalBinary(b []byte) error {
-	var res Results
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// ResultsResultsItems0 results results items0
-//
-// swagger:model ResultsResultsItems0
-type ResultsResultsItems0 struct {
-
-	// docs
-	Docs []*ResultsResultsItems0DocsItems0 `json:"docs"`
-
-	// id
-	ID string `json:"id,omitempty"`
-}
-
-// Validate validates this results results items0
-func (m *ResultsResultsItems0) Validate(formats strfmt.Registry) error {
+// ContextValidate validate this results based on the context it is used
+func (m *Results) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateDocs(formats); err != nil {
+	if err := m.contextValidateResults(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -105,21 +75,14 @@ func (m *ResultsResultsItems0) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *ResultsResultsItems0) validateDocs(formats strfmt.Registry) error {
+func (m *Results) contextValidateResults(ctx context.Context, formats strfmt.Registry) error {
 
-	if swag.IsZero(m.Docs) { // not required
-		return nil
-	}
+	for i := 0; i < len(m.Results); i++ {
 
-	for i := 0; i < len(m.Docs); i++ {
-		if swag.IsZero(m.Docs[i]) { // not required
-			continue
-		}
-
-		if m.Docs[i] != nil {
-			if err := m.Docs[i].Validate(formats); err != nil {
+		if m.Results[i] != nil {
+			if err := m.Results[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("docs" + "." + strconv.Itoa(i))
+					return ve.ValidateName("results" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -131,7 +94,7 @@ func (m *ResultsResultsItems0) validateDocs(formats strfmt.Registry) error {
 }
 
 // MarshalBinary interface implementation
-func (m *ResultsResultsItems0) MarshalBinary() ([]byte, error) {
+func (m *Results) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -139,65 +102,8 @@ func (m *ResultsResultsItems0) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *ResultsResultsItems0) UnmarshalBinary(b []byte) error {
-	var res ResultsResultsItems0
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// ResultsResultsItems0DocsItems0 results results items0 docs items0
-//
-// swagger:model ResultsResultsItems0DocsItems0
-type ResultsResultsItems0DocsItems0 struct {
-
-	// error
-	Error struct {
-		ErrorResponse
-
-		BasicDoc
-	} `json:"error,omitempty"`
-
-	// ok
-	Ok Document `json:"ok,omitempty"`
-}
-
-// Validate validates this results results items0 docs items0
-func (m *ResultsResultsItems0DocsItems0) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateError(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *ResultsResultsItems0DocsItems0) validateError(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Error) { // not required
-		return nil
-	}
-
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *ResultsResultsItems0DocsItems0) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *ResultsResultsItems0DocsItems0) UnmarshalBinary(b []byte) error {
-	var res ResultsResultsItems0DocsItems0
+func (m *Results) UnmarshalBinary(b []byte) error {
+	var res Results
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

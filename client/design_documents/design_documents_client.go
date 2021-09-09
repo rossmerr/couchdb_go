@@ -25,25 +25,28 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
+// ClientOption is the option for Client methods
+type ClientOption func(*runtime.ClientOperation)
+
 // ClientService is the interface for Client methods
 type ClientService interface {
-	DesignDocDelete(params *DesignDocDeleteParams) (*DesignDocDeleteOK, *DesignDocDeleteAccepted, error)
+	DesignDocDelete(params *DesignDocDeleteParams, opts ...ClientOption) (*DesignDocDeleteOK, *DesignDocDeleteAccepted, error)
 
-	DesignDocExists(params *DesignDocExistsParams) (*DesignDocExistsOK, error)
+	DesignDocExists(params *DesignDocExistsParams, opts ...ClientOption) (*DesignDocExistsOK, error)
 
-	DesignDocGet(params *DesignDocGetParams) (*DesignDocGetOK, error)
+	DesignDocGet(params *DesignDocGetParams, opts ...ClientOption) (*DesignDocGetOK, error)
 
-	DesignDocInfo(params *DesignDocInfoParams) (*DesignDocInfoOK, error)
+	DesignDocInfo(params *DesignDocInfoParams, opts ...ClientOption) (*DesignDocInfoOK, error)
 
-	DesignDocPut(params *DesignDocPutParams) (*DesignDocPutCreated, *DesignDocPutAccepted, error)
+	DesignDocPut(params *DesignDocPutParams, opts ...ClientOption) (*DesignDocPutCreated, *DesignDocPutAccepted, error)
 
-	DesignDocSearch(params *DesignDocSearchParams) (*DesignDocSearchOK, error)
+	DesignDocSearch(params *DesignDocSearchParams, opts ...ClientOption) (*DesignDocSearchOK, error)
 
-	DesignDocSearchInfo(params *DesignDocSearchInfoParams) (*DesignDocSearchInfoOK, error)
+	DesignDocSearchInfo(params *DesignDocSearchInfoParams, opts ...ClientOption) (*DesignDocSearchInfoOK, error)
 
-	DesignDocView(params *DesignDocViewParams) (*DesignDocViewOK, error)
+	DesignDocView(params *DesignDocViewParams, opts ...ClientOption) (*DesignDocViewOK, error)
 
-	DesignDocViewPost(params *DesignDocViewPostParams) (*DesignDocViewPostOK, error)
+	DesignDocViewPost(params *DesignDocViewPostParams, opts ...ClientOption) (*DesignDocViewPostOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -51,13 +54,12 @@ type ClientService interface {
 /*
   DesignDocDelete deletes the specified document from the database you must supply the current latest revision either by using the rev parameter to specify the revision
 */
-func (a *Client) DesignDocDelete(params *DesignDocDeleteParams) (*DesignDocDeleteOK, *DesignDocDeleteAccepted, error) {
+func (a *Client) DesignDocDelete(params *DesignDocDeleteParams, opts ...ClientOption) (*DesignDocDeleteOK, *DesignDocDeleteAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDesignDocDeleteParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "designDocDelete",
 		Method:             "DELETE",
 		PathPattern:        "/{db}/_design/{ddoc}",
@@ -68,7 +70,12 @@ func (a *Client) DesignDocDelete(params *DesignDocDeleteParams) (*DesignDocDelet
 		Reader:             &DesignDocDeleteReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -86,13 +93,12 @@ func (a *Client) DesignDocDelete(params *DesignDocDeleteParams) (*DesignDocDelet
 /*
   DesignDocExists returns the HTTP headers containing a minimal amount of information about the specified design document
 */
-func (a *Client) DesignDocExists(params *DesignDocExistsParams) (*DesignDocExistsOK, error) {
+func (a *Client) DesignDocExists(params *DesignDocExistsParams, opts ...ClientOption) (*DesignDocExistsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDesignDocExistsParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "designDocExists",
 		Method:             "HEAD",
 		PathPattern:        "/{db}/_design/{ddoc}",
@@ -103,7 +109,12 @@ func (a *Client) DesignDocExists(params *DesignDocExistsParams) (*DesignDocExist
 		Reader:             &DesignDocExistsReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -123,13 +134,12 @@ func (a *Client) DesignDocExists(params *DesignDocExistsParams) (*DesignDocExist
   Unless you request a specific revision, the latest revision of the document will always be returned.
 
 */
-func (a *Client) DesignDocGet(params *DesignDocGetParams) (*DesignDocGetOK, error) {
+func (a *Client) DesignDocGet(params *DesignDocGetParams, opts ...ClientOption) (*DesignDocGetOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDesignDocGetParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "designDocGet",
 		Method:             "GET",
 		PathPattern:        "/{db}/_design/{ddoc}",
@@ -140,7 +150,12 @@ func (a *Client) DesignDocGet(params *DesignDocGetParams) (*DesignDocGetOK, erro
 		Reader:             &DesignDocGetReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -157,13 +172,12 @@ func (a *Client) DesignDocGet(params *DesignDocGetParams) (*DesignDocGetOK, erro
 /*
   DesignDocInfo obtains information about the specified design document including the index index size and current status of the design document and associated index information
 */
-func (a *Client) DesignDocInfo(params *DesignDocInfoParams) (*DesignDocInfoOK, error) {
+func (a *Client) DesignDocInfo(params *DesignDocInfoParams, opts ...ClientOption) (*DesignDocInfoOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDesignDocInfoParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "designDocInfo",
 		Method:             "HEAD",
 		PathPattern:        "/{db}/_design/{ddoc}/_info",
@@ -174,7 +188,12 @@ func (a *Client) DesignDocInfo(params *DesignDocInfoParams) (*DesignDocInfoOK, e
 		Reader:             &DesignDocInfoReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -195,13 +214,12 @@ func (a *Client) DesignDocInfo(params *DesignDocInfoParams) (*DesignDocInfoOK, e
 that for filters, lists, shows and updates fields objects are mapping of function name to string function source code. For views mapping is the same except that values are objects with map and reduce (optional) keys which also contains functions source code.
 
 */
-func (a *Client) DesignDocPut(params *DesignDocPutParams) (*DesignDocPutCreated, *DesignDocPutAccepted, error) {
+func (a *Client) DesignDocPut(params *DesignDocPutParams, opts ...ClientOption) (*DesignDocPutCreated, *DesignDocPutAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDesignDocPutParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "designDocPut",
 		Method:             "PUT",
 		PathPattern:        "/{db}/_design/{ddoc}",
@@ -212,7 +230,12 @@ func (a *Client) DesignDocPut(params *DesignDocPutParams) (*DesignDocPutCreated,
 		Reader:             &DesignDocPutReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -243,13 +266,12 @@ Faceting and grouping are not supported on partitioned searches, so the followin
 Do not combine the bookmark and stale options. These options constrain the choice of shard replicas to use for the response. When used together, the options might cause problems when contact is attempted with replicas that are slow or not available.
 
 */
-func (a *Client) DesignDocSearch(params *DesignDocSearchParams) (*DesignDocSearchOK, error) {
+func (a *Client) DesignDocSearch(params *DesignDocSearchParams, opts ...ClientOption) (*DesignDocSearchOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDesignDocSearchParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "designDocSearch",
 		Method:             "GET",
 		PathPattern:        "/{db}/_design/{ddoc}/_search/{index}",
@@ -260,7 +282,12 @@ func (a *Client) DesignDocSearch(params *DesignDocSearchParams) (*DesignDocSearc
 		Reader:             &DesignDocSearchReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -281,13 +308,12 @@ func (a *Client) DesignDocSearch(params *DesignDocSearchParams) (*DesignDocSearc
 Search endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.
 
 */
-func (a *Client) DesignDocSearchInfo(params *DesignDocSearchInfoParams) (*DesignDocSearchInfoOK, error) {
+func (a *Client) DesignDocSearchInfo(params *DesignDocSearchInfoParams, opts ...ClientOption) (*DesignDocSearchInfoOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDesignDocSearchInfoParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "designDocSearchInfo",
 		Method:             "GET",
 		PathPattern:        "/{db}/_design/{ddoc}/_search_info/{index}",
@@ -298,7 +324,12 @@ func (a *Client) DesignDocSearchInfo(params *DesignDocSearchInfoParams) (*Design
 		Reader:             &DesignDocSearchInfoReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -315,13 +346,12 @@ func (a *Client) DesignDocSearchInfo(params *DesignDocSearchInfoParams) (*Design
 /*
   DesignDocView executes the specified view function from the specified design document
 */
-func (a *Client) DesignDocView(params *DesignDocViewParams) (*DesignDocViewOK, error) {
+func (a *Client) DesignDocView(params *DesignDocViewParams, opts ...ClientOption) (*DesignDocViewOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDesignDocViewParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "designDocView",
 		Method:             "GET",
 		PathPattern:        "/{db}/_design/{ddoc}/_view/{view}",
@@ -332,7 +362,12 @@ func (a *Client) DesignDocView(params *DesignDocViewParams) (*DesignDocViewOK, e
 		Reader:             &DesignDocViewReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -352,13 +387,12 @@ func (a *Client) DesignDocView(params *DesignDocViewParams) (*DesignDocViewOK, e
   POST view functionality supports identical parameters and behavior as specified in the GET /{db}/_design/{ddoc}/_view/{view} API but allows for the query string parameters to be supplied as keys in a JSON object in the body of the POST request.
 
 */
-func (a *Client) DesignDocViewPost(params *DesignDocViewPostParams) (*DesignDocViewPostOK, error) {
+func (a *Client) DesignDocViewPost(params *DesignDocViewPostParams, opts ...ClientOption) (*DesignDocViewPostOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDesignDocViewPostParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "designDocViewPost",
 		Method:             "POST",
 		PathPattern:        "/{db}/_design/{ddoc}/_view/{view}",
@@ -369,7 +403,12 @@ func (a *Client) DesignDocViewPost(params *DesignDocViewPostParams) (*DesignDocV
 		Reader:             &DesignDocViewPostReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}

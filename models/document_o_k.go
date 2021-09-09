@@ -6,6 +6,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -67,6 +69,25 @@ func (m *DocumentOK) Validate(formats strfmt.Registry) error {
 	}
 	// validation for a type composition with BasicDoc
 	if err := m.BasicDoc.Validate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+// ContextValidate validate this document o k based on the context it is used
+func (m *DocumentOK) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	// validation for a type composition with OK
+	if err := m.OK.ContextValidate(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+	// validation for a type composition with BasicDoc
+	if err := m.BasicDoc.ContextValidate(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 

@@ -18,56 +18,70 @@ import (
 	"github.com/rossmerr/couchdb_go/models"
 )
 
-// NewReplicationParams creates a new ReplicationParams object
-// with the default values initialized.
+// NewReplicationParams creates a new ReplicationParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewReplicationParams() *ReplicationParams {
-	var ()
 	return &ReplicationParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewReplicationParamsWithTimeout creates a new ReplicationParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewReplicationParamsWithTimeout(timeout time.Duration) *ReplicationParams {
-	var ()
 	return &ReplicationParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewReplicationParamsWithContext creates a new ReplicationParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewReplicationParamsWithContext(ctx context.Context) *ReplicationParams {
-	var ()
 	return &ReplicationParams{
-
 		Context: ctx,
 	}
 }
 
 // NewReplicationParamsWithHTTPClient creates a new ReplicationParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewReplicationParamsWithHTTPClient(client *http.Client) *ReplicationParams {
-	var ()
 	return &ReplicationParams{
 		HTTPClient: client,
 	}
 }
 
-/*ReplicationParams contains all the parameters to send to the API endpoint
-for the replication operation typically these are written to a http.Request
+/* ReplicationParams contains all the parameters to send to the API endpoint
+   for the replication operation.
+
+   Typically these are written to a http.Request.
 */
 type ReplicationParams struct {
 
-	/*Body*/
+	// Body.
 	Body *models.Replicate
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the replication params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *ReplicationParams) WithDefaults() *ReplicationParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the replication params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *ReplicationParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the replication params
@@ -121,7 +135,6 @@ func (o *ReplicationParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.R
 		return err
 	}
 	var res []error
-
 	if o.Body != nil {
 		if err := r.SetBodyParam(o.Body); err != nil {
 			return err

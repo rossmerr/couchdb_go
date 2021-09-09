@@ -16,52 +16,66 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewMembershipParams creates a new MembershipParams object
-// with the default values initialized.
+// NewMembershipParams creates a new MembershipParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewMembershipParams() *MembershipParams {
-
 	return &MembershipParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewMembershipParamsWithTimeout creates a new MembershipParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewMembershipParamsWithTimeout(timeout time.Duration) *MembershipParams {
-
 	return &MembershipParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewMembershipParamsWithContext creates a new MembershipParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewMembershipParamsWithContext(ctx context.Context) *MembershipParams {
-
 	return &MembershipParams{
-
 		Context: ctx,
 	}
 }
 
 // NewMembershipParamsWithHTTPClient creates a new MembershipParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewMembershipParamsWithHTTPClient(client *http.Client) *MembershipParams {
-
 	return &MembershipParams{
 		HTTPClient: client,
 	}
 }
 
-/*MembershipParams contains all the parameters to send to the API endpoint
-for the membership operation typically these are written to a http.Request
+/* MembershipParams contains all the parameters to send to the API endpoint
+   for the membership operation.
+
+   Typically these are written to a http.Request.
 */
 type MembershipParams struct {
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the membership params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *MembershipParams) WithDefaults() *MembershipParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the membership params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *MembershipParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the membership params

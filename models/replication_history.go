@@ -6,6 +6,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -51,6 +53,11 @@ type ReplicationHistory struct {
 
 // Validate validates this replication history
 func (m *ReplicationHistory) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this replication history based on context it is used
+func (m *ReplicationHistory) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

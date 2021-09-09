@@ -17,129 +17,157 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NewDesignDocGetParams creates a new DesignDocGetParams object
-// with the default values initialized.
+// NewDesignDocGetParams creates a new DesignDocGetParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewDesignDocGetParams() *DesignDocGetParams {
-	var ()
 	return &DesignDocGetParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewDesignDocGetParamsWithTimeout creates a new DesignDocGetParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewDesignDocGetParamsWithTimeout(timeout time.Duration) *DesignDocGetParams {
-	var ()
 	return &DesignDocGetParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewDesignDocGetParamsWithContext creates a new DesignDocGetParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewDesignDocGetParamsWithContext(ctx context.Context) *DesignDocGetParams {
-	var ()
 	return &DesignDocGetParams{
-
 		Context: ctx,
 	}
 }
 
 // NewDesignDocGetParamsWithHTTPClient creates a new DesignDocGetParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewDesignDocGetParamsWithHTTPClient(client *http.Client) *DesignDocGetParams {
-	var ()
 	return &DesignDocGetParams{
 		HTTPClient: client,
 	}
 }
 
-/*DesignDocGetParams contains all the parameters to send to the API endpoint
-for the design doc get operation typically these are written to a http.Request
+/* DesignDocGetParams contains all the parameters to send to the API endpoint
+   for the design doc get operation.
+
+   Typically these are written to a http.Request.
 */
 type DesignDocGetParams struct {
 
-	/*IfNoneMatch
-	  Double quoted document’s revision token
+	/* IfNoneMatch.
 
+	   Double quoted document’s revision token
 	*/
 	IfNoneMatch string
-	/*AttEncodingInfo
-	  Includes encoding information in attachment stubs if the particular attachment is compressed. Default is false.
 
+	/* AttEncodingInfo.
+
+	   Includes encoding information in attachment stubs if the particular attachment is compressed. Default is false.
 	*/
 	AttEncodingInfo *bool
-	/*Attachments
-	  Includes attachments bodies in response. Default is false
 
+	/* Attachments.
+
+	   Includes attachments bodies in response. Default is false
 	*/
 	Attachments *bool
-	/*AttsSince
-	  Includes attachments only since specified revisions. Doesn’t includes attachments for specified revisions. Optional
 
+	/* AttsSince.
+
+	   Includes attachments only since specified revisions. Doesn’t includes attachments for specified revisions. Optional
 	*/
 	AttsSince []string
-	/*Conflicts
-	  Includes information about conflicts in document. Default is false
 
+	/* Conflicts.
+
+	   Includes information about conflicts in document. Default is false
 	*/
 	Conflicts *bool
-	/*Db
-	  Database name
 
+	/* Db.
+
+	   Database name
 	*/
 	Db string
-	/*Ddoc
-	  Design document id
 
+	/* Ddoc.
+
+	   Design document id
 	*/
 	Ddoc string
-	/*DeletedConflicts
-	  Includes information about deleted conflicted revisions. Default is false
 
+	/* DeletedConflicts.
+
+	   Includes information about deleted conflicted revisions. Default is false
 	*/
 	DeletedConflicts *bool
-	/*Latest
-	  Forces retrieving latest “leaf” revision, no matter what rev was requested. Default is false
 
+	/* Latest.
+
+	   Forces retrieving latest “leaf” revision, no matter what rev was requested. Default is false
 	*/
 	Latest *bool
-	/*LocalSeq
-	  Includes last update sequence for the document. Default is false
 
+	/* LocalSeq.
+
+	   Includes last update sequence for the document. Default is false
 	*/
 	LocalSeq *bool
-	/*Meta
-	  Acts same as specifying all conflicts, deleted_conflicts and revs_info query parameters. Default is false
 
+	/* Meta.
+
+	   Acts same as specifying all conflicts, deleted_conflicts and revs_info query parameters. Default is false
 	*/
 	Meta *bool
-	/*OpenRevs
-	  Retrieves documents of specified leaf revisions. Additionally, it accepts value as all to return all leaf revisions. Optional
 
+	/* OpenRevs.
+
+	   Retrieves documents of specified leaf revisions. Additionally, it accepts value as all to return all leaf revisions. Optional
 	*/
 	OpenRevs []string
-	/*Rev
-	  Retrieves document of specified revision. Optional
 
+	/* Rev.
+
+	   Retrieves document of specified revision. Optional
 	*/
 	Rev *string
-	/*Revs
-	  Includes list of all known document revisions. Default is false
 
+	/* Revs.
+
+	   Includes list of all known document revisions. Default is false
 	*/
 	Revs *bool
-	/*RevsInfo
-	  Includes detailed information for all known document revisions. Default is false
 
+	/* RevsInfo.
+
+	   Includes detailed information for all known document revisions. Default is false
 	*/
 	RevsInfo *bool
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the design doc get params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DesignDocGetParams) WithDefaults() *DesignDocGetParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the design doc get params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DesignDocGetParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the design doc get params
@@ -357,56 +385,62 @@ func (o *DesignDocGetParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 
 		// query param att_encoding_info
 		var qrAttEncodingInfo bool
+
 		if o.AttEncodingInfo != nil {
 			qrAttEncodingInfo = *o.AttEncodingInfo
 		}
 		qAttEncodingInfo := swag.FormatBool(qrAttEncodingInfo)
 		if qAttEncodingInfo != "" {
+
 			if err := r.SetQueryParam("att_encoding_info", qAttEncodingInfo); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Attachments != nil {
 
 		// query param attachments
 		var qrAttachments bool
+
 		if o.Attachments != nil {
 			qrAttachments = *o.Attachments
 		}
 		qAttachments := swag.FormatBool(qrAttachments)
 		if qAttachments != "" {
+
 			if err := r.SetQueryParam("attachments", qAttachments); err != nil {
 				return err
 			}
 		}
-
 	}
 
-	valuesAttsSince := o.AttsSince
+	if o.AttsSince != nil {
 
-	joinedAttsSince := swag.JoinByFormat(valuesAttsSince, "multi")
-	// query array param atts_since
-	if err := r.SetQueryParam("atts_since", joinedAttsSince...); err != nil {
-		return err
+		// binding items for atts_since
+		joinedAttsSince := o.bindParamAttsSince(reg)
+
+		// query array param atts_since
+		if err := r.SetQueryParam("atts_since", joinedAttsSince...); err != nil {
+			return err
+		}
 	}
 
 	if o.Conflicts != nil {
 
 		// query param conflicts
 		var qrConflicts bool
+
 		if o.Conflicts != nil {
 			qrConflicts = *o.Conflicts
 		}
 		qConflicts := swag.FormatBool(qrConflicts)
 		if qConflicts != "" {
+
 			if err := r.SetQueryParam("conflicts", qConflicts); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	// path param db
@@ -423,124 +457,168 @@ func (o *DesignDocGetParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 
 		// query param deleted_conflicts
 		var qrDeletedConflicts bool
+
 		if o.DeletedConflicts != nil {
 			qrDeletedConflicts = *o.DeletedConflicts
 		}
 		qDeletedConflicts := swag.FormatBool(qrDeletedConflicts)
 		if qDeletedConflicts != "" {
+
 			if err := r.SetQueryParam("deleted_conflicts", qDeletedConflicts); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Latest != nil {
 
 		// query param latest
 		var qrLatest bool
+
 		if o.Latest != nil {
 			qrLatest = *o.Latest
 		}
 		qLatest := swag.FormatBool(qrLatest)
 		if qLatest != "" {
+
 			if err := r.SetQueryParam("latest", qLatest); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.LocalSeq != nil {
 
 		// query param local_seq
 		var qrLocalSeq bool
+
 		if o.LocalSeq != nil {
 			qrLocalSeq = *o.LocalSeq
 		}
 		qLocalSeq := swag.FormatBool(qrLocalSeq)
 		if qLocalSeq != "" {
+
 			if err := r.SetQueryParam("local_seq", qLocalSeq); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Meta != nil {
 
 		// query param meta
 		var qrMeta bool
+
 		if o.Meta != nil {
 			qrMeta = *o.Meta
 		}
 		qMeta := swag.FormatBool(qrMeta)
 		if qMeta != "" {
+
 			if err := r.SetQueryParam("meta", qMeta); err != nil {
 				return err
 			}
 		}
-
 	}
 
-	valuesOpenRevs := o.OpenRevs
+	if o.OpenRevs != nil {
 
-	joinedOpenRevs := swag.JoinByFormat(valuesOpenRevs, "multi")
-	// query array param open_revs
-	if err := r.SetQueryParam("open_revs", joinedOpenRevs...); err != nil {
-		return err
+		// binding items for open_revs
+		joinedOpenRevs := o.bindParamOpenRevs(reg)
+
+		// query array param open_revs
+		if err := r.SetQueryParam("open_revs", joinedOpenRevs...); err != nil {
+			return err
+		}
 	}
 
 	if o.Rev != nil {
 
 		// query param rev
 		var qrRev string
+
 		if o.Rev != nil {
 			qrRev = *o.Rev
 		}
 		qRev := qrRev
 		if qRev != "" {
+
 			if err := r.SetQueryParam("rev", qRev); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Revs != nil {
 
 		// query param revs
 		var qrRevs bool
+
 		if o.Revs != nil {
 			qrRevs = *o.Revs
 		}
 		qRevs := swag.FormatBool(qrRevs)
 		if qRevs != "" {
+
 			if err := r.SetQueryParam("revs", qRevs); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.RevsInfo != nil {
 
 		// query param revs_info
 		var qrRevsInfo bool
+
 		if o.RevsInfo != nil {
 			qrRevsInfo = *o.RevsInfo
 		}
 		qRevsInfo := swag.FormatBool(qrRevsInfo)
 		if qRevsInfo != "" {
+
 			if err := r.SetQueryParam("revs_info", qRevsInfo); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
 	return nil
+}
+
+// bindParamDesignDocGet binds the parameter atts_since
+func (o *DesignDocGetParams) bindParamAttsSince(formats strfmt.Registry) []string {
+	attsSinceIR := o.AttsSince
+
+	var attsSinceIC []string
+	for _, attsSinceIIR := range attsSinceIR { // explode []string
+
+		attsSinceIIV := attsSinceIIR // string as string
+		attsSinceIC = append(attsSinceIC, attsSinceIIV)
+	}
+
+	// items.CollectionFormat: "multi"
+	attsSinceIS := swag.JoinByFormat(attsSinceIC, "multi")
+
+	return attsSinceIS
+}
+
+// bindParamDesignDocGet binds the parameter open_revs
+func (o *DesignDocGetParams) bindParamOpenRevs(formats strfmt.Registry) []string {
+	openRevsIR := o.OpenRevs
+
+	var openRevsIC []string
+	for _, openRevsIIR := range openRevsIR { // explode []string
+
+		openRevsIIV := openRevsIIR // string as string
+		openRevsIC = append(openRevsIC, openRevsIIV)
+	}
+
+	// items.CollectionFormat: "multi"
+	openRevsIS := swag.JoinByFormat(openRevsIC, "multi")
+
+	return openRevsIS
 }

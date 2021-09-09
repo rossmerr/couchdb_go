@@ -16,59 +16,73 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewDbSecurityGetParams creates a new DbSecurityGetParams object
-// with the default values initialized.
+// NewDbSecurityGetParams creates a new DbSecurityGetParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewDbSecurityGetParams() *DbSecurityGetParams {
-	var ()
 	return &DbSecurityGetParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewDbSecurityGetParamsWithTimeout creates a new DbSecurityGetParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewDbSecurityGetParamsWithTimeout(timeout time.Duration) *DbSecurityGetParams {
-	var ()
 	return &DbSecurityGetParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewDbSecurityGetParamsWithContext creates a new DbSecurityGetParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewDbSecurityGetParamsWithContext(ctx context.Context) *DbSecurityGetParams {
-	var ()
 	return &DbSecurityGetParams{
-
 		Context: ctx,
 	}
 }
 
 // NewDbSecurityGetParamsWithHTTPClient creates a new DbSecurityGetParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewDbSecurityGetParamsWithHTTPClient(client *http.Client) *DbSecurityGetParams {
-	var ()
 	return &DbSecurityGetParams{
 		HTTPClient: client,
 	}
 }
 
-/*DbSecurityGetParams contains all the parameters to send to the API endpoint
-for the db security get operation typically these are written to a http.Request
+/* DbSecurityGetParams contains all the parameters to send to the API endpoint
+   for the db security get operation.
+
+   Typically these are written to a http.Request.
 */
 type DbSecurityGetParams struct {
 
-	/*Db
-	  Database name
+	/* Db.
 
+	   Database name
 	*/
 	Db string
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the db security get params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DbSecurityGetParams) WithDefaults() *DbSecurityGetParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the db security get params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DbSecurityGetParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the db security get params

@@ -25,27 +25,30 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
+// ClientOption is the option for Client methods
+type ClientOption func(*runtime.ClientOperation)
+
 // ClientService is the interface for Client methods
 type ClientService interface {
-	DBsInfo(params *DBsInfoParams) (*DBsInfoOK, error)
+	DBsInfo(params *DBsInfoParams, opts ...ClientOption) (*DBsInfoOK, error)
 
-	ActiveTasks(params *ActiveTasksParams) (*ActiveTasksOK, error)
+	ActiveTasks(params *ActiveTasksParams, opts ...ClientOption) (*ActiveTasksOK, error)
 
-	AllDBs(params *AllDBsParams) (*AllDBsOK, error)
+	AllDBs(params *AllDBsParams, opts ...ClientOption) (*AllDBsOK, error)
 
-	ClusterSetupGet(params *ClusterSetupGetParams) (*ClusterSetupGetOK, error)
+	ClusterSetupGet(params *ClusterSetupGetParams, opts ...ClientOption) (*ClusterSetupGetOK, error)
 
-	ClusterSetupPost(params *ClusterSetupPostParams) (*ClusterSetupPostOK, error)
+	ClusterSetupPost(params *ClusterSetupPostParams, opts ...ClientOption) (*ClusterSetupPostOK, error)
 
-	Membership(params *MembershipParams) (*MembershipOK, error)
+	Membership(params *MembershipParams, opts ...ClientOption) (*MembershipOK, error)
 
-	MetaInformation(params *MetaInformationParams) (*MetaInformationOK, error)
+	MetaInformation(params *MetaInformationParams, opts ...ClientOption) (*MetaInformationOK, error)
 
-	Replication(params *ReplicationParams) (*ReplicationOK, *ReplicationAccepted, error)
+	Replication(params *ReplicationParams, opts ...ClientOption) (*ReplicationOK, *ReplicationAccepted, error)
 
-	SearchAnalyze(params *SearchAnalyzeParams) (*SearchAnalyzeOK, error)
+	SearchAnalyze(params *SearchAnalyzeParams, opts ...ClientOption) (*SearchAnalyzeOK, error)
 
-	Up(params *UpParams) (*UpOK, error)
+	Up(params *UpParams, opts ...ClientOption) (*UpOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -56,13 +59,12 @@ type ClientService interface {
   This enables you to request information about multiple databases in a single request, in place of multiple GET /{db} requests.
 
 */
-func (a *Client) DBsInfo(params *DBsInfoParams) (*DBsInfoOK, error) {
+func (a *Client) DBsInfo(params *DBsInfoParams, opts ...ClientOption) (*DBsInfoOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDBsInfoParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "DBsInfo",
 		Method:             "POST",
 		PathPattern:        "/_dbs_info",
@@ -73,7 +75,12 @@ func (a *Client) DBsInfo(params *DBsInfoParams) (*DBsInfoOK, error) {
 		Reader:             &DBsInfoReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -93,13 +100,12 @@ func (a *Client) DBsInfo(params *DBsInfoParams) (*DBsInfoOK, error) {
   The result is a JSON array of the currently running tasks, with each task being described with a single object. Depending on operation type set of response object fields might be different.
 
 */
-func (a *Client) ActiveTasks(params *ActiveTasksParams) (*ActiveTasksOK, error) {
+func (a *Client) ActiveTasks(params *ActiveTasksParams, opts ...ClientOption) (*ActiveTasksOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewActiveTasksParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "activeTasks",
 		Method:             "GET",
 		PathPattern:        "/_active_tasks",
@@ -110,7 +116,12 @@ func (a *Client) ActiveTasks(params *ActiveTasksParams) (*ActiveTasksOK, error) 
 		Reader:             &ActiveTasksReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -127,13 +138,12 @@ func (a *Client) ActiveTasks(params *ActiveTasksParams) (*ActiveTasksOK, error) 
 /*
   AllDBs returns a list of all the databases in the couch d b instance
 */
-func (a *Client) AllDBs(params *AllDBsParams) (*AllDBsOK, error) {
+func (a *Client) AllDBs(params *AllDBsParams, opts ...ClientOption) (*AllDBsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewAllDBsParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "allDBs",
 		Method:             "GET",
 		PathPattern:        "/_all_dbs",
@@ -144,7 +154,12 @@ func (a *Client) AllDBs(params *AllDBsParams) (*AllDBsOK, error) {
 		Reader:             &AllDBsReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -161,13 +176,12 @@ func (a *Client) AllDBs(params *AllDBsParams) (*AllDBsOK, error) {
 /*
   ClusterSetupGet returns the status of the node or cluster per the cluster setup wizard
 */
-func (a *Client) ClusterSetupGet(params *ClusterSetupGetParams) (*ClusterSetupGetOK, error) {
+func (a *Client) ClusterSetupGet(params *ClusterSetupGetParams, opts ...ClientOption) (*ClusterSetupGetOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewClusterSetupGetParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "clusterSetupGet",
 		Method:             "GET",
 		PathPattern:        "/_cluster_setup",
@@ -178,7 +192,12 @@ func (a *Client) ClusterSetupGet(params *ClusterSetupGetParams) (*ClusterSetupGe
 		Reader:             &ClusterSetupGetReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -195,13 +214,12 @@ func (a *Client) ClusterSetupGet(params *ClusterSetupGetParams) (*ClusterSetupGe
 /*
   ClusterSetupPost configures a node as a single standalone node as part of a cluster or finalise a cluster
 */
-func (a *Client) ClusterSetupPost(params *ClusterSetupPostParams) (*ClusterSetupPostOK, error) {
+func (a *Client) ClusterSetupPost(params *ClusterSetupPostParams, opts ...ClientOption) (*ClusterSetupPostOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewClusterSetupPostParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "clusterSetupPost",
 		Method:             "POST",
 		PathPattern:        "/_cluster_setup",
@@ -212,7 +230,12 @@ func (a *Client) ClusterSetupPost(params *ClusterSetupPostParams) (*ClusterSetup
 		Reader:             &ClusterSetupPostReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -232,13 +255,12 @@ func (a *Client) ClusterSetupPost(params *ClusterSetupPostParams) (*ClusterSetup
   The field all_nodes displays all nodes this node knows about, including the ones that are part of the cluster. The endpoint is useful when setting up a cluster, see Node Management
 
 */
-func (a *Client) Membership(params *MembershipParams) (*MembershipOK, error) {
+func (a *Client) Membership(params *MembershipParams, opts ...ClientOption) (*MembershipOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewMembershipParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "membership",
 		Method:             "GET",
 		PathPattern:        "/_membership",
@@ -249,7 +271,12 @@ func (a *Client) Membership(params *MembershipParams) (*MembershipOK, error) {
 		Reader:             &MembershipReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -269,13 +296,12 @@ func (a *Client) Membership(params *MembershipParams) (*MembershipOK, error) {
   The response is a JSON structure containing information about the server, including a welcome message and the version of the server.
 
 */
-func (a *Client) MetaInformation(params *MetaInformationParams) (*MetaInformationOK, error) {
+func (a *Client) MetaInformation(params *MetaInformationParams, opts ...ClientOption) (*MetaInformationOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewMetaInformationParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "metaInformation",
 		Method:             "GET",
 		PathPattern:        "/",
@@ -286,7 +312,12 @@ func (a *Client) MetaInformation(params *MetaInformationParams) (*MetaInformatio
 		Reader:             &MetaInformationReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -303,13 +334,12 @@ func (a *Client) MetaInformation(params *MetaInformationParams) (*MetaInformatio
 /*
   Replication requests configure or stop a replication operation
 */
-func (a *Client) Replication(params *ReplicationParams) (*ReplicationOK, *ReplicationAccepted, error) {
+func (a *Client) Replication(params *ReplicationParams, opts ...ClientOption) (*ReplicationOK, *ReplicationAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewReplicationParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "replication",
 		Method:             "POST",
 		PathPattern:        "/_replicate",
@@ -320,7 +350,12 @@ func (a *Client) Replication(params *ReplicationParams) (*ReplicationOK, *Replic
 		Reader:             &ReplicationReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -342,13 +377,12 @@ func (a *Client) Replication(params *ReplicationParams) (*ReplicationOK, *Replic
 Search endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.
 
 */
-func (a *Client) SearchAnalyze(params *SearchAnalyzeParams) (*SearchAnalyzeOK, error) {
+func (a *Client) SearchAnalyze(params *SearchAnalyzeParams, opts ...ClientOption) (*SearchAnalyzeOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewSearchAnalyzeParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "searchAnalyze",
 		Method:             "POST",
 		PathPattern:        "/_search_analyze",
@@ -359,7 +393,12 @@ func (a *Client) SearchAnalyze(params *SearchAnalyzeParams) (*SearchAnalyzeOK, e
 		Reader:             &SearchAnalyzeReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -379,13 +418,12 @@ func (a *Client) SearchAnalyze(params *SearchAnalyzeParams) (*SearchAnalyzeOK, e
   If maintenance_mode is true or nolb, the endpoint will return a 404 response.
 
 */
-func (a *Client) Up(params *UpParams) (*UpOK, error) {
+func (a *Client) Up(params *UpParams, opts ...ClientOption) (*UpOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewUpParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "up",
 		Method:             "GET",
 		PathPattern:        "/_up",
@@ -396,7 +434,12 @@ func (a *Client) Up(params *UpParams) (*UpOK, error) {
 		Reader:             &UpReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}

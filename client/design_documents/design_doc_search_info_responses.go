@@ -9,10 +9,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 
 	"github.com/rossmerr/couchdb_go/models"
 )
@@ -49,7 +47,6 @@ func (o *DesignDocSearchInfoReader) ReadResponse(response runtime.ClientResponse
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -60,38 +57,47 @@ func NewDesignDocSearchInfoOK() *DesignDocSearchInfoOK {
 	return &DesignDocSearchInfoOK{}
 }
 
-/*DesignDocSearchInfoOK handles this case with default header values.
+/* DesignDocSearchInfoOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
 type DesignDocSearchInfoOK struct {
-	/*Response signature
+
+	/* Response signature
 	 */
 	ETag string
-	/*chunked
+
+	/* chunked
 	 */
 	TransferEncoding string
 
-	Payload *DesignDocSearchInfoOKBody
+	Payload *models.InlineResponse2007
 }
 
 func (o *DesignDocSearchInfoOK) Error() string {
 	return fmt.Sprintf("[GET /{db}/_design/{ddoc}/_search_info/{index}][%d] designDocSearchInfoOK  %+v", 200, o.Payload)
 }
-
-func (o *DesignDocSearchInfoOK) GetPayload() *DesignDocSearchInfoOKBody {
+func (o *DesignDocSearchInfoOK) GetPayload() *models.InlineResponse2007 {
 	return o.Payload
 }
 
 func (o *DesignDocSearchInfoOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	// response header ETag
-	o.ETag = response.GetHeader("ETag")
+	// hydrates response header ETag
+	hdrETag := response.GetHeader("ETag")
 
-	// response header Transfer-Encoding
-	o.TransferEncoding = response.GetHeader("Transfer-Encoding")
+	if hdrETag != "" {
+		o.ETag = hdrETag
+	}
 
-	o.Payload = new(DesignDocSearchInfoOKBody)
+	// hydrates response header Transfer-Encoding
+	hdrTransferEncoding := response.GetHeader("Transfer-Encoding")
+
+	if hdrTransferEncoding != "" {
+		o.TransferEncoding = hdrTransferEncoding
+	}
+
+	o.Payload = new(models.InlineResponse2007)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -106,7 +112,7 @@ func NewDesignDocSearchInfoBadRequest() *DesignDocSearchInfoBadRequest {
 	return &DesignDocSearchInfoBadRequest{}
 }
 
-/*DesignDocSearchInfoBadRequest handles this case with default header values.
+/* DesignDocSearchInfoBadRequest describes a response with status code 400, with default header values.
 
 Invalid request
 */
@@ -117,7 +123,6 @@ type DesignDocSearchInfoBadRequest struct {
 func (o *DesignDocSearchInfoBadRequest) Error() string {
 	return fmt.Sprintf("[GET /{db}/_design/{ddoc}/_search_info/{index}][%d] designDocSearchInfoBadRequest  %+v", 400, o.Payload)
 }
-
 func (o *DesignDocSearchInfoBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -139,7 +144,7 @@ func NewDesignDocSearchInfoUnauthorized() *DesignDocSearchInfoUnauthorized {
 	return &DesignDocSearchInfoUnauthorized{}
 }
 
-/*DesignDocSearchInfoUnauthorized handles this case with default header values.
+/* DesignDocSearchInfoUnauthorized describes a response with status code 401, with default header values.
 
 Read permission required
 */
@@ -150,7 +155,6 @@ type DesignDocSearchInfoUnauthorized struct {
 func (o *DesignDocSearchInfoUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /{db}/_design/{ddoc}/_search_info/{index}][%d] designDocSearchInfoUnauthorized  %+v", 401, o.Payload)
 }
-
 func (o *DesignDocSearchInfoUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -172,7 +176,7 @@ func NewDesignDocSearchInfoNotFound() *DesignDocSearchInfoNotFound {
 	return &DesignDocSearchInfoNotFound{}
 }
 
-/*DesignDocSearchInfoNotFound handles this case with default header values.
+/* DesignDocSearchInfoNotFound describes a response with status code 404, with default header values.
 
 Specified database, design document or view is missed
 */
@@ -183,7 +187,6 @@ type DesignDocSearchInfoNotFound struct {
 func (o *DesignDocSearchInfoNotFound) Error() string {
 	return fmt.Sprintf("[GET /{db}/_design/{ddoc}/_search_info/{index}][%d] designDocSearchInfoNotFound  %+v", 404, o.Payload)
 }
-
 func (o *DesignDocSearchInfoNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -197,67 +200,5 @@ func (o *DesignDocSearchInfoNotFound) readResponse(response runtime.ClientRespon
 		return err
 	}
 
-	return nil
-}
-
-/*DesignDocSearchInfoOKBody design doc search info o k body
-swagger:model DesignDocSearchInfoOKBody
-*/
-type DesignDocSearchInfoOKBody struct {
-
-	// name
-	Name string `json:"name,omitempty"`
-
-	// search index
-	SearchIndex *models.SearchIndex `json:"search_index,omitempty"`
-}
-
-// Validate validates this design doc search info o k body
-func (o *DesignDocSearchInfoOKBody) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := o.validateSearchIndex(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (o *DesignDocSearchInfoOKBody) validateSearchIndex(formats strfmt.Registry) error {
-
-	if swag.IsZero(o.SearchIndex) { // not required
-		return nil
-	}
-
-	if o.SearchIndex != nil {
-		if err := o.SearchIndex.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("designDocSearchInfoOK" + "." + "search_index")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (o *DesignDocSearchInfoOKBody) MarshalBinary() ([]byte, error) {
-	if o == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(o)
-}
-
-// UnmarshalBinary interface implementation
-func (o *DesignDocSearchInfoOKBody) UnmarshalBinary(b []byte) error {
-	var res DesignDocSearchInfoOKBody
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*o = res
 	return nil
 }

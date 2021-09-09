@@ -18,56 +18,70 @@ import (
 	"github.com/rossmerr/couchdb_go/models"
 )
 
-// NewDBsInfoParams creates a new DBsInfoParams object
-// with the default values initialized.
+// NewDBsInfoParams creates a new DBsInfoParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewDBsInfoParams() *DBsInfoParams {
-	var ()
 	return &DBsInfoParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewDBsInfoParamsWithTimeout creates a new DBsInfoParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewDBsInfoParamsWithTimeout(timeout time.Duration) *DBsInfoParams {
-	var ()
 	return &DBsInfoParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewDBsInfoParamsWithContext creates a new DBsInfoParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewDBsInfoParamsWithContext(ctx context.Context) *DBsInfoParams {
-	var ()
 	return &DBsInfoParams{
-
 		Context: ctx,
 	}
 }
 
 // NewDBsInfoParamsWithHTTPClient creates a new DBsInfoParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewDBsInfoParamsWithHTTPClient(client *http.Client) *DBsInfoParams {
-	var ()
 	return &DBsInfoParams{
 		HTTPClient: client,
 	}
 }
 
-/*DBsInfoParams contains all the parameters to send to the API endpoint
-for the d bs info operation typically these are written to a http.Request
+/* DBsInfoParams contains all the parameters to send to the API endpoint
+   for the d bs info operation.
+
+   Typically these are written to a http.Request.
 */
 type DBsInfoParams struct {
 
-	/*Body*/
+	// Body.
 	Body *models.Keys
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the d bs info params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DBsInfoParams) WithDefaults() *DBsInfoParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the d bs info params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DBsInfoParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the d bs info params
@@ -121,7 +135,6 @@ func (o *DBsInfoParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regis
 		return err
 	}
 	var res []error
-
 	if o.Body != nil {
 		if err := r.SetBodyParam(o.Body); err != nil {
 			return err

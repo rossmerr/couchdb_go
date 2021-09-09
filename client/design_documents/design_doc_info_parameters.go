@@ -16,64 +16,79 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewDesignDocInfoParams creates a new DesignDocInfoParams object
-// with the default values initialized.
+// NewDesignDocInfoParams creates a new DesignDocInfoParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewDesignDocInfoParams() *DesignDocInfoParams {
-	var ()
 	return &DesignDocInfoParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewDesignDocInfoParamsWithTimeout creates a new DesignDocInfoParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewDesignDocInfoParamsWithTimeout(timeout time.Duration) *DesignDocInfoParams {
-	var ()
 	return &DesignDocInfoParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewDesignDocInfoParamsWithContext creates a new DesignDocInfoParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewDesignDocInfoParamsWithContext(ctx context.Context) *DesignDocInfoParams {
-	var ()
 	return &DesignDocInfoParams{
-
 		Context: ctx,
 	}
 }
 
 // NewDesignDocInfoParamsWithHTTPClient creates a new DesignDocInfoParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewDesignDocInfoParamsWithHTTPClient(client *http.Client) *DesignDocInfoParams {
-	var ()
 	return &DesignDocInfoParams{
 		HTTPClient: client,
 	}
 }
 
-/*DesignDocInfoParams contains all the parameters to send to the API endpoint
-for the design doc info operation typically these are written to a http.Request
+/* DesignDocInfoParams contains all the parameters to send to the API endpoint
+   for the design doc info operation.
+
+   Typically these are written to a http.Request.
 */
 type DesignDocInfoParams struct {
 
-	/*Db
-	  Database name
+	/* Db.
 
+	   Database name
 	*/
 	Db string
-	/*Ddoc
-	  Design document id
 
+	/* Ddoc.
+
+	   Design document id
 	*/
 	Ddoc string
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the design doc info params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DesignDocInfoParams) WithDefaults() *DesignDocInfoParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the design doc info params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DesignDocInfoParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the design doc info params

@@ -53,7 +53,6 @@ func (o *DesignDocViewPostReader) ReadResponse(response runtime.ClientResponse, 
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -64,15 +63,17 @@ func NewDesignDocViewPostOK() *DesignDocViewPostOK {
 	return &DesignDocViewPostOK{}
 }
 
-/*DesignDocViewPostOK handles this case with default header values.
+/* DesignDocViewPostOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
 type DesignDocViewPostOK struct {
-	/*Response signature
+
+	/* Response signature
 	 */
 	ETag string
-	/*chunked
+
+	/* chunked
 	 */
 	TransferEncoding string
 
@@ -82,18 +83,25 @@ type DesignDocViewPostOK struct {
 func (o *DesignDocViewPostOK) Error() string {
 	return fmt.Sprintf("[POST /{db}/_design/{ddoc}/_view/{view}][%d] designDocViewPostOK  %+v", 200, o.Payload)
 }
-
 func (o *DesignDocViewPostOK) GetPayload() *models.Pagination {
 	return o.Payload
 }
 
 func (o *DesignDocViewPostOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	// response header ETag
-	o.ETag = response.GetHeader("ETag")
+	// hydrates response header ETag
+	hdrETag := response.GetHeader("ETag")
 
-	// response header Transfer-Encoding
-	o.TransferEncoding = response.GetHeader("Transfer-Encoding")
+	if hdrETag != "" {
+		o.ETag = hdrETag
+	}
+
+	// hydrates response header Transfer-Encoding
+	hdrTransferEncoding := response.GetHeader("Transfer-Encoding")
+
+	if hdrTransferEncoding != "" {
+		o.TransferEncoding = hdrTransferEncoding
+	}
 
 	o.Payload = new(models.Pagination)
 
@@ -110,7 +118,7 @@ func NewDesignDocViewPostNotModified() *DesignDocViewPostNotModified {
 	return &DesignDocViewPostNotModified{}
 }
 
-/*DesignDocViewPostNotModified handles this case with default header values.
+/* DesignDocViewPostNotModified describes a response with status code 304, with default header values.
 
 Document wasn’t modified since specified revision
 */
@@ -131,7 +139,7 @@ func NewDesignDocViewPostBadRequest() *DesignDocViewPostBadRequest {
 	return &DesignDocViewPostBadRequest{}
 }
 
-/*DesignDocViewPostBadRequest handles this case with default header values.
+/* DesignDocViewPostBadRequest describes a response with status code 400, with default header values.
 
 Invalid request
 */
@@ -142,7 +150,6 @@ type DesignDocViewPostBadRequest struct {
 func (o *DesignDocViewPostBadRequest) Error() string {
 	return fmt.Sprintf("[POST /{db}/_design/{ddoc}/_view/{view}][%d] designDocViewPostBadRequest  %+v", 400, o.Payload)
 }
-
 func (o *DesignDocViewPostBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -164,7 +171,7 @@ func NewDesignDocViewPostUnauthorized() *DesignDocViewPostUnauthorized {
 	return &DesignDocViewPostUnauthorized{}
 }
 
-/*DesignDocViewPostUnauthorized handles this case with default header values.
+/* DesignDocViewPostUnauthorized describes a response with status code 401, with default header values.
 
 Read permission required
 */
@@ -175,7 +182,6 @@ type DesignDocViewPostUnauthorized struct {
 func (o *DesignDocViewPostUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /{db}/_design/{ddoc}/_view/{view}][%d] designDocViewPostUnauthorized  %+v", 401, o.Payload)
 }
-
 func (o *DesignDocViewPostUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -197,7 +203,7 @@ func NewDesignDocViewPostNotFound() *DesignDocViewPostNotFound {
 	return &DesignDocViewPostNotFound{}
 }
 
-/*DesignDocViewPostNotFound handles this case with default header values.
+/* DesignDocViewPostNotFound describes a response with status code 404, with default header values.
 
 Specified database, design document or view is missed
 */
@@ -208,7 +214,6 @@ type DesignDocViewPostNotFound struct {
 func (o *DesignDocViewPostNotFound) Error() string {
 	return fmt.Sprintf("[POST /{db}/_design/{ddoc}/_view/{view}][%d] designDocViewPostNotFound  %+v", 404, o.Payload)
 }
-
 func (o *DesignDocViewPostNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }

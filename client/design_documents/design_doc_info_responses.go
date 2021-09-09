@@ -9,10 +9,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 
 	"github.com/rossmerr/couchdb_go/models"
 )
@@ -31,7 +29,6 @@ func (o *DesignDocInfoReader) ReadResponse(response runtime.ClientResponse, cons
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -42,92 +39,29 @@ func NewDesignDocInfoOK() *DesignDocInfoOK {
 	return &DesignDocInfoOK{}
 }
 
-/*DesignDocInfoOK handles this case with default header values.
+/* DesignDocInfoOK describes a response with status code 200, with default header values.
 
 DRequest completed successfully
 */
 type DesignDocInfoOK struct {
-	Payload *DesignDocInfoOKBody
+	Payload *models.InlineResponse2006
 }
 
 func (o *DesignDocInfoOK) Error() string {
 	return fmt.Sprintf("[HEAD /{db}/_design/{ddoc}/_info][%d] designDocInfoOK  %+v", 200, o.Payload)
 }
-
-func (o *DesignDocInfoOK) GetPayload() *DesignDocInfoOKBody {
+func (o *DesignDocInfoOK) GetPayload() *models.InlineResponse2006 {
 	return o.Payload
 }
 
 func (o *DesignDocInfoOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(DesignDocInfoOKBody)
+	o.Payload = new(models.InlineResponse2006)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 
-	return nil
-}
-
-/*DesignDocInfoOKBody design doc info o k body
-swagger:model DesignDocInfoOKBody
-*/
-type DesignDocInfoOKBody struct {
-
-	// name
-	Name string `json:"name,omitempty"`
-
-	// view index
-	ViewIndex *models.ViewIndex `json:"view_index,omitempty"`
-}
-
-// Validate validates this design doc info o k body
-func (o *DesignDocInfoOKBody) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := o.validateViewIndex(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (o *DesignDocInfoOKBody) validateViewIndex(formats strfmt.Registry) error {
-
-	if swag.IsZero(o.ViewIndex) { // not required
-		return nil
-	}
-
-	if o.ViewIndex != nil {
-		if err := o.ViewIndex.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("designDocInfoOK" + "." + "view_index")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (o *DesignDocInfoOKBody) MarshalBinary() ([]byte, error) {
-	if o == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(o)
-}
-
-// UnmarshalBinary interface implementation
-func (o *DesignDocInfoOKBody) UnmarshalBinary(b []byte) error {
-	var res DesignDocInfoOKBody
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*o = res
 	return nil
 }

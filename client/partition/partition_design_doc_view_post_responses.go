@@ -53,7 +53,6 @@ func (o *PartitionDesignDocViewPostReader) ReadResponse(response runtime.ClientR
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -64,15 +63,17 @@ func NewPartitionDesignDocViewPostOK() *PartitionDesignDocViewPostOK {
 	return &PartitionDesignDocViewPostOK{}
 }
 
-/*PartitionDesignDocViewPostOK handles this case with default header values.
+/* PartitionDesignDocViewPostOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
 type PartitionDesignDocViewPostOK struct {
-	/*Response signature
+
+	/* Response signature
 	 */
 	ETag string
-	/*chunked
+
+	/* chunked
 	 */
 	TransferEncoding string
 
@@ -82,18 +83,25 @@ type PartitionDesignDocViewPostOK struct {
 func (o *PartitionDesignDocViewPostOK) Error() string {
 	return fmt.Sprintf("[POST /{db}/_partition/{partition}/_design/{ddoc}/_view/{view}][%d] partitionDesignDocViewPostOK  %+v", 200, o.Payload)
 }
-
 func (o *PartitionDesignDocViewPostOK) GetPayload() *models.Pagination {
 	return o.Payload
 }
 
 func (o *PartitionDesignDocViewPostOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	// response header ETag
-	o.ETag = response.GetHeader("ETag")
+	// hydrates response header ETag
+	hdrETag := response.GetHeader("ETag")
 
-	// response header Transfer-Encoding
-	o.TransferEncoding = response.GetHeader("Transfer-Encoding")
+	if hdrETag != "" {
+		o.ETag = hdrETag
+	}
+
+	// hydrates response header Transfer-Encoding
+	hdrTransferEncoding := response.GetHeader("Transfer-Encoding")
+
+	if hdrTransferEncoding != "" {
+		o.TransferEncoding = hdrTransferEncoding
+	}
 
 	o.Payload = new(models.Pagination)
 
@@ -110,7 +118,7 @@ func NewPartitionDesignDocViewPostNotModified() *PartitionDesignDocViewPostNotMo
 	return &PartitionDesignDocViewPostNotModified{}
 }
 
-/*PartitionDesignDocViewPostNotModified handles this case with default header values.
+/* PartitionDesignDocViewPostNotModified describes a response with status code 304, with default header values.
 
 Document wasn’t modified since specified revision
 */
@@ -131,7 +139,7 @@ func NewPartitionDesignDocViewPostBadRequest() *PartitionDesignDocViewPostBadReq
 	return &PartitionDesignDocViewPostBadRequest{}
 }
 
-/*PartitionDesignDocViewPostBadRequest handles this case with default header values.
+/* PartitionDesignDocViewPostBadRequest describes a response with status code 400, with default header values.
 
 Invalid request
 */
@@ -142,7 +150,6 @@ type PartitionDesignDocViewPostBadRequest struct {
 func (o *PartitionDesignDocViewPostBadRequest) Error() string {
 	return fmt.Sprintf("[POST /{db}/_partition/{partition}/_design/{ddoc}/_view/{view}][%d] partitionDesignDocViewPostBadRequest  %+v", 400, o.Payload)
 }
-
 func (o *PartitionDesignDocViewPostBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -164,7 +171,7 @@ func NewPartitionDesignDocViewPostUnauthorized() *PartitionDesignDocViewPostUnau
 	return &PartitionDesignDocViewPostUnauthorized{}
 }
 
-/*PartitionDesignDocViewPostUnauthorized handles this case with default header values.
+/* PartitionDesignDocViewPostUnauthorized describes a response with status code 401, with default header values.
 
 Read permission required
 */
@@ -175,7 +182,6 @@ type PartitionDesignDocViewPostUnauthorized struct {
 func (o *PartitionDesignDocViewPostUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /{db}/_partition/{partition}/_design/{ddoc}/_view/{view}][%d] partitionDesignDocViewPostUnauthorized  %+v", 401, o.Payload)
 }
-
 func (o *PartitionDesignDocViewPostUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -197,7 +203,7 @@ func NewPartitionDesignDocViewPostNotFound() *PartitionDesignDocViewPostNotFound
 	return &PartitionDesignDocViewPostNotFound{}
 }
 
-/*PartitionDesignDocViewPostNotFound handles this case with default header values.
+/* PartitionDesignDocViewPostNotFound describes a response with status code 404, with default header values.
 
 Specified database, design document or view is missed
 */
@@ -208,7 +214,6 @@ type PartitionDesignDocViewPostNotFound struct {
 func (o *PartitionDesignDocViewPostNotFound) Error() string {
 	return fmt.Sprintf("[POST /{db}/_partition/{partition}/_design/{ddoc}/_view/{view}][%d] partitionDesignDocViewPostNotFound  %+v", 404, o.Payload)
 }
-
 func (o *PartitionDesignDocViewPostNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }

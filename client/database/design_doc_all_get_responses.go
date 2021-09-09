@@ -35,7 +35,6 @@ func (o *DesignDocAllGetReader) ReadResponse(response runtime.ClientResponse, co
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -46,12 +45,13 @@ func NewDesignDocAllGetOK() *DesignDocAllGetOK {
 	return &DesignDocAllGetOK{}
 }
 
-/*DesignDocAllGetOK handles this case with default header values.
+/* DesignDocAllGetOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
 type DesignDocAllGetOK struct {
-	/*Response signature
+
+	/* Response signature
 	 */
 	ETag string
 
@@ -61,15 +61,18 @@ type DesignDocAllGetOK struct {
 func (o *DesignDocAllGetOK) Error() string {
 	return fmt.Sprintf("[GET /{db}/_design_docs][%d] designDocAllGetOK  %+v", 200, o.Payload)
 }
-
 func (o *DesignDocAllGetOK) GetPayload() *models.Pagination {
 	return o.Payload
 }
 
 func (o *DesignDocAllGetOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	// response header ETag
-	o.ETag = response.GetHeader("ETag")
+	// hydrates response header ETag
+	hdrETag := response.GetHeader("ETag")
+
+	if hdrETag != "" {
+		o.ETag = hdrETag
+	}
 
 	o.Payload = new(models.Pagination)
 
@@ -86,7 +89,7 @@ func NewDesignDocAllGetNotFound() *DesignDocAllGetNotFound {
 	return &DesignDocAllGetNotFound{}
 }
 
-/*DesignDocAllGetNotFound handles this case with default header values.
+/* DesignDocAllGetNotFound describes a response with status code 404, with default header values.
 
 Requested database not found
 */
@@ -97,7 +100,6 @@ type DesignDocAllGetNotFound struct {
 func (o *DesignDocAllGetNotFound) Error() string {
 	return fmt.Sprintf("[GET /{db}/_design_docs][%d] designDocAllGetNotFound  %+v", 404, o.Payload)
 }
-
 func (o *DesignDocAllGetNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }

@@ -17,156 +17,189 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NewPartitionDocGetAllParams creates a new PartitionDocGetAllParams object
-// with the default values initialized.
+// NewPartitionDocGetAllParams creates a new PartitionDocGetAllParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewPartitionDocGetAllParams() *PartitionDocGetAllParams {
-	var ()
 	return &PartitionDocGetAllParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewPartitionDocGetAllParamsWithTimeout creates a new PartitionDocGetAllParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewPartitionDocGetAllParamsWithTimeout(timeout time.Duration) *PartitionDocGetAllParams {
-	var ()
 	return &PartitionDocGetAllParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewPartitionDocGetAllParamsWithContext creates a new PartitionDocGetAllParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewPartitionDocGetAllParamsWithContext(ctx context.Context) *PartitionDocGetAllParams {
-	var ()
 	return &PartitionDocGetAllParams{
-
 		Context: ctx,
 	}
 }
 
 // NewPartitionDocGetAllParamsWithHTTPClient creates a new PartitionDocGetAllParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewPartitionDocGetAllParamsWithHTTPClient(client *http.Client) *PartitionDocGetAllParams {
-	var ()
 	return &PartitionDocGetAllParams{
 		HTTPClient: client,
 	}
 }
 
-/*PartitionDocGetAllParams contains all the parameters to send to the API endpoint
-for the partition doc get all operation typically these are written to a http.Request
+/* PartitionDocGetAllParams contains all the parameters to send to the API endpoint
+   for the partition doc get all operation.
+
+   Typically these are written to a http.Request.
 */
 type PartitionDocGetAllParams struct {
 
-	/*AttEncodingInfo
-	  Include encoding information in attachment stubs if include_docs is true and the particular attachment is compressed. Ignored if include_docs isn’t true. Default is false.
+	/* AttEncodingInfo.
 
+	   Include encoding information in attachment stubs if include_docs is true and the particular attachment is compressed. Ignored if include_docs isn’t true. Default is false.
 	*/
 	AttEncodingInfo *bool
-	/*Attachments
-	  Include the Base64-encoded content of attachments in the documents that are included if include_docs is true. Ignored if include_docs isn’t true. Default is false.
 
+	/* Attachments.
+
+	   Include the Base64-encoded content of attachments in the documents that are included if include_docs is true. Ignored if include_docs isn’t true. Default is false.
 	*/
 	Attachments *bool
-	/*Conflicts
-	  Include conflicts information in response. Ignored if include_docs isn’t true. Default is false.
 
+	/* Conflicts.
+
+	   Include conflicts information in response. Ignored if include_docs isn’t true. Default is false.
 	*/
 	Conflicts *bool
-	/*Db
-	  Database name
 
+	/* Db.
+
+	   Database name
 	*/
 	Db string
-	/*Descending
-	  Return the documents in descending order by key. Default is false.
 
+	/* Descending.
+
+	   Return the documents in descending order by key. Default is false.
 	*/
 	Descending *bool
-	/*Group
-	  Group the results using the reduce function to a group or single row. Implies reduce is true and the maximum group_level. Default is false.
 
+	/* Group.
+
+	   Group the results using the reduce function to a group or single row. Implies reduce is true and the maximum group_level. Default is false.
 	*/
 	Group *bool
-	/*GroupLevel
-	  Specify the group level to be used. Implies group is true.
 
+	/* GroupLevel.
+
+	   Specify the group level to be used. Implies group is true.
 	*/
 	GroupLevel *int64
-	/*IncludeDocs
-	  Include the associated document with each row. Default is false.
 
+	/* IncludeDocs.
+
+	   Include the associated document with each row. Default is false.
 	*/
 	IncludeDocs *bool
-	/*InclusiveEnd
-	  Specifies whether the specified end key should be included in the result. Default is true.
 
+	/* InclusiveEnd.
+
+	   Specifies whether the specified end key should be included in the result. Default is true.
 	*/
 	InclusiveEnd *bool
-	/*Limit
-	  Limit the number of the returned documents to the specified number.
 
+	/* Limit.
+
+	   Limit the number of the returned documents to the specified number.
 	*/
 	Limit *int64
-	/*Partition
-	  Partition name
 
+	/* Partition.
+
+	   Partition name
 	*/
 	Partition string
-	/*Reduce
-	  Use the reduction function. Default is true when a reduce function is defined.
 
+	/* Reduce.
+
+	   Use the reduction function. Default is true when a reduce function is defined.
 	*/
 	Reduce *bool
-	/*Skip
-	  Skip this number of records before starting to return the results. Default is 0.
 
+	/* Skip.
+
+	   Skip this number of records before starting to return the results. Default is 0.
 	*/
 	Skip *int64
-	/*Sorted
-	  Sort returned rows (see Sorting Returned Rows). Setting this to false offers a performance boost. The total_rows and offset fields are not available when this is set to false. Default is true.
 
+	/* Sorted.
+
+	   Sort returned rows (see Sorting Returned Rows). Setting this to false offers a performance boost. The total_rows and offset fields are not available when this is set to false. Default is true.
 	*/
 	Sorted *bool
-	/*Stable
-	  Whether or not the view results should be returned from a stable set of shards. Default is false.
 
+	/* Stable.
+
+	   Whether or not the view results should be returned from a stable set of shards. Default is false.
 	*/
 	Stable *bool
-	/*Stale
-	  Allow the results from a stale view to be used. Supported values: ok and update_after. ok is equivalent to stable=true&update=false. update_after is equivalent to stable=true&update=lazy. The default behavior is equivalent to stable=false&update=true. Note that this parameter is deprecated. Use stable and update instead. See Views Generation for more details.
 
+	/* Stale.
+
+	   Allow the results from a stale view to be used. Supported values: ok and update_after. ok is equivalent to stable=true&update=false. update_after is equivalent to stable=true&update=lazy. The default behavior is equivalent to stable=false&update=true. Note that this parameter is deprecated. Use stable and update instead. See Views Generation for more details.
 
 	*/
 	Stale *string
-	/*StartKeyDocID
-	  Alias for startkey_docid param
 
+	/* StartKeyDocID.
+
+	   Alias for startkey_docid param
 	*/
 	StartKeyDocID *string
-	/*StartkeyDocid
-	  Return records starting with the specified document ID. Ignored if startkey is not set.
 
+	/* StartkeyDocid.
+
+	   Return records starting with the specified document ID. Ignored if startkey is not set.
 	*/
 	StartkeyDocid *string
-	/*Update
-	  Whether or not the view in question should be updated prior to responding to the user. Supported values: true, false, lazy. Default is true.
 
+	/* Update.
+
+	   Whether or not the view in question should be updated prior to responding to the user. Supported values: true, false, lazy. Default is true.
 
 	*/
 	Update *string
-	/*UpdateSeq
-	  Whether to include in the response an update_seq value indicating the sequence id of the database the view reflects. Default is false.
 
+	/* UpdateSeq.
+
+	   Whether to include in the response an update_seq value indicating the sequence id of the database the view reflects. Default is false.
 	*/
 	UpdateSeq *bool
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the partition doc get all params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *PartitionDocGetAllParams) WithDefaults() *PartitionDocGetAllParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the partition doc get all params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *PartitionDocGetAllParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the partition doc get all params
@@ -434,48 +467,51 @@ func (o *PartitionDocGetAllParams) WriteToRequest(r runtime.ClientRequest, reg s
 
 		// query param att_encoding_info
 		var qrAttEncodingInfo bool
+
 		if o.AttEncodingInfo != nil {
 			qrAttEncodingInfo = *o.AttEncodingInfo
 		}
 		qAttEncodingInfo := swag.FormatBool(qrAttEncodingInfo)
 		if qAttEncodingInfo != "" {
+
 			if err := r.SetQueryParam("att_encoding_info", qAttEncodingInfo); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Attachments != nil {
 
 		// query param attachments
 		var qrAttachments bool
+
 		if o.Attachments != nil {
 			qrAttachments = *o.Attachments
 		}
 		qAttachments := swag.FormatBool(qrAttachments)
 		if qAttachments != "" {
+
 			if err := r.SetQueryParam("attachments", qAttachments); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Conflicts != nil {
 
 		// query param conflicts
 		var qrConflicts bool
+
 		if o.Conflicts != nil {
 			qrConflicts = *o.Conflicts
 		}
 		qConflicts := swag.FormatBool(qrConflicts)
 		if qConflicts != "" {
+
 			if err := r.SetQueryParam("conflicts", qConflicts); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	// path param db
@@ -487,96 +523,102 @@ func (o *PartitionDocGetAllParams) WriteToRequest(r runtime.ClientRequest, reg s
 
 		// query param descending
 		var qrDescending bool
+
 		if o.Descending != nil {
 			qrDescending = *o.Descending
 		}
 		qDescending := swag.FormatBool(qrDescending)
 		if qDescending != "" {
+
 			if err := r.SetQueryParam("descending", qDescending); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Group != nil {
 
 		// query param group
 		var qrGroup bool
+
 		if o.Group != nil {
 			qrGroup = *o.Group
 		}
 		qGroup := swag.FormatBool(qrGroup)
 		if qGroup != "" {
+
 			if err := r.SetQueryParam("group", qGroup); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.GroupLevel != nil {
 
 		// query param group_level
 		var qrGroupLevel int64
+
 		if o.GroupLevel != nil {
 			qrGroupLevel = *o.GroupLevel
 		}
 		qGroupLevel := swag.FormatInt64(qrGroupLevel)
 		if qGroupLevel != "" {
+
 			if err := r.SetQueryParam("group_level", qGroupLevel); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.IncludeDocs != nil {
 
 		// query param include_docs
 		var qrIncludeDocs bool
+
 		if o.IncludeDocs != nil {
 			qrIncludeDocs = *o.IncludeDocs
 		}
 		qIncludeDocs := swag.FormatBool(qrIncludeDocs)
 		if qIncludeDocs != "" {
+
 			if err := r.SetQueryParam("include_docs", qIncludeDocs); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.InclusiveEnd != nil {
 
 		// query param inclusive_end
 		var qrInclusiveEnd bool
+
 		if o.InclusiveEnd != nil {
 			qrInclusiveEnd = *o.InclusiveEnd
 		}
 		qInclusiveEnd := swag.FormatBool(qrInclusiveEnd)
 		if qInclusiveEnd != "" {
+
 			if err := r.SetQueryParam("inclusive_end", qInclusiveEnd); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Limit != nil {
 
 		// query param limit
 		var qrLimit int64
+
 		if o.Limit != nil {
 			qrLimit = *o.Limit
 		}
 		qLimit := swag.FormatInt64(qrLimit)
 		if qLimit != "" {
+
 			if err := r.SetQueryParam("limit", qLimit); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	// path param partition
@@ -588,144 +630,153 @@ func (o *PartitionDocGetAllParams) WriteToRequest(r runtime.ClientRequest, reg s
 
 		// query param reduce
 		var qrReduce bool
+
 		if o.Reduce != nil {
 			qrReduce = *o.Reduce
 		}
 		qReduce := swag.FormatBool(qrReduce)
 		if qReduce != "" {
+
 			if err := r.SetQueryParam("reduce", qReduce); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Skip != nil {
 
 		// query param skip
 		var qrSkip int64
+
 		if o.Skip != nil {
 			qrSkip = *o.Skip
 		}
 		qSkip := swag.FormatInt64(qrSkip)
 		if qSkip != "" {
+
 			if err := r.SetQueryParam("skip", qSkip); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Sorted != nil {
 
 		// query param sorted
 		var qrSorted bool
+
 		if o.Sorted != nil {
 			qrSorted = *o.Sorted
 		}
 		qSorted := swag.FormatBool(qrSorted)
 		if qSorted != "" {
+
 			if err := r.SetQueryParam("sorted", qSorted); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Stable != nil {
 
 		// query param stable
 		var qrStable bool
+
 		if o.Stable != nil {
 			qrStable = *o.Stable
 		}
 		qStable := swag.FormatBool(qrStable)
 		if qStable != "" {
+
 			if err := r.SetQueryParam("stable", qStable); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Stale != nil {
 
 		// query param stale
 		var qrStale string
+
 		if o.Stale != nil {
 			qrStale = *o.Stale
 		}
 		qStale := qrStale
 		if qStale != "" {
+
 			if err := r.SetQueryParam("stale", qStale); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.StartKeyDocID != nil {
 
 		// query param start_key_doc_id
 		var qrStartKeyDocID string
+
 		if o.StartKeyDocID != nil {
 			qrStartKeyDocID = *o.StartKeyDocID
 		}
 		qStartKeyDocID := qrStartKeyDocID
 		if qStartKeyDocID != "" {
+
 			if err := r.SetQueryParam("start_key_doc_id", qStartKeyDocID); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.StartkeyDocid != nil {
 
 		// query param startkey_docid
 		var qrStartkeyDocid string
+
 		if o.StartkeyDocid != nil {
 			qrStartkeyDocid = *o.StartkeyDocid
 		}
 		qStartkeyDocid := qrStartkeyDocid
 		if qStartkeyDocid != "" {
+
 			if err := r.SetQueryParam("startkey_docid", qStartkeyDocid); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Update != nil {
 
 		// query param update
 		var qrUpdate string
+
 		if o.Update != nil {
 			qrUpdate = *o.Update
 		}
 		qUpdate := qrUpdate
 		if qUpdate != "" {
+
 			if err := r.SetQueryParam("update", qUpdate); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.UpdateSeq != nil {
 
 		// query param update_seq
 		var qrUpdateSeq bool
+
 		if o.UpdateSeq != nil {
 			qrUpdateSeq = *o.UpdateSeq
 		}
 		qUpdateSeq := swag.FormatBool(qrUpdateSeq)
 		if qUpdateSeq != "" {
+
 			if err := r.SetQueryParam("update_seq", qUpdateSeq); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if len(res) > 0 {

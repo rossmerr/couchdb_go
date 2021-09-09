@@ -17,59 +17,73 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NewClusterSetupGetParams creates a new ClusterSetupGetParams object
-// with the default values initialized.
+// NewClusterSetupGetParams creates a new ClusterSetupGetParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewClusterSetupGetParams() *ClusterSetupGetParams {
-	var ()
 	return &ClusterSetupGetParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewClusterSetupGetParamsWithTimeout creates a new ClusterSetupGetParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewClusterSetupGetParamsWithTimeout(timeout time.Duration) *ClusterSetupGetParams {
-	var ()
 	return &ClusterSetupGetParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewClusterSetupGetParamsWithContext creates a new ClusterSetupGetParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewClusterSetupGetParamsWithContext(ctx context.Context) *ClusterSetupGetParams {
-	var ()
 	return &ClusterSetupGetParams{
-
 		Context: ctx,
 	}
 }
 
 // NewClusterSetupGetParamsWithHTTPClient creates a new ClusterSetupGetParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewClusterSetupGetParamsWithHTTPClient(client *http.Client) *ClusterSetupGetParams {
-	var ()
 	return &ClusterSetupGetParams{
 		HTTPClient: client,
 	}
 }
 
-/*ClusterSetupGetParams contains all the parameters to send to the API endpoint
-for the cluster setup get operation typically these are written to a http.Request
+/* ClusterSetupGetParams contains all the parameters to send to the API endpoint
+   for the cluster setup get operation.
+
+   Typically these are written to a http.Request.
 */
 type ClusterSetupGetParams struct {
 
-	/*EnsureDbsExist
-	  List of system databases to ensure exist on the node/cluster. Defaults to ["_users","_replicator"].
+	/* EnsureDbsExist.
 
+	   List of system databases to ensure exist on the node/cluster. Defaults to ["_users","_replicator"].
 	*/
 	EnsureDbsExist []string
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the cluster setup get params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *ClusterSetupGetParams) WithDefaults() *ClusterSetupGetParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the cluster setup get params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *ClusterSetupGetParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the cluster setup get params
@@ -124,16 +138,36 @@ func (o *ClusterSetupGetParams) WriteToRequest(r runtime.ClientRequest, reg strf
 	}
 	var res []error
 
-	valuesEnsureDbsExist := o.EnsureDbsExist
+	if o.EnsureDbsExist != nil {
 
-	joinedEnsureDbsExist := swag.JoinByFormat(valuesEnsureDbsExist, "multi")
-	// query array param ensure_dbs_exist
-	if err := r.SetQueryParam("ensure_dbs_exist", joinedEnsureDbsExist...); err != nil {
-		return err
+		// binding items for ensure_dbs_exist
+		joinedEnsureDbsExist := o.bindParamEnsureDbsExist(reg)
+
+		// query array param ensure_dbs_exist
+		if err := r.SetQueryParam("ensure_dbs_exist", joinedEnsureDbsExist...); err != nil {
+			return err
+		}
 	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
 	return nil
+}
+
+// bindParamClusterSetupGet binds the parameter ensure_dbs_exist
+func (o *ClusterSetupGetParams) bindParamEnsureDbsExist(formats strfmt.Registry) []string {
+	ensureDbsExistIR := o.EnsureDbsExist
+
+	var ensureDbsExistIC []string
+	for _, ensureDbsExistIIR := range ensureDbsExistIR { // explode []string
+
+		ensureDbsExistIIV := ensureDbsExistIIR // string as string
+		ensureDbsExistIC = append(ensureDbsExistIC, ensureDbsExistIIV)
+	}
+
+	// items.CollectionFormat: "multi"
+	ensureDbsExistIS := swag.JoinByFormat(ensureDbsExistIC, "multi")
+
+	return ensureDbsExistIS
 }

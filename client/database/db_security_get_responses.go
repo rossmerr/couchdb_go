@@ -9,10 +9,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 
 	"github.com/rossmerr/couchdb_go/models"
 )
@@ -31,7 +29,6 @@ func (o *DbSecurityGetReader) ReadResponse(response runtime.ClientResponse, cons
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -42,114 +39,29 @@ func NewDbSecurityGetOK() *DbSecurityGetOK {
 	return &DbSecurityGetOK{}
 }
 
-/*DbSecurityGetOK handles this case with default header values.
+/* DbSecurityGetOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
 type DbSecurityGetOK struct {
-	Payload *DbSecurityGetOKBody
+	Payload *models.InlineResponse2005
 }
 
 func (o *DbSecurityGetOK) Error() string {
 	return fmt.Sprintf("[GET /{db}/_security][%d] dbSecurityGetOK  %+v", 200, o.Payload)
 }
-
-func (o *DbSecurityGetOK) GetPayload() *DbSecurityGetOKBody {
+func (o *DbSecurityGetOK) GetPayload() *models.InlineResponse2005 {
 	return o.Payload
 }
 
 func (o *DbSecurityGetOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(DbSecurityGetOKBody)
+	o.Payload = new(models.InlineResponse2005)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 
-	return nil
-}
-
-/*DbSecurityGetOKBody db security get o k body
-swagger:model DbSecurityGetOKBody
-*/
-type DbSecurityGetOKBody struct {
-
-	// admins
-	Admins *models.Admins `json:"admins,omitempty"`
-
-	// members
-	Members *models.Members `json:"members,omitempty"`
-}
-
-// Validate validates this db security get o k body
-func (o *DbSecurityGetOKBody) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := o.validateAdmins(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := o.validateMembers(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (o *DbSecurityGetOKBody) validateAdmins(formats strfmt.Registry) error {
-
-	if swag.IsZero(o.Admins) { // not required
-		return nil
-	}
-
-	if o.Admins != nil {
-		if err := o.Admins.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("dbSecurityGetOK" + "." + "admins")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (o *DbSecurityGetOKBody) validateMembers(formats strfmt.Registry) error {
-
-	if swag.IsZero(o.Members) { // not required
-		return nil
-	}
-
-	if o.Members != nil {
-		if err := o.Members.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("dbSecurityGetOK" + "." + "members")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (o *DbSecurityGetOKBody) MarshalBinary() ([]byte, error) {
-	if o == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(o)
-}
-
-// UnmarshalBinary interface implementation
-func (o *DbSecurityGetOKBody) UnmarshalBinary(b []byte) error {
-	var res DbSecurityGetOKBody
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*o = res
 	return nil
 }

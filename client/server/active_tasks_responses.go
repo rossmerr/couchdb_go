@@ -35,7 +35,6 @@ func (o *ActiveTasksReader) ReadResponse(response runtime.ClientResponse, consum
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -46,7 +45,7 @@ func NewActiveTasksOK() *ActiveTasksOK {
 	return &ActiveTasksOK{}
 }
 
-/*ActiveTasksOK handles this case with default header values.
+/* ActiveTasksOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
@@ -57,7 +56,6 @@ type ActiveTasksOK struct {
 func (o *ActiveTasksOK) Error() string {
 	return fmt.Sprintf("[GET /_active_tasks][%d] activeTasksOK  %+v", 200, o.Payload)
 }
-
 func (o *ActiveTasksOK) GetPayload() []*models.Task {
 	return o.Payload
 }
@@ -77,7 +75,7 @@ func NewActiveTasksUnauthorized() *ActiveTasksUnauthorized {
 	return &ActiveTasksUnauthorized{}
 }
 
-/*ActiveTasksUnauthorized handles this case with default header values.
+/* ActiveTasksUnauthorized describes a response with status code 401, with default header values.
 
 CouchDB Server Administrator privileges required
 */
@@ -88,7 +86,6 @@ type ActiveTasksUnauthorized struct {
 func (o *ActiveTasksUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /_active_tasks][%d] activeTasksUnauthorized  %+v", 401, o.Payload)
 }
-
 func (o *ActiveTasksUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }

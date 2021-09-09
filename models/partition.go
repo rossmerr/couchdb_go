@@ -6,6 +6,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -47,13 +49,40 @@ func (m *Partition) Validate(formats strfmt.Registry) error {
 }
 
 func (m *Partition) validateSizes(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Sizes) { // not required
 		return nil
 	}
 
 	if m.Sizes != nil {
 		if err := m.Sizes.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("sizes")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this partition based on the context it is used
+func (m *Partition) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateSizes(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Partition) contextValidateSizes(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Sizes != nil {
+		if err := m.Sizes.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("sizes")
 			}
@@ -75,41 +104,6 @@ func (m *Partition) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Partition) UnmarshalBinary(b []byte) error {
 	var res Partition
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// PartitionSizes partition sizes
-//
-// swagger:model PartitionSizes
-type PartitionSizes struct {
-
-	// active
-	Active int64 `json:"active,omitempty"`
-
-	// external
-	External int64 `json:"external,omitempty"`
-}
-
-// Validate validates this partition sizes
-func (m *PartitionSizes) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *PartitionSizes) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *PartitionSizes) UnmarshalBinary(b []byte) error {
-	var res PartitionSizes
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

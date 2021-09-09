@@ -9,10 +9,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 
 	"github.com/rossmerr/couchdb_go/models"
 )
@@ -37,7 +35,6 @@ func (o *SbSecurityPutReader) ReadResponse(response runtime.ClientResponse, cons
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -48,7 +45,7 @@ func NewSbSecurityPutOK() *SbSecurityPutOK {
 	return &SbSecurityPutOK{}
 }
 
-/*SbSecurityPutOK handles this case with default header values.
+/* SbSecurityPutOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
@@ -59,7 +56,6 @@ type SbSecurityPutOK struct {
 func (o *SbSecurityPutOK) Error() string {
 	return fmt.Sprintf("[PUT /{db}/_security][%d] sbSecurityPutOK  %+v", 200, o.Payload)
 }
-
 func (o *SbSecurityPutOK) GetPayload() *models.OK {
 	return o.Payload
 }
@@ -81,7 +77,7 @@ func NewSbSecurityPutUnauthorized() *SbSecurityPutUnauthorized {
 	return &SbSecurityPutUnauthorized{}
 }
 
-/*SbSecurityPutUnauthorized handles this case with default header values.
+/* SbSecurityPutUnauthorized describes a response with status code 401, with default header values.
 
 CouchDB Server Administrator privileges required
 */
@@ -92,7 +88,6 @@ type SbSecurityPutUnauthorized struct {
 func (o *SbSecurityPutUnauthorized) Error() string {
 	return fmt.Sprintf("[PUT /{db}/_security][%d] sbSecurityPutUnauthorized  %+v", 401, o.Payload)
 }
-
 func (o *SbSecurityPutUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -106,89 +101,5 @@ func (o *SbSecurityPutUnauthorized) readResponse(response runtime.ClientResponse
 		return err
 	}
 
-	return nil
-}
-
-/*SbSecurityPutBody sb security put body
-swagger:model SbSecurityPutBody
-*/
-type SbSecurityPutBody struct {
-
-	// admins
-	Admins *models.Admins `json:"admins,omitempty"`
-
-	// members
-	Members *models.Members `json:"members,omitempty"`
-}
-
-// Validate validates this sb security put body
-func (o *SbSecurityPutBody) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := o.validateAdmins(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := o.validateMembers(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (o *SbSecurityPutBody) validateAdmins(formats strfmt.Registry) error {
-
-	if swag.IsZero(o.Admins) { // not required
-		return nil
-	}
-
-	if o.Admins != nil {
-		if err := o.Admins.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("body" + "." + "admins")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (o *SbSecurityPutBody) validateMembers(formats strfmt.Registry) error {
-
-	if swag.IsZero(o.Members) { // not required
-		return nil
-	}
-
-	if o.Members != nil {
-		if err := o.Members.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("body" + "." + "members")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (o *SbSecurityPutBody) MarshalBinary() ([]byte, error) {
-	if o == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(o)
-}
-
-// UnmarshalBinary interface implementation
-func (o *SbSecurityPutBody) UnmarshalBinary(b []byte) error {
-	var res SbSecurityPutBody
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*o = res
 	return nil
 }

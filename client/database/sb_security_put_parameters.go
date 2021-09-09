@@ -14,63 +14,80 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+
+	"github.com/rossmerr/couchdb_go/models"
 )
 
-// NewSbSecurityPutParams creates a new SbSecurityPutParams object
-// with the default values initialized.
+// NewSbSecurityPutParams creates a new SbSecurityPutParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewSbSecurityPutParams() *SbSecurityPutParams {
-	var ()
 	return &SbSecurityPutParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewSbSecurityPutParamsWithTimeout creates a new SbSecurityPutParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewSbSecurityPutParamsWithTimeout(timeout time.Duration) *SbSecurityPutParams {
-	var ()
 	return &SbSecurityPutParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewSbSecurityPutParamsWithContext creates a new SbSecurityPutParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewSbSecurityPutParamsWithContext(ctx context.Context) *SbSecurityPutParams {
-	var ()
 	return &SbSecurityPutParams{
-
 		Context: ctx,
 	}
 }
 
 // NewSbSecurityPutParamsWithHTTPClient creates a new SbSecurityPutParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewSbSecurityPutParamsWithHTTPClient(client *http.Client) *SbSecurityPutParams {
-	var ()
 	return &SbSecurityPutParams{
 		HTTPClient: client,
 	}
 }
 
-/*SbSecurityPutParams contains all the parameters to send to the API endpoint
-for the sb security put operation typically these are written to a http.Request
+/* SbSecurityPutParams contains all the parameters to send to the API endpoint
+   for the sb security put operation.
+
+   Typically these are written to a http.Request.
 */
 type SbSecurityPutParams struct {
 
-	/*Body*/
-	Body SbSecurityPutBody
-	/*Db
-	  Database name
+	// Body.
+	Body *models.Body4
 
+	/* Db.
+
+	   Database name
 	*/
 	Db string
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the sb security put params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *SbSecurityPutParams) WithDefaults() *SbSecurityPutParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the sb security put params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *SbSecurityPutParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the sb security put params
@@ -107,13 +124,13 @@ func (o *SbSecurityPutParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithBody adds the body to the sb security put params
-func (o *SbSecurityPutParams) WithBody(body SbSecurityPutBody) *SbSecurityPutParams {
+func (o *SbSecurityPutParams) WithBody(body *models.Body4) *SbSecurityPutParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the sb security put params
-func (o *SbSecurityPutParams) SetBody(body SbSecurityPutBody) {
+func (o *SbSecurityPutParams) SetBody(body *models.Body4) {
 	o.Body = body
 }
 
@@ -135,9 +152,10 @@ func (o *SbSecurityPutParams) WriteToRequest(r runtime.ClientRequest, reg strfmt
 		return err
 	}
 	var res []error
-
-	if err := r.SetBodyParam(o.Body); err != nil {
-		return err
+	if o.Body != nil {
+		if err := r.SetBodyParam(o.Body); err != nil {
+			return err
+		}
 	}
 
 	// path param db

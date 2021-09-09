@@ -14,58 +14,74 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+
+	"github.com/rossmerr/couchdb_go/models"
 )
 
-// NewSearchAnalyzeParams creates a new SearchAnalyzeParams object
-// with the default values initialized.
+// NewSearchAnalyzeParams creates a new SearchAnalyzeParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewSearchAnalyzeParams() *SearchAnalyzeParams {
-	var ()
 	return &SearchAnalyzeParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewSearchAnalyzeParamsWithTimeout creates a new SearchAnalyzeParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewSearchAnalyzeParamsWithTimeout(timeout time.Duration) *SearchAnalyzeParams {
-	var ()
 	return &SearchAnalyzeParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewSearchAnalyzeParamsWithContext creates a new SearchAnalyzeParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewSearchAnalyzeParamsWithContext(ctx context.Context) *SearchAnalyzeParams {
-	var ()
 	return &SearchAnalyzeParams{
-
 		Context: ctx,
 	}
 }
 
 // NewSearchAnalyzeParamsWithHTTPClient creates a new SearchAnalyzeParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewSearchAnalyzeParamsWithHTTPClient(client *http.Client) *SearchAnalyzeParams {
-	var ()
 	return &SearchAnalyzeParams{
 		HTTPClient: client,
 	}
 }
 
-/*SearchAnalyzeParams contains all the parameters to send to the API endpoint
-for the search analyze operation typically these are written to a http.Request
+/* SearchAnalyzeParams contains all the parameters to send to the API endpoint
+   for the search analyze operation.
+
+   Typically these are written to a http.Request.
 */
 type SearchAnalyzeParams struct {
 
-	/*Body*/
-	Body SearchAnalyzeBody
+	// Body.
+	Body *models.Body
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the search analyze params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *SearchAnalyzeParams) WithDefaults() *SearchAnalyzeParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the search analyze params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *SearchAnalyzeParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the search analyze params
@@ -102,13 +118,13 @@ func (o *SearchAnalyzeParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithBody adds the body to the search analyze params
-func (o *SearchAnalyzeParams) WithBody(body SearchAnalyzeBody) *SearchAnalyzeParams {
+func (o *SearchAnalyzeParams) WithBody(body *models.Body) *SearchAnalyzeParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the search analyze params
-func (o *SearchAnalyzeParams) SetBody(body SearchAnalyzeBody) {
+func (o *SearchAnalyzeParams) SetBody(body *models.Body) {
 	o.Body = body
 }
 
@@ -119,9 +135,10 @@ func (o *SearchAnalyzeParams) WriteToRequest(r runtime.ClientRequest, reg strfmt
 		return err
 	}
 	var res []error
-
-	if err := r.SetBodyParam(o.Body); err != nil {
-		return err
+	if o.Body != nil {
+		if err := r.SetBodyParam(o.Body); err != nil {
+			return err
+		}
 	}
 
 	if len(res) > 0 {

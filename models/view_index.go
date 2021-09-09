@@ -6,6 +6,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -59,13 +61,40 @@ func (m *ViewIndex) Validate(formats strfmt.Registry) error {
 }
 
 func (m *ViewIndex) validateSizes(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Sizes) { // not required
 		return nil
 	}
 
 	if m.Sizes != nil {
 		if err := m.Sizes.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("sizes")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this view index based on the context it is used
+func (m *ViewIndex) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateSizes(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *ViewIndex) contextValidateSizes(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Sizes != nil {
+		if err := m.Sizes.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("sizes")
 			}
@@ -87,44 +116,6 @@ func (m *ViewIndex) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *ViewIndex) UnmarshalBinary(b []byte) error {
 	var res ViewIndex
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// ViewIndexSizes view index sizes
-//
-// swagger:model ViewIndexSizes
-type ViewIndexSizes struct {
-
-	// The size of live data inside the view, in bytes
-	Active int64 `json:"active,omitempty"`
-
-	// Size in bytes of the view as stored on disk
-	Disk int64 `json:"disk,omitempty"`
-
-	// The uncompressed size of view contents in bytes
-	External int64 `json:"external,omitempty"`
-}
-
-// Validate validates this view index sizes
-func (m *ViewIndexSizes) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *ViewIndexSizes) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *ViewIndexSizes) UnmarshalBinary(b []byte) error {
-	var res ViewIndexSizes
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

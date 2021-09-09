@@ -14,63 +14,80 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+
+	"github.com/rossmerr/couchdb_go/models"
 )
 
-// NewBulkDocsParams creates a new BulkDocsParams object
-// with the default values initialized.
+// NewBulkDocsParams creates a new BulkDocsParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewBulkDocsParams() *BulkDocsParams {
-	var ()
 	return &BulkDocsParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewBulkDocsParamsWithTimeout creates a new BulkDocsParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewBulkDocsParamsWithTimeout(timeout time.Duration) *BulkDocsParams {
-	var ()
 	return &BulkDocsParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewBulkDocsParamsWithContext creates a new BulkDocsParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewBulkDocsParamsWithContext(ctx context.Context) *BulkDocsParams {
-	var ()
 	return &BulkDocsParams{
-
 		Context: ctx,
 	}
 }
 
 // NewBulkDocsParamsWithHTTPClient creates a new BulkDocsParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewBulkDocsParamsWithHTTPClient(client *http.Client) *BulkDocsParams {
-	var ()
 	return &BulkDocsParams{
 		HTTPClient: client,
 	}
 }
 
-/*BulkDocsParams contains all the parameters to send to the API endpoint
-for the bulk docs operation typically these are written to a http.Request
+/* BulkDocsParams contains all the parameters to send to the API endpoint
+   for the bulk docs operation.
+
+   Typically these are written to a http.Request.
 */
 type BulkDocsParams struct {
 
-	/*Body*/
-	Body BulkDocsBody
-	/*Db
-	  Database name
+	// Body.
+	Body *models.Body2
 
+	/* Db.
+
+	   Database name
 	*/
 	Db string
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the bulk docs params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *BulkDocsParams) WithDefaults() *BulkDocsParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the bulk docs params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *BulkDocsParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the bulk docs params
@@ -107,13 +124,13 @@ func (o *BulkDocsParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithBody adds the body to the bulk docs params
-func (o *BulkDocsParams) WithBody(body BulkDocsBody) *BulkDocsParams {
+func (o *BulkDocsParams) WithBody(body *models.Body2) *BulkDocsParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the bulk docs params
-func (o *BulkDocsParams) SetBody(body BulkDocsBody) {
+func (o *BulkDocsParams) SetBody(body *models.Body2) {
 	o.Body = body
 }
 
@@ -135,9 +152,10 @@ func (o *BulkDocsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regi
 		return err
 	}
 	var res []error
-
-	if err := r.SetBodyParam(o.Body); err != nil {
-		return err
+	if o.Body != nil {
+		if err := r.SetBodyParam(o.Body); err != nil {
+			return err
+		}
 	}
 
 	// path param db

@@ -17,166 +17,201 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NewPartitionDesignDocSearchParams creates a new PartitionDesignDocSearchParams object
-// with the default values initialized.
+// NewPartitionDesignDocSearchParams creates a new PartitionDesignDocSearchParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewPartitionDesignDocSearchParams() *PartitionDesignDocSearchParams {
-	var ()
 	return &PartitionDesignDocSearchParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewPartitionDesignDocSearchParamsWithTimeout creates a new PartitionDesignDocSearchParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewPartitionDesignDocSearchParamsWithTimeout(timeout time.Duration) *PartitionDesignDocSearchParams {
-	var ()
 	return &PartitionDesignDocSearchParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewPartitionDesignDocSearchParamsWithContext creates a new PartitionDesignDocSearchParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewPartitionDesignDocSearchParamsWithContext(ctx context.Context) *PartitionDesignDocSearchParams {
-	var ()
 	return &PartitionDesignDocSearchParams{
-
 		Context: ctx,
 	}
 }
 
 // NewPartitionDesignDocSearchParamsWithHTTPClient creates a new PartitionDesignDocSearchParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewPartitionDesignDocSearchParamsWithHTTPClient(client *http.Client) *PartitionDesignDocSearchParams {
-	var ()
 	return &PartitionDesignDocSearchParams{
 		HTTPClient: client,
 	}
 }
 
-/*PartitionDesignDocSearchParams contains all the parameters to send to the API endpoint
-for the partition design doc search operation typically these are written to a http.Request
+/* PartitionDesignDocSearchParams contains all the parameters to send to the API endpoint
+   for the partition design doc search operation.
+
+   Typically these are written to a http.Request.
 */
 type PartitionDesignDocSearchParams struct {
 
-	/*Bookmark
-	  A bookmark received from a previous search. This parameter enables paging through the results. If there are no more results after the bookmark, you get a response with an empty rows array and the same bookmark, confirming the end of the result list.
+	/* Bookmark.
 
+	   A bookmark received from a previous search. This parameter enables paging through the results. If there are no more results after the bookmark, you get a response with an empty rows array and the same bookmark, confirming the end of the result list.
 	*/
 	Bookmark *string
-	/*Counts
-	  An array of names of string fields for which counts are requested. The response contains counts for each unique value of this field name among the documents that match the search query. Faceting must be enabled for this parameter to function.
 
+	/* Counts.
+
+	   An array of names of string fields for which counts are requested. The response contains counts for each unique value of this field name among the documents that match the search query. Faceting must be enabled for this parameter to function.
 	*/
 	Counts *string
-	/*Db
-	  Database name
 
+	/* Db.
+
+	   Database name
 	*/
 	Db string
-	/*Ddoc
-	  Design document id
 
+	/* Ddoc.
+
+	   Design document id
 	*/
 	Ddoc string
-	/*Drilldown
-	  This field can be used several times. Each use defines a pair with a field name and a value. The search matches only documents containing the value that was provided in the named field. It differs from using "fieldname:value" in the q parameter only in that the values are not analyzed. Faceting must be enabled for this parameter to function.
 
+	/* Drilldown.
+
+	   This field can be used several times. Each use defines a pair with a field name and a value. The search matches only documents containing the value that was provided in the named field. It differs from using "fieldname:value" in the q parameter only in that the values are not analyzed. Faceting must be enabled for this parameter to function.
 	*/
 	Drilldown *string
-	/*GroupField
-	  Field by which to group search matches. :query number group_limit: Maximum group count. This field can be used only if group_field is specified.
 
+	/* GroupField.
+
+	   Field by which to group search matches. :query number group_limit: Maximum group count. This field can be used only if group_field is specified.
 
 	*/
 	GroupField *string
-	/*GroupSort
-	  This field defines the order of the groups in a search that uses group_field. The default sort order is relevance.
 
+	/* GroupSort.
+
+	   This field defines the order of the groups in a search that uses group_field. The default sort order is relevance.
 	*/
 	GroupSort *string
-	/*HighlightFields
-	  Specifies which fields to highlight. If specified, the result object contains a highlights field with an entry for each specified field.
 
+	/* HighlightFields.
+
+	   Specifies which fields to highlight. If specified, the result object contains a highlights field with an entry for each specified field.
 	*/
 	HighlightFields *string
-	/*HighlightNumber
-	  Number of fragments that are returned in highlights. If the search term occurs less often than the number of fragments that are specified, longer fragments are returned.
 
+	/* HighlightNumber.
+
+	   Number of fragments that are returned in highlights. If the search term occurs less often than the number of fragments that are specified, longer fragments are returned.
 	*/
 	HighlightNumber *int64
-	/*HighlightPostTag
-	  A string that is inserted after the highlighted word in the highlights output.
 
+	/* HighlightPostTag.
+
+	   A string that is inserted after the highlighted word in the highlights output.
 	*/
 	HighlightPostTag *string
-	/*HighlightPreTag
-	  A string that is inserted before the highlighted word in the highlights output.
 
+	/* HighlightPreTag.
+
+	   A string that is inserted before the highlighted word in the highlights output.
 	*/
 	HighlightPreTag *string
-	/*HighlightSize
-	  Number of characters in each fragment for highlights.
 
+	/* HighlightSize.
+
+	   Number of characters in each fragment for highlights.
 	*/
 	HighlightSize *int64
-	/*IncludeDocs
-	  Include the full content of the documents in the response.
 
+	/* IncludeDocs.
+
+	   Include the full content of the documents in the response.
 	*/
 	IncludeDocs *bool
-	/*IncludeFields
-	  A JSON array of field names to include in search results. Any fields that are included must be indexed with the store:true option. limit (number) – Limit the number of the returned documents to the specified number. For a grouped search, this parameter limits the number of documents per group.
 
+	/* IncludeFields.
+
+	   A JSON array of field names to include in search results. Any fields that are included must be indexed with the store:true option. limit (number) – Limit the number of the returned documents to the specified number. For a grouped search, this parameter limits the number of documents per group.
 
 	*/
 	IncludeFields *string
-	/*Index
-	  Search index name
 
+	/* Index.
+
+	   Search index name
 	*/
 	Index string
-	/*Limit
-	  Limit the number of the returned documents to the specified number. For a grouped search, this parameter limits the number of documents per group.
 
+	/* Limit.
+
+	   Limit the number of the returned documents to the specified number. For a grouped search, this parameter limits the number of documents per group.
 	*/
 	Limit *int64
-	/*Partition
-	  Partition name
 
+	/* Partition.
+
+	   Partition name
 	*/
 	Partition string
-	/*Q
-	  Alias for query.
 
+	/* Q.
+
+	   Alias for query.
 	*/
 	Q *string
-	/*Query
-	  Required. The Lucene query string.
 
+	/* Query.
+
+	   Required. The Lucene query string.
 	*/
 	Query *string
-	/*Range
-	  This field defines ranges for faceted, numeric search fields. The value is a JSON object where the fields names are faceted numeric search fields, and the values of the fields are JSON objects. The field names of the JSON objects are names for ranges. The values are strings that describe the range, for example “[0 TO 10]”.
 
+	/* Range.
+
+	   This field defines ranges for faceted, numeric search fields. The value is a JSON object where the fields names are faceted numeric search fields, and the values of the fields are JSON objects. The field names of the JSON objects are names for ranges. The values are strings that describe the range, for example “[0 TO 10]”.
 	*/
 	Range *string
-	/*Sort
-	  Specifies the sort order of the results. In a grouped search (when group_field is used), this parameter specifies the sort order within a group. The default sort order is relevance. A JSON string of the form "fieldname<type>" or -fieldname<type> for descending order, where fieldname is the name of a string or number field, and type is either a number, a string, or a JSON array of strings. The type part is optional, and defaults to number. Some examples are "foo", "-foo", "bar<string>", "-foo<number>" and ["-foo<number>", "bar<string>"]. String fields that are used for sorting must not be analyzed fields. Fields that are used for sorting must be indexed by the same indexer that is used for the search query.
 
+	/* Sort.
+
+	   Specifies the sort order of the results. In a grouped search (when group_field is used), this parameter specifies the sort order within a group. The default sort order is relevance. A JSON string of the form "fieldname<type>" or -fieldname<type> for descending order, where fieldname is the name of a string or number field, and type is either a number, a string, or a JSON array of strings. The type part is optional, and defaults to number. Some examples are "foo", "-foo", "bar<string>", "-foo<number>" and ["-foo<number>", "bar<string>"]. String fields that are used for sorting must not be analyzed fields. Fields that are used for sorting must be indexed by the same indexer that is used for the search query.
 	*/
 	Sort *string
-	/*Stale
-	  Set to ok to allow the use of an out-of-date index.
 
+	/* Stale.
+
+	   Set to ok to allow the use of an out-of-date index.
 	*/
 	Stale *string
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the partition design doc search params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *PartitionDesignDocSearchParams) WithDefaults() *PartitionDesignDocSearchParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the partition design doc search params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *PartitionDesignDocSearchParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the partition design doc search params
@@ -466,32 +501,34 @@ func (o *PartitionDesignDocSearchParams) WriteToRequest(r runtime.ClientRequest,
 
 		// query param bookmark
 		var qrBookmark string
+
 		if o.Bookmark != nil {
 			qrBookmark = *o.Bookmark
 		}
 		qBookmark := qrBookmark
 		if qBookmark != "" {
+
 			if err := r.SetQueryParam("bookmark", qBookmark); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Counts != nil {
 
 		// query param counts
 		var qrCounts string
+
 		if o.Counts != nil {
 			qrCounts = *o.Counts
 		}
 		qCounts := qrCounts
 		if qCounts != "" {
+
 			if err := r.SetQueryParam("counts", qCounts); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	// path param db
@@ -508,160 +545,170 @@ func (o *PartitionDesignDocSearchParams) WriteToRequest(r runtime.ClientRequest,
 
 		// query param drilldown
 		var qrDrilldown string
+
 		if o.Drilldown != nil {
 			qrDrilldown = *o.Drilldown
 		}
 		qDrilldown := qrDrilldown
 		if qDrilldown != "" {
+
 			if err := r.SetQueryParam("drilldown", qDrilldown); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.GroupField != nil {
 
 		// query param group_field
 		var qrGroupField string
+
 		if o.GroupField != nil {
 			qrGroupField = *o.GroupField
 		}
 		qGroupField := qrGroupField
 		if qGroupField != "" {
+
 			if err := r.SetQueryParam("group_field", qGroupField); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.GroupSort != nil {
 
 		// query param group_sort
 		var qrGroupSort string
+
 		if o.GroupSort != nil {
 			qrGroupSort = *o.GroupSort
 		}
 		qGroupSort := qrGroupSort
 		if qGroupSort != "" {
+
 			if err := r.SetQueryParam("group_sort", qGroupSort); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.HighlightFields != nil {
 
 		// query param highlight_fields
 		var qrHighlightFields string
+
 		if o.HighlightFields != nil {
 			qrHighlightFields = *o.HighlightFields
 		}
 		qHighlightFields := qrHighlightFields
 		if qHighlightFields != "" {
+
 			if err := r.SetQueryParam("highlight_fields", qHighlightFields); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.HighlightNumber != nil {
 
 		// query param highlight_number
 		var qrHighlightNumber int64
+
 		if o.HighlightNumber != nil {
 			qrHighlightNumber = *o.HighlightNumber
 		}
 		qHighlightNumber := swag.FormatInt64(qrHighlightNumber)
 		if qHighlightNumber != "" {
+
 			if err := r.SetQueryParam("highlight_number", qHighlightNumber); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.HighlightPostTag != nil {
 
 		// query param highlight_post_tag
 		var qrHighlightPostTag string
+
 		if o.HighlightPostTag != nil {
 			qrHighlightPostTag = *o.HighlightPostTag
 		}
 		qHighlightPostTag := qrHighlightPostTag
 		if qHighlightPostTag != "" {
+
 			if err := r.SetQueryParam("highlight_post_tag", qHighlightPostTag); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.HighlightPreTag != nil {
 
 		// query param highlight_pre_tag
 		var qrHighlightPreTag string
+
 		if o.HighlightPreTag != nil {
 			qrHighlightPreTag = *o.HighlightPreTag
 		}
 		qHighlightPreTag := qrHighlightPreTag
 		if qHighlightPreTag != "" {
+
 			if err := r.SetQueryParam("highlight_pre_tag", qHighlightPreTag); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.HighlightSize != nil {
 
 		// query param highlight_size
 		var qrHighlightSize int64
+
 		if o.HighlightSize != nil {
 			qrHighlightSize = *o.HighlightSize
 		}
 		qHighlightSize := swag.FormatInt64(qrHighlightSize)
 		if qHighlightSize != "" {
+
 			if err := r.SetQueryParam("highlight_size", qHighlightSize); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.IncludeDocs != nil {
 
 		// query param include_docs
 		var qrIncludeDocs bool
+
 		if o.IncludeDocs != nil {
 			qrIncludeDocs = *o.IncludeDocs
 		}
 		qIncludeDocs := swag.FormatBool(qrIncludeDocs)
 		if qIncludeDocs != "" {
+
 			if err := r.SetQueryParam("include_docs", qIncludeDocs); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.IncludeFields != nil {
 
 		// query param include_fields
 		var qrIncludeFields string
+
 		if o.IncludeFields != nil {
 			qrIncludeFields = *o.IncludeFields
 		}
 		qIncludeFields := qrIncludeFields
 		if qIncludeFields != "" {
+
 			if err := r.SetQueryParam("include_fields", qIncludeFields); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	// path param index
@@ -673,16 +720,17 @@ func (o *PartitionDesignDocSearchParams) WriteToRequest(r runtime.ClientRequest,
 
 		// query param limit
 		var qrLimit int64
+
 		if o.Limit != nil {
 			qrLimit = *o.Limit
 		}
 		qLimit := swag.FormatInt64(qrLimit)
 		if qLimit != "" {
+
 			if err := r.SetQueryParam("limit", qLimit); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	// path param partition
@@ -694,80 +742,85 @@ func (o *PartitionDesignDocSearchParams) WriteToRequest(r runtime.ClientRequest,
 
 		// query param q
 		var qrQ string
+
 		if o.Q != nil {
 			qrQ = *o.Q
 		}
 		qQ := qrQ
 		if qQ != "" {
+
 			if err := r.SetQueryParam("q", qQ); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Query != nil {
 
 		// query param query
 		var qrQuery string
+
 		if o.Query != nil {
 			qrQuery = *o.Query
 		}
 		qQuery := qrQuery
 		if qQuery != "" {
+
 			if err := r.SetQueryParam("query", qQuery); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Range != nil {
 
 		// query param range
 		var qrRange string
+
 		if o.Range != nil {
 			qrRange = *o.Range
 		}
 		qRange := qrRange
 		if qRange != "" {
+
 			if err := r.SetQueryParam("range", qRange); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Sort != nil {
 
 		// query param sort
 		var qrSort string
+
 		if o.Sort != nil {
 			qrSort = *o.Sort
 		}
 		qSort := qrSort
 		if qSort != "" {
+
 			if err := r.SetQueryParam("sort", qSort); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Stale != nil {
 
 		// query param stale
 		var qrStale string
+
 		if o.Stale != nil {
 			qrStale = *o.Stale
 		}
 		qStale := qrStale
 		if qStale != "" {
+
 			if err := r.SetQueryParam("stale", qStale); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if len(res) > 0 {

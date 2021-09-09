@@ -16,64 +16,79 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewPartitionInfoParams creates a new PartitionInfoParams object
-// with the default values initialized.
+// NewPartitionInfoParams creates a new PartitionInfoParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewPartitionInfoParams() *PartitionInfoParams {
-	var ()
 	return &PartitionInfoParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewPartitionInfoParamsWithTimeout creates a new PartitionInfoParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewPartitionInfoParamsWithTimeout(timeout time.Duration) *PartitionInfoParams {
-	var ()
 	return &PartitionInfoParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewPartitionInfoParamsWithContext creates a new PartitionInfoParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewPartitionInfoParamsWithContext(ctx context.Context) *PartitionInfoParams {
-	var ()
 	return &PartitionInfoParams{
-
 		Context: ctx,
 	}
 }
 
 // NewPartitionInfoParamsWithHTTPClient creates a new PartitionInfoParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewPartitionInfoParamsWithHTTPClient(client *http.Client) *PartitionInfoParams {
-	var ()
 	return &PartitionInfoParams{
 		HTTPClient: client,
 	}
 }
 
-/*PartitionInfoParams contains all the parameters to send to the API endpoint
-for the partition info operation typically these are written to a http.Request
+/* PartitionInfoParams contains all the parameters to send to the API endpoint
+   for the partition info operation.
+
+   Typically these are written to a http.Request.
 */
 type PartitionInfoParams struct {
 
-	/*Db
-	  Database name
+	/* Db.
 
+	   Database name
 	*/
 	Db string
-	/*Partition
-	  Partition name
 
+	/* Partition.
+
+	   Partition name
 	*/
 	Partition string
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the partition info params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *PartitionInfoParams) WithDefaults() *PartitionInfoParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the partition info params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *PartitionInfoParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the partition info params

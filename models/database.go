@@ -6,6 +6,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -73,7 +75,6 @@ func (m *Database) Validate(formats strfmt.Registry) error {
 }
 
 func (m *Database) validateCluster(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Cluster) { // not required
 		return nil
 	}
@@ -91,7 +92,6 @@ func (m *Database) validateCluster(formats strfmt.Registry) error {
 }
 
 func (m *Database) validateProps(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Props) { // not required
 		return nil
 	}
@@ -109,13 +109,76 @@ func (m *Database) validateProps(formats strfmt.Registry) error {
 }
 
 func (m *Database) validateSizes(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Sizes) { // not required
 		return nil
 	}
 
 	if m.Sizes != nil {
 		if err := m.Sizes.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("sizes")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this database based on the context it is used
+func (m *Database) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateCluster(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateProps(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSizes(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Database) contextValidateCluster(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Cluster != nil {
+		if err := m.Cluster.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("cluster")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Database) contextValidateProps(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Props != nil {
+		if err := m.Props.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("props")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Database) contextValidateSizes(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Sizes != nil {
+		if err := m.Sizes.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("sizes")
 			}
@@ -137,117 +200,6 @@ func (m *Database) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Database) UnmarshalBinary(b []byte) error {
 	var res Database
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// DatabaseCluster database cluster
-//
-// swagger:model DatabaseCluster
-type DatabaseCluster struct {
-
-	// Replicas. The number of copies of every document.
-	N int64 `json:"n,omitempty"`
-
-	// Shards. The number of range partitions.
-	Q int64 `json:"q,omitempty"`
-
-	// Read quorum. The number of consistent copies of a document that need to be read before a successful reply.
-	R int64 `json:"r,omitempty"`
-
-	// Write quorum. The number of copies of a document that need to be written before a successful reply.
-	W int64 `json:"w,omitempty"`
-}
-
-// Validate validates this database cluster
-func (m *DatabaseCluster) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *DatabaseCluster) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *DatabaseCluster) UnmarshalBinary(b []byte) error {
-	var res DatabaseCluster
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// DatabaseProps database props
-//
-// swagger:model DatabaseProps
-type DatabaseProps struct {
-
-	// If present and true, this indicates that the database is partitioned.
-	Partitioned bool `json:"partitioned,omitempty"`
-}
-
-// Validate validates this database props
-func (m *DatabaseProps) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *DatabaseProps) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *DatabaseProps) UnmarshalBinary(b []byte) error {
-	var res DatabaseProps
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// DatabaseSizes database sizes
-//
-// swagger:model DatabaseSizes
-type DatabaseSizes struct {
-
-	// The size of live data inside the database, in bytes.
-	Active int64 `json:"active,omitempty"`
-
-	// The uncompressed size of database contents in bytes. sizes.file (number) – The size of the database file on disk in bytes. Views indexes are not included in the calculation.
-	External int64 `json:"external,omitempty"`
-
-	// An opaque string that describes the state of the database. Do not rely on this string for counting the number of updates.
-	File int64 `json:"file,omitempty"`
-}
-
-// Validate validates this database sizes
-func (m *DatabaseSizes) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *DatabaseSizes) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *DatabaseSizes) UnmarshalBinary(b []byte) error {
-	var res DatabaseSizes
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

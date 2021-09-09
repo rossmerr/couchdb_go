@@ -16,59 +16,73 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewExistsParams creates a new ExistsParams object
-// with the default values initialized.
+// NewExistsParams creates a new ExistsParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewExistsParams() *ExistsParams {
-	var ()
 	return &ExistsParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewExistsParamsWithTimeout creates a new ExistsParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewExistsParamsWithTimeout(timeout time.Duration) *ExistsParams {
-	var ()
 	return &ExistsParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewExistsParamsWithContext creates a new ExistsParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewExistsParamsWithContext(ctx context.Context) *ExistsParams {
-	var ()
 	return &ExistsParams{
-
 		Context: ctx,
 	}
 }
 
 // NewExistsParamsWithHTTPClient creates a new ExistsParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewExistsParamsWithHTTPClient(client *http.Client) *ExistsParams {
-	var ()
 	return &ExistsParams{
 		HTTPClient: client,
 	}
 }
 
-/*ExistsParams contains all the parameters to send to the API endpoint
-for the exists operation typically these are written to a http.Request
+/* ExistsParams contains all the parameters to send to the API endpoint
+   for the exists operation.
+
+   Typically these are written to a http.Request.
 */
 type ExistsParams struct {
 
-	/*Db
-	  Database name
+	/* Db.
 
+	   Database name
 	*/
 	Db string
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the exists params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *ExistsParams) WithDefaults() *ExistsParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the exists params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *ExistsParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the exists params

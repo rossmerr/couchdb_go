@@ -18,56 +18,70 @@ import (
 	"github.com/rossmerr/couchdb_go/models"
 )
 
-// NewClusterSetupPostParams creates a new ClusterSetupPostParams object
-// with the default values initialized.
+// NewClusterSetupPostParams creates a new ClusterSetupPostParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewClusterSetupPostParams() *ClusterSetupPostParams {
-	var ()
 	return &ClusterSetupPostParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewClusterSetupPostParamsWithTimeout creates a new ClusterSetupPostParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewClusterSetupPostParamsWithTimeout(timeout time.Duration) *ClusterSetupPostParams {
-	var ()
 	return &ClusterSetupPostParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewClusterSetupPostParamsWithContext creates a new ClusterSetupPostParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewClusterSetupPostParamsWithContext(ctx context.Context) *ClusterSetupPostParams {
-	var ()
 	return &ClusterSetupPostParams{
-
 		Context: ctx,
 	}
 }
 
 // NewClusterSetupPostParamsWithHTTPClient creates a new ClusterSetupPostParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewClusterSetupPostParamsWithHTTPClient(client *http.Client) *ClusterSetupPostParams {
-	var ()
 	return &ClusterSetupPostParams{
 		HTTPClient: client,
 	}
 }
 
-/*ClusterSetupPostParams contains all the parameters to send to the API endpoint
-for the cluster setup post operation typically these are written to a http.Request
+/* ClusterSetupPostParams contains all the parameters to send to the API endpoint
+   for the cluster setup post operation.
+
+   Typically these are written to a http.Request.
 */
 type ClusterSetupPostParams struct {
 
-	/*Body*/
+	// Body.
 	Body *models.Cluster
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the cluster setup post params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *ClusterSetupPostParams) WithDefaults() *ClusterSetupPostParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the cluster setup post params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *ClusterSetupPostParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the cluster setup post params
@@ -121,7 +135,6 @@ func (o *ClusterSetupPostParams) WriteToRequest(r runtime.ClientRequest, reg str
 		return err
 	}
 	var res []error
-
 	if o.Body != nil {
 		if err := r.SetBodyParam(o.Body); err != nil {
 			return err

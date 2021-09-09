@@ -53,7 +53,6 @@ func (o *DesignDocGetReader) ReadResponse(response runtime.ClientResponse, consu
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -64,15 +63,17 @@ func NewDesignDocGetOK() *DesignDocGetOK {
 	return &DesignDocGetOK{}
 }
 
-/*DesignDocGetOK handles this case with default header values.
+/* DesignDocGetOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
 type DesignDocGetOK struct {
-	/*Double quoted document’s revision token
+
+	/* Double quoted document’s revision token
 	 */
 	ETag string
-	/*chunked. Available if requested with query parameter open_revs
+
+	/* chunked. Available if requested with query parameter open_revs
 	 */
 	TransferEncoding string
 
@@ -82,18 +83,25 @@ type DesignDocGetOK struct {
 func (o *DesignDocGetOK) Error() string {
 	return fmt.Sprintf("[GET /{db}/_design/{ddoc}][%d] designDocGetOK  %+v", 200, o.Payload)
 }
-
 func (o *DesignDocGetOK) GetPayload() *models.DesignDoc {
 	return o.Payload
 }
 
 func (o *DesignDocGetOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	// response header ETag
-	o.ETag = response.GetHeader("ETag")
+	// hydrates response header ETag
+	hdrETag := response.GetHeader("ETag")
 
-	// response header Transfer-Encoding
-	o.TransferEncoding = response.GetHeader("Transfer-Encoding")
+	if hdrETag != "" {
+		o.ETag = hdrETag
+	}
+
+	// hydrates response header Transfer-Encoding
+	hdrTransferEncoding := response.GetHeader("Transfer-Encoding")
+
+	if hdrTransferEncoding != "" {
+		o.TransferEncoding = hdrTransferEncoding
+	}
 
 	o.Payload = new(models.DesignDoc)
 
@@ -110,7 +118,7 @@ func NewDesignDocGetNotModified() *DesignDocGetNotModified {
 	return &DesignDocGetNotModified{}
 }
 
-/*DesignDocGetNotModified handles this case with default header values.
+/* DesignDocGetNotModified describes a response with status code 304, with default header values.
 
 Document wasn’t modified since specified revision
 */
@@ -131,7 +139,7 @@ func NewDesignDocGetBadRequest() *DesignDocGetBadRequest {
 	return &DesignDocGetBadRequest{}
 }
 
-/*DesignDocGetBadRequest handles this case with default header values.
+/* DesignDocGetBadRequest describes a response with status code 400, with default header values.
 
 The format of the request or revision was invalid
 */
@@ -142,7 +150,6 @@ type DesignDocGetBadRequest struct {
 func (o *DesignDocGetBadRequest) Error() string {
 	return fmt.Sprintf("[GET /{db}/_design/{ddoc}][%d] designDocGetBadRequest  %+v", 400, o.Payload)
 }
-
 func (o *DesignDocGetBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -164,7 +171,7 @@ func NewDesignDocGetUnauthorized() *DesignDocGetUnauthorized {
 	return &DesignDocGetUnauthorized{}
 }
 
-/*DesignDocGetUnauthorized handles this case with default header values.
+/* DesignDocGetUnauthorized describes a response with status code 401, with default header values.
 
 Read privilege required
 */
@@ -175,7 +182,6 @@ type DesignDocGetUnauthorized struct {
 func (o *DesignDocGetUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /{db}/_design/{ddoc}][%d] designDocGetUnauthorized  %+v", 401, o.Payload)
 }
-
 func (o *DesignDocGetUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -197,7 +203,7 @@ func NewDesignDocGetNotFound() *DesignDocGetNotFound {
 	return &DesignDocGetNotFound{}
 }
 
-/*DesignDocGetNotFound handles this case with default header values.
+/* DesignDocGetNotFound describes a response with status code 404, with default header values.
 
 Document not found
 */
@@ -208,7 +214,6 @@ type DesignDocGetNotFound struct {
 func (o *DesignDocGetNotFound) Error() string {
 	return fmt.Sprintf("[GET /{db}/_design/{ddoc}][%d] designDocGetNotFound  %+v", 404, o.Payload)
 }
-
 func (o *DesignDocGetNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }

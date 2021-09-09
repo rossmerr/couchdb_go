@@ -29,7 +29,6 @@ func (o *MetaInformationReader) ReadResponse(response runtime.ClientResponse, co
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -40,7 +39,7 @@ func NewMetaInformationOK() *MetaInformationOK {
 	return &MetaInformationOK{}
 }
 
-/*MetaInformationOK handles this case with default header values.
+/* MetaInformationOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
@@ -51,7 +50,6 @@ type MetaInformationOK struct {
 func (o *MetaInformationOK) Error() string {
 	return fmt.Sprintf("[GET /][%d] metaInformationOK  %+v", 200, o.Payload)
 }
-
 func (o *MetaInformationOK) GetPayload() []*models.Server {
 	return o.Payload
 }

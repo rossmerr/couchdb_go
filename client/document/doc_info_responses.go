@@ -49,7 +49,6 @@ func (o *DocInfoReader) ReadResponse(response runtime.ClientResponse, consumer r
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -60,15 +59,17 @@ func NewDocInfoOK() *DocInfoOK {
 	return &DocInfoOK{}
 }
 
-/*DocInfoOK handles this case with default header values.
+/* DocInfoOK describes a response with status code 200, with default header values.
 
 Document exists
 */
 type DocInfoOK struct {
-	/*Document size
+
+	/* Document size
 	 */
 	ContentLength int64
-	/*Double quoted document’s revision token
+
+	/* Double quoted document’s revision token
 	 */
 	ETag string
 }
@@ -79,15 +80,23 @@ func (o *DocInfoOK) Error() string {
 
 func (o *DocInfoOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	// response header Content-Length
-	contentLength, err := swag.ConvertInt64(response.GetHeader("Content-Length"))
-	if err != nil {
-		return errors.InvalidType("Content-Length", "header", "int64", response.GetHeader("Content-Length"))
-	}
-	o.ContentLength = contentLength
+	// hydrates response header Content-Length
+	hdrContentLength := response.GetHeader("Content-Length")
 
-	// response header ETag
-	o.ETag = response.GetHeader("ETag")
+	if hdrContentLength != "" {
+		valcontentLength, err := swag.ConvertInt64(hdrContentLength)
+		if err != nil {
+			return errors.InvalidType("Content-Length", "header", "int64", hdrContentLength)
+		}
+		o.ContentLength = valcontentLength
+	}
+
+	// hydrates response header ETag
+	hdrETag := response.GetHeader("ETag")
+
+	if hdrETag != "" {
+		o.ETag = hdrETag
+	}
 
 	return nil
 }
@@ -97,7 +106,7 @@ func NewDocInfoNotModified() *DocInfoNotModified {
 	return &DocInfoNotModified{}
 }
 
-/*DocInfoNotModified handles this case with default header values.
+/* DocInfoNotModified describes a response with status code 304, with default header values.
 
 Document wasn’t modified since specified revision
 */
@@ -118,7 +127,7 @@ func NewDocInfoUnauthorized() *DocInfoUnauthorized {
 	return &DocInfoUnauthorized{}
 }
 
-/*DocInfoUnauthorized handles this case with default header values.
+/* DocInfoUnauthorized describes a response with status code 401, with default header values.
 
 Read privilege required
 */
@@ -129,7 +138,6 @@ type DocInfoUnauthorized struct {
 func (o *DocInfoUnauthorized) Error() string {
 	return fmt.Sprintf("[HEAD /{db}/{docid}][%d] docInfoUnauthorized  %+v", 401, o.Payload)
 }
-
 func (o *DocInfoUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -151,7 +159,7 @@ func NewDocInfoNotFound() *DocInfoNotFound {
 	return &DocInfoNotFound{}
 }
 
-/*DocInfoNotFound handles this case with default header values.
+/* DocInfoNotFound describes a response with status code 404, with default header values.
 
 Document not found
 */
@@ -162,7 +170,6 @@ type DocInfoNotFound struct {
 func (o *DocInfoNotFound) Error() string {
 	return fmt.Sprintf("[HEAD /{db}/{docid}][%d] docInfoNotFound  %+v", 404, o.Payload)
 }
-
 func (o *DocInfoNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }

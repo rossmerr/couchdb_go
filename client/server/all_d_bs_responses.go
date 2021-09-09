@@ -27,7 +27,6 @@ func (o *AllDBsReader) ReadResponse(response runtime.ClientResponse, consumer ru
 			return nil, err
 		}
 		return result, nil
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -38,7 +37,7 @@ func NewAllDBsOK() *AllDBsOK {
 	return &AllDBsOK{}
 }
 
-/*AllDBsOK handles this case with default header values.
+/* AllDBsOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
@@ -49,7 +48,6 @@ type AllDBsOK struct {
 func (o *AllDBsOK) Error() string {
 	return fmt.Sprintf("[GET /_all_dbs][%d] allDBsOK  %+v", 200, o.Payload)
 }
-
 func (o *AllDBsOK) GetPayload() []string {
 	return o.Payload
 }

@@ -35,7 +35,6 @@ func (o *ExistsReader) ReadResponse(response runtime.ClientResponse, consumer ru
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -46,7 +45,7 @@ func NewExistsOK() *ExistsOK {
 	return &ExistsOK{}
 }
 
-/*ExistsOK handles this case with default header values.
+/* ExistsOK describes a response with status code 200, with default header values.
 
 Database exists
 */
@@ -67,7 +66,7 @@ func NewExistsNotFound() *ExistsNotFound {
 	return &ExistsNotFound{}
 }
 
-/*ExistsNotFound handles this case with default header values.
+/* ExistsNotFound describes a response with status code 404, with default header values.
 
 Requested database not found
 */
@@ -78,7 +77,6 @@ type ExistsNotFound struct {
 func (o *ExistsNotFound) Error() string {
 	return fmt.Sprintf("[HEAD /{db}][%d] existsNotFound  %+v", 404, o.Payload)
 }
-
 func (o *ExistsNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }

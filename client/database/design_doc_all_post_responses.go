@@ -8,12 +8,9 @@ package database
 import (
 	"fmt"
 	"io"
-	"strconv"
 
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 
 	"github.com/rossmerr/couchdb_go/models"
 )
@@ -38,7 +35,6 @@ func (o *DesignDocAllPostReader) ReadResponse(response runtime.ClientResponse, c
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -49,12 +45,13 @@ func NewDesignDocAllPostOK() *DesignDocAllPostOK {
 	return &DesignDocAllPostOK{}
 }
 
-/*DesignDocAllPostOK handles this case with default header values.
+/* DesignDocAllPostOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
 type DesignDocAllPostOK struct {
-	/*Response signature
+
+	/* Response signature
 	 */
 	ETag string
 
@@ -64,15 +61,18 @@ type DesignDocAllPostOK struct {
 func (o *DesignDocAllPostOK) Error() string {
 	return fmt.Sprintf("[POST /{db}/_design_docs][%d] designDocAllPostOK  %+v", 200, o.Payload)
 }
-
 func (o *DesignDocAllPostOK) GetPayload() *models.Pagination {
 	return o.Payload
 }
 
 func (o *DesignDocAllPostOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	// response header ETag
-	o.ETag = response.GetHeader("ETag")
+	// hydrates response header ETag
+	hdrETag := response.GetHeader("ETag")
+
+	if hdrETag != "" {
+		o.ETag = hdrETag
+	}
 
 	o.Payload = new(models.Pagination)
 
@@ -89,7 +89,7 @@ func NewDesignDocAllPostNotFound() *DesignDocAllPostNotFound {
 	return &DesignDocAllPostNotFound{}
 }
 
-/*DesignDocAllPostNotFound handles this case with default header values.
+/* DesignDocAllPostNotFound describes a response with status code 404, with default header values.
 
 Requested database not found
 */
@@ -100,7 +100,6 @@ type DesignDocAllPostNotFound struct {
 func (o *DesignDocAllPostNotFound) Error() string {
 	return fmt.Sprintf("[POST /{db}/_design_docs][%d] designDocAllPostNotFound  %+v", 404, o.Payload)
 }
-
 func (o *DesignDocAllPostNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -114,71 +113,5 @@ func (o *DesignDocAllPostNotFound) readResponse(response runtime.ClientResponse,
 		return err
 	}
 
-	return nil
-}
-
-/*DesignDocAllPostBody design doc all post body
-swagger:model DesignDocAllPostBody
-*/
-type DesignDocAllPostBody struct {
-
-	// docs
-	Docs []*models.Keys `json:"docs"`
-}
-
-// Validate validates this design doc all post body
-func (o *DesignDocAllPostBody) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := o.validateDocs(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (o *DesignDocAllPostBody) validateDocs(formats strfmt.Registry) error {
-
-	if swag.IsZero(o.Docs) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(o.Docs); i++ {
-		if swag.IsZero(o.Docs[i]) { // not required
-			continue
-		}
-
-		if o.Docs[i] != nil {
-			if err := o.Docs[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("body" + "." + "docs" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (o *DesignDocAllPostBody) MarshalBinary() ([]byte, error) {
-	if o == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(o)
-}
-
-// UnmarshalBinary interface implementation
-func (o *DesignDocAllPostBody) UnmarshalBinary(b []byte) error {
-	var res DesignDocAllPostBody
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*o = res
 	return nil
 }

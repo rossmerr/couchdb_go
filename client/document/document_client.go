@@ -25,17 +25,20 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
+// ClientOption is the option for Client methods
+type ClientOption func(*runtime.ClientOperation)
+
 // ClientService is the interface for Client methods
 type ClientService interface {
-	DocDelete(params *DocDeleteParams) (*DocDeleteOK, *DocDeleteAccepted, error)
+	DocDelete(params *DocDeleteParams, opts ...ClientOption) (*DocDeleteOK, *DocDeleteAccepted, error)
 
-	DocGet(params *DocGetParams) (*DocGetOK, error)
+	DocGet(params *DocGetParams, opts ...ClientOption) (*DocGetOK, error)
 
-	DocInfo(params *DocInfoParams) (*DocInfoOK, error)
+	DocInfo(params *DocInfoParams, opts ...ClientOption) (*DocInfoOK, error)
 
-	DocPut(params *DocPutParams) (*DocPutCreated, *DocPutAccepted, error)
+	DocPut(params *DocPutParams, opts ...ClientOption) (*DocPutCreated, *DocPutAccepted, error)
 
-	Post(params *PostParams) (*PostCreated, *PostAccepted, error)
+	Post(params *PostParams, opts ...ClientOption) (*PostCreated, *PostAccepted, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -53,13 +56,12 @@ basic information about the document. The tombstone is required so that the dele
 replicated across databases.
 
 */
-func (a *Client) DocDelete(params *DocDeleteParams) (*DocDeleteOK, *DocDeleteAccepted, error) {
+func (a *Client) DocDelete(params *DocDeleteParams, opts ...ClientOption) (*DocDeleteOK, *DocDeleteAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDocDeleteParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "docDelete",
 		Method:             "DELETE",
 		PathPattern:        "/{db}/{docid}",
@@ -70,7 +72,12 @@ func (a *Client) DocDelete(params *DocDeleteParams) (*DocDeleteOK, *DocDeleteAcc
 		Reader:             &DocDeleteReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -88,13 +95,12 @@ func (a *Client) DocDelete(params *DocDeleteParams) (*DocDeleteOK, *DocDeleteAcc
 /*
   DocGet returns document by the specified docid from the specified db unless you request a specific revision the latest revision of the document will always be returned
 */
-func (a *Client) DocGet(params *DocGetParams) (*DocGetOK, error) {
+func (a *Client) DocGet(params *DocGetParams, opts ...ClientOption) (*DocGetOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDocGetParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "docGet",
 		Method:             "GET",
 		PathPattern:        "/{db}/{docid}",
@@ -105,7 +111,12 @@ func (a *Client) DocGet(params *DocGetParams) (*DocGetOK, error) {
 		Reader:             &DocGetReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -132,13 +143,12 @@ Adding any of the query arguments (see GET /{db}/{docid}), then the resulting HT
 will correspond to what would be returned.
 
 */
-func (a *Client) DocInfo(params *DocInfoParams) (*DocInfoOK, error) {
+func (a *Client) DocInfo(params *DocInfoParams, opts ...ClientOption) (*DocInfoOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDocInfoParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "docInfo",
 		Method:             "HEAD",
 		PathPattern:        "/{db}/{docid}",
@@ -149,7 +159,12 @@ func (a *Client) DocInfo(params *DocInfoParams) (*DocInfoOK, error) {
 		Reader:             &DocInfoReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -170,13 +185,12 @@ func (a *Client) DocInfo(params *DocInfoParams) (*DocInfoOK, error) {
 (i.e. the request body), as the rev query parameter, or in the If-Match request header.
 
 */
-func (a *Client) DocPut(params *DocPutParams) (*DocPutCreated, *DocPutAccepted, error) {
+func (a *Client) DocPut(params *DocPutParams, opts ...ClientOption) (*DocPutCreated, *DocPutAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDocPutParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "docPut",
 		Method:             "PUT",
 		PathPattern:        "/{db}/{docid}",
@@ -187,7 +201,12 @@ func (a *Client) DocPut(params *DocPutParams) (*DocPutCreated, *DocPutAccepted, 
 		Reader:             &DocPutReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -212,13 +231,12 @@ If the _id field is not specified, a new unique ID will be generated, following 
 UUID algorithm is configured for that server.
 
 */
-func (a *Client) Post(params *PostParams) (*PostCreated, *PostAccepted, error) {
+func (a *Client) Post(params *PostParams, opts ...ClientOption) (*PostCreated, *PostAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPostParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "post",
 		Method:             "POST",
 		PathPattern:        "/{db}",
@@ -229,7 +247,12 @@ func (a *Client) Post(params *PostParams) (*PostCreated, *PostAccepted, error) {
 		Reader:             &PostReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, nil, err
 	}

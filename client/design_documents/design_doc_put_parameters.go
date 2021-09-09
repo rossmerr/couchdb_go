@@ -19,163 +19,198 @@ import (
 	"github.com/rossmerr/couchdb_go/models"
 )
 
-// NewDesignDocPutParams creates a new DesignDocPutParams object
-// with the default values initialized.
+// NewDesignDocPutParams creates a new DesignDocPutParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewDesignDocPutParams() *DesignDocPutParams {
-	var ()
 	return &DesignDocPutParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewDesignDocPutParamsWithTimeout creates a new DesignDocPutParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewDesignDocPutParamsWithTimeout(timeout time.Duration) *DesignDocPutParams {
-	var ()
 	return &DesignDocPutParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewDesignDocPutParamsWithContext creates a new DesignDocPutParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewDesignDocPutParamsWithContext(ctx context.Context) *DesignDocPutParams {
-	var ()
 	return &DesignDocPutParams{
-
 		Context: ctx,
 	}
 }
 
 // NewDesignDocPutParamsWithHTTPClient creates a new DesignDocPutParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewDesignDocPutParamsWithHTTPClient(client *http.Client) *DesignDocPutParams {
-	var ()
 	return &DesignDocPutParams{
 		HTTPClient: client,
 	}
 }
 
-/*DesignDocPutParams contains all the parameters to send to the API endpoint
-for the design doc put operation typically these are written to a http.Request
+/* DesignDocPutParams contains all the parameters to send to the API endpoint
+   for the design doc put operation.
+
+   Typically these are written to a http.Request.
 */
 type DesignDocPutParams struct {
 
-	/*IfMatch
-	  Document’s revision. Alternative to rev query parameter or document key. Optional
+	/* IfMatch.
 
+	   Document’s revision. Alternative to rev query parameter or document key. Optional
 	*/
 	IfMatch *string
-	/*AttEncodingInfo
-	  Include encoding information in attachment stubs if include_docs is true and the particular attachment is compressed. Ignored if include_docs isn’t true. Default is false.
 
+	/* AttEncodingInfo.
+
+	   Include encoding information in attachment stubs if include_docs is true and the particular attachment is compressed. Ignored if include_docs isn’t true. Default is false.
 	*/
 	AttEncodingInfo *bool
-	/*Attachments
-	  Include the Base64-encoded content of attachments in the documents that are included if include_docs is true. Ignored if include_docs isn’t true. Default is false.
 
+	/* Attachments.
+
+	   Include the Base64-encoded content of attachments in the documents that are included if include_docs is true. Ignored if include_docs isn’t true. Default is false.
 	*/
 	Attachments *bool
-	/*Body*/
-	Body *models.DesignDoc
-	/*Conflicts
-	  Include conflicts information in response. Ignored if include_docs isn’t true. Default is false.
 
+	// Body.
+	Body *models.DesignDoc
+
+	/* Conflicts.
+
+	   Include conflicts information in response. Ignored if include_docs isn’t true. Default is false.
 	*/
 	Conflicts *bool
-	/*Db
-	  Database name
 
+	/* Db.
+
+	   Database name
 	*/
 	Db string
-	/*Ddoc
-	  Design document id
 
+	/* Ddoc.
+
+	   Design document id
 	*/
 	Ddoc string
-	/*Descending
-	  Return the documents in descending order by key. Default is false.
 
+	/* Descending.
+
+	   Return the documents in descending order by key. Default is false.
 	*/
 	Descending *bool
-	/*Group
-	  Group the results using the reduce function to a group or single row. Implies reduce is true and the maximum group_level. Default is false.
 
+	/* Group.
+
+	   Group the results using the reduce function to a group or single row. Implies reduce is true and the maximum group_level. Default is false.
 	*/
 	Group *bool
-	/*GroupLevel
-	  Specify the group level to be used. Implies group is true.
 
+	/* GroupLevel.
+
+	   Specify the group level to be used. Implies group is true.
 	*/
 	GroupLevel *int64
-	/*InclusiveEnd
-	  Specifies whether the specified end key should be included in the result. Default is true.
 
+	/* InclusiveEnd.
+
+	   Specifies whether the specified end key should be included in the result. Default is true.
 	*/
 	InclusiveEnd *bool
-	/*Limit
-	  Limit the number of the returned documents to the specified number.
 
+	/* Limit.
+
+	   Limit the number of the returned documents to the specified number.
 	*/
 	Limit *int64
-	/*Reduce
-	  Use the reduction function. Default is true when a reduce function is defined.
 
+	/* Reduce.
+
+	   Use the reduction function. Default is true when a reduce function is defined.
 	*/
 	Reduce *bool
-	/*Rev
-	  Document’s revision if updating an existing document. Alternative to If-Match header or document key. Optional
 
+	/* Rev.
+
+	   Document’s revision if updating an existing document. Alternative to If-Match header or document key. Optional
 	*/
 	Rev *string
-	/*Skip
-	  Skip this number of records before starting to return the results. Default is 0.
 
+	/* Skip.
+
+	   Skip this number of records before starting to return the results. Default is 0.
 	*/
 	Skip *int64
-	/*Sorted
-	  Sort returned rows (see Sorting Returned Rows). Setting this to false offers a performance boost. The total_rows and offset fields are not available when this is set to false. Default is true.
 
+	/* Sorted.
+
+	   Sort returned rows (see Sorting Returned Rows). Setting this to false offers a performance boost. The total_rows and offset fields are not available when this is set to false. Default is true.
 	*/
 	Sorted *bool
-	/*Stable
-	  Whether or not the view results should be returned from a stable set of shards. Default is false.
 
+	/* Stable.
+
+	   Whether or not the view results should be returned from a stable set of shards. Default is false.
 	*/
 	Stable *bool
-	/*Stale
-	  Allow the results from a stale view to be used. Supported values: ok and update_after. ok is equivalent to stable=true&update=false. update_after is equivalent to stable=true&update=lazy. The default behavior is equivalent to stable=false&update=true. Note that this parameter is deprecated. Use stable and update instead. See Views Generation for more details.
 
+	/* Stale.
+
+	   Allow the results from a stale view to be used. Supported values: ok and update_after. ok is equivalent to stable=true&update=false. update_after is equivalent to stable=true&update=lazy. The default behavior is equivalent to stable=false&update=true. Note that this parameter is deprecated. Use stable and update instead. See Views Generation for more details.
 
 	*/
 	Stale *string
-	/*StartKeyDocID
-	  Alias for startkey_docid param
 
+	/* StartKeyDocID.
+
+	   Alias for startkey_docid param
 	*/
 	StartKeyDocID *string
-	/*StartkeyDocid
-	  Return records starting with the specified document ID. Ignored if startkey is not set.
 
+	/* StartkeyDocid.
+
+	   Return records starting with the specified document ID. Ignored if startkey is not set.
 	*/
 	StartkeyDocid *string
-	/*Update
-	  Whether or not the view in question should be updated prior to responding to the user. Supported values: true, false, lazy. Default is true.
 
+	/* Update.
+
+	   Whether or not the view in question should be updated prior to responding to the user. Supported values: true, false, lazy. Default is true.
 
 	*/
 	Update *string
-	/*UpdateSeq
-	  Whether to include in the response an update_seq value indicating the sequence id of the database the view reflects. Default is false.
 
+	/* UpdateSeq.
+
+	   Whether to include in the response an update_seq value indicating the sequence id of the database the view reflects. Default is false.
 	*/
 	UpdateSeq *bool
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the design doc put params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DesignDocPutParams) WithDefaults() *DesignDocPutParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the design doc put params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DesignDocPutParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the design doc put params
@@ -467,41 +502,41 @@ func (o *DesignDocPutParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		if err := r.SetHeaderParam("If-Match", *o.IfMatch); err != nil {
 			return err
 		}
-
 	}
 
 	if o.AttEncodingInfo != nil {
 
 		// query param att_encoding_info
 		var qrAttEncodingInfo bool
+
 		if o.AttEncodingInfo != nil {
 			qrAttEncodingInfo = *o.AttEncodingInfo
 		}
 		qAttEncodingInfo := swag.FormatBool(qrAttEncodingInfo)
 		if qAttEncodingInfo != "" {
+
 			if err := r.SetQueryParam("att_encoding_info", qAttEncodingInfo); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Attachments != nil {
 
 		// query param attachments
 		var qrAttachments bool
+
 		if o.Attachments != nil {
 			qrAttachments = *o.Attachments
 		}
 		qAttachments := swag.FormatBool(qrAttachments)
 		if qAttachments != "" {
+
 			if err := r.SetQueryParam("attachments", qAttachments); err != nil {
 				return err
 			}
 		}
-
 	}
-
 	if o.Body != nil {
 		if err := r.SetBodyParam(o.Body); err != nil {
 			return err
@@ -512,16 +547,17 @@ func (o *DesignDocPutParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 
 		// query param conflicts
 		var qrConflicts bool
+
 		if o.Conflicts != nil {
 			qrConflicts = *o.Conflicts
 		}
 		qConflicts := swag.FormatBool(qrConflicts)
 		if qConflicts != "" {
+
 			if err := r.SetQueryParam("conflicts", qConflicts); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	// path param db
@@ -538,240 +574,255 @@ func (o *DesignDocPutParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 
 		// query param descending
 		var qrDescending bool
+
 		if o.Descending != nil {
 			qrDescending = *o.Descending
 		}
 		qDescending := swag.FormatBool(qrDescending)
 		if qDescending != "" {
+
 			if err := r.SetQueryParam("descending", qDescending); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Group != nil {
 
 		// query param group
 		var qrGroup bool
+
 		if o.Group != nil {
 			qrGroup = *o.Group
 		}
 		qGroup := swag.FormatBool(qrGroup)
 		if qGroup != "" {
+
 			if err := r.SetQueryParam("group", qGroup); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.GroupLevel != nil {
 
 		// query param group_level
 		var qrGroupLevel int64
+
 		if o.GroupLevel != nil {
 			qrGroupLevel = *o.GroupLevel
 		}
 		qGroupLevel := swag.FormatInt64(qrGroupLevel)
 		if qGroupLevel != "" {
+
 			if err := r.SetQueryParam("group_level", qGroupLevel); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.InclusiveEnd != nil {
 
 		// query param inclusive_end
 		var qrInclusiveEnd bool
+
 		if o.InclusiveEnd != nil {
 			qrInclusiveEnd = *o.InclusiveEnd
 		}
 		qInclusiveEnd := swag.FormatBool(qrInclusiveEnd)
 		if qInclusiveEnd != "" {
+
 			if err := r.SetQueryParam("inclusive_end", qInclusiveEnd); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Limit != nil {
 
 		// query param limit
 		var qrLimit int64
+
 		if o.Limit != nil {
 			qrLimit = *o.Limit
 		}
 		qLimit := swag.FormatInt64(qrLimit)
 		if qLimit != "" {
+
 			if err := r.SetQueryParam("limit", qLimit); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Reduce != nil {
 
 		// query param reduce
 		var qrReduce bool
+
 		if o.Reduce != nil {
 			qrReduce = *o.Reduce
 		}
 		qReduce := swag.FormatBool(qrReduce)
 		if qReduce != "" {
+
 			if err := r.SetQueryParam("reduce", qReduce); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Rev != nil {
 
 		// query param rev
 		var qrRev string
+
 		if o.Rev != nil {
 			qrRev = *o.Rev
 		}
 		qRev := qrRev
 		if qRev != "" {
+
 			if err := r.SetQueryParam("rev", qRev); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Skip != nil {
 
 		// query param skip
 		var qrSkip int64
+
 		if o.Skip != nil {
 			qrSkip = *o.Skip
 		}
 		qSkip := swag.FormatInt64(qrSkip)
 		if qSkip != "" {
+
 			if err := r.SetQueryParam("skip", qSkip); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Sorted != nil {
 
 		// query param sorted
 		var qrSorted bool
+
 		if o.Sorted != nil {
 			qrSorted = *o.Sorted
 		}
 		qSorted := swag.FormatBool(qrSorted)
 		if qSorted != "" {
+
 			if err := r.SetQueryParam("sorted", qSorted); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Stable != nil {
 
 		// query param stable
 		var qrStable bool
+
 		if o.Stable != nil {
 			qrStable = *o.Stable
 		}
 		qStable := swag.FormatBool(qrStable)
 		if qStable != "" {
+
 			if err := r.SetQueryParam("stable", qStable); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Stale != nil {
 
 		// query param stale
 		var qrStale string
+
 		if o.Stale != nil {
 			qrStale = *o.Stale
 		}
 		qStale := qrStale
 		if qStale != "" {
+
 			if err := r.SetQueryParam("stale", qStale); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.StartKeyDocID != nil {
 
 		// query param start_key_doc_id
 		var qrStartKeyDocID string
+
 		if o.StartKeyDocID != nil {
 			qrStartKeyDocID = *o.StartKeyDocID
 		}
 		qStartKeyDocID := qrStartKeyDocID
 		if qStartKeyDocID != "" {
+
 			if err := r.SetQueryParam("start_key_doc_id", qStartKeyDocID); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.StartkeyDocid != nil {
 
 		// query param startkey_docid
 		var qrStartkeyDocid string
+
 		if o.StartkeyDocid != nil {
 			qrStartkeyDocid = *o.StartkeyDocid
 		}
 		qStartkeyDocid := qrStartkeyDocid
 		if qStartkeyDocid != "" {
+
 			if err := r.SetQueryParam("startkey_docid", qStartkeyDocid); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Update != nil {
 
 		// query param update
 		var qrUpdate string
+
 		if o.Update != nil {
 			qrUpdate = *o.Update
 		}
 		qUpdate := qrUpdate
 		if qUpdate != "" {
+
 			if err := r.SetQueryParam("update", qUpdate); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.UpdateSeq != nil {
 
 		// query param update_seq
 		var qrUpdateSeq bool
+
 		if o.UpdateSeq != nil {
 			qrUpdateSeq = *o.UpdateSeq
 		}
 		qUpdateSeq := swag.FormatBool(qrUpdateSeq)
 		if qUpdateSeq != "" {
+
 			if err := r.SetQueryParam("update_seq", qUpdateSeq); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if len(res) > 0 {

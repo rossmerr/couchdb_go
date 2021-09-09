@@ -16,64 +16,79 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewDesignDocExistsParams creates a new DesignDocExistsParams object
-// with the default values initialized.
+// NewDesignDocExistsParams creates a new DesignDocExistsParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewDesignDocExistsParams() *DesignDocExistsParams {
-	var ()
 	return &DesignDocExistsParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewDesignDocExistsParamsWithTimeout creates a new DesignDocExistsParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewDesignDocExistsParamsWithTimeout(timeout time.Duration) *DesignDocExistsParams {
-	var ()
 	return &DesignDocExistsParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewDesignDocExistsParamsWithContext creates a new DesignDocExistsParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewDesignDocExistsParamsWithContext(ctx context.Context) *DesignDocExistsParams {
-	var ()
 	return &DesignDocExistsParams{
-
 		Context: ctx,
 	}
 }
 
 // NewDesignDocExistsParamsWithHTTPClient creates a new DesignDocExistsParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewDesignDocExistsParamsWithHTTPClient(client *http.Client) *DesignDocExistsParams {
-	var ()
 	return &DesignDocExistsParams{
 		HTTPClient: client,
 	}
 }
 
-/*DesignDocExistsParams contains all the parameters to send to the API endpoint
-for the design doc exists operation typically these are written to a http.Request
+/* DesignDocExistsParams contains all the parameters to send to the API endpoint
+   for the design doc exists operation.
+
+   Typically these are written to a http.Request.
 */
 type DesignDocExistsParams struct {
 
-	/*Db
-	  Database name
+	/* Db.
 
+	   Database name
 	*/
 	Db string
-	/*Ddoc
-	  Design document id
 
+	/* Ddoc.
+
+	   Design document id
 	*/
 	Ddoc string
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the design doc exists params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DesignDocExistsParams) WithDefaults() *DesignDocExistsParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the design doc exists params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *DesignDocExistsParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the design doc exists params

@@ -17,89 +17,109 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NewAllDBsParams creates a new AllDBsParams object
-// with the default values initialized.
+// NewAllDBsParams creates a new AllDBsParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewAllDBsParams() *AllDBsParams {
-	var ()
 	return &AllDBsParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewAllDBsParamsWithTimeout creates a new AllDBsParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewAllDBsParamsWithTimeout(timeout time.Duration) *AllDBsParams {
-	var ()
 	return &AllDBsParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewAllDBsParamsWithContext creates a new AllDBsParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewAllDBsParamsWithContext(ctx context.Context) *AllDBsParams {
-	var ()
 	return &AllDBsParams{
-
 		Context: ctx,
 	}
 }
 
 // NewAllDBsParamsWithHTTPClient creates a new AllDBsParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewAllDBsParamsWithHTTPClient(client *http.Client) *AllDBsParams {
-	var ()
 	return &AllDBsParams{
 		HTTPClient: client,
 	}
 }
 
-/*AllDBsParams contains all the parameters to send to the API endpoint
-for the all d bs operation typically these are written to a http.Request
+/* AllDBsParams contains all the parameters to send to the API endpoint
+   for the all d bs operation.
+
+   Typically these are written to a http.Request.
 */
 type AllDBsParams struct {
 
-	/*Descending
-	  Return the databases in descending order by key. Default is false.
+	/* Descending.
 
+	   Return the databases in descending order by key. Default is false.
 	*/
 	Descending *bool
-	/*EndKey
-	  Alias for endkey param
 
+	/* EndKey.
+
+	   Alias for endkey param
 	*/
 	EndKey *string
-	/*Endkey
-	  Stop returning databases when the specified key is reached.
 
+	/* Endkey.
+
+	   Stop returning databases when the specified key is reached.
 	*/
 	Endkey *string
-	/*Limit
-	  Limit the number of the returned databases to the specified number.
 
+	/* Limit.
+
+	   Limit the number of the returned databases to the specified number.
 	*/
 	Limit *int64
-	/*Skip
-	  Skip this number of databases before starting to return the results. Default is 0.
 
+	/* Skip.
+
+	   Skip this number of databases before starting to return the results. Default is 0.
 	*/
 	Skip *int64
-	/*StartKey
-	  Alias for startkey.
 
+	/* StartKey.
+
+	   Alias for startkey.
 	*/
 	StartKey *string
-	/*Startkey
-	  Return databases starting with the specified key.
 
+	/* Startkey.
+
+	   Return databases starting with the specified key.
 	*/
 	Startkey *string
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the all d bs params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *AllDBsParams) WithDefaults() *AllDBsParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the all d bs params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *AllDBsParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the all d bs params
@@ -224,112 +244,119 @@ func (o *AllDBsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regist
 
 		// query param descending
 		var qrDescending bool
+
 		if o.Descending != nil {
 			qrDescending = *o.Descending
 		}
 		qDescending := swag.FormatBool(qrDescending)
 		if qDescending != "" {
+
 			if err := r.SetQueryParam("descending", qDescending); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.EndKey != nil {
 
 		// query param end_key
 		var qrEndKey string
+
 		if o.EndKey != nil {
 			qrEndKey = *o.EndKey
 		}
 		qEndKey := qrEndKey
 		if qEndKey != "" {
+
 			if err := r.SetQueryParam("end_key", qEndKey); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Endkey != nil {
 
 		// query param endkey
 		var qrEndkey string
+
 		if o.Endkey != nil {
 			qrEndkey = *o.Endkey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {
+
 			if err := r.SetQueryParam("endkey", qEndkey); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Limit != nil {
 
 		// query param limit
 		var qrLimit int64
+
 		if o.Limit != nil {
 			qrLimit = *o.Limit
 		}
 		qLimit := swag.FormatInt64(qrLimit)
 		if qLimit != "" {
+
 			if err := r.SetQueryParam("limit", qLimit); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Skip != nil {
 
 		// query param skip
 		var qrSkip int64
+
 		if o.Skip != nil {
 			qrSkip = *o.Skip
 		}
 		qSkip := swag.FormatInt64(qrSkip)
 		if qSkip != "" {
+
 			if err := r.SetQueryParam("skip", qSkip); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.StartKey != nil {
 
 		// query param start_key
 		var qrStartKey string
+
 		if o.StartKey != nil {
 			qrStartKey = *o.StartKey
 		}
 		qStartKey := qrStartKey
 		if qStartKey != "" {
+
 			if err := r.SetQueryParam("start_key", qStartKey); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Startkey != nil {
 
 		// query param startkey
 		var qrStartkey string
+
 		if o.Startkey != nil {
 			qrStartkey = *o.Startkey
 		}
 		qStartkey := qrStartkey
 		if qStartkey != "" {
+
 			if err := r.SetQueryParam("startkey", qStartkey); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if len(res) > 0 {

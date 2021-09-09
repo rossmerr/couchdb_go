@@ -53,7 +53,6 @@ func (o *DeleteReader) ReadResponse(response runtime.ClientResponse, consumer ru
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -64,7 +63,7 @@ func NewDeleteOK() *DeleteOK {
 	return &DeleteOK{}
 }
 
-/*DeleteOK handles this case with default header values.
+/* DeleteOK describes a response with status code 200, with default header values.
 
 Database removed successfully (quorum is met and database is deleted by at least one node)
 */
@@ -75,7 +74,6 @@ type DeleteOK struct {
 func (o *DeleteOK) Error() string {
 	return fmt.Sprintf("[DELETE /{db}][%d] deleteOK  %+v", 200, o.Payload)
 }
-
 func (o *DeleteOK) GetPayload() *models.OK {
 	return o.Payload
 }
@@ -97,7 +95,7 @@ func NewDeleteAccepted() *DeleteAccepted {
 	return &DeleteAccepted{}
 }
 
-/*DeleteAccepted handles this case with default header values.
+/* DeleteAccepted describes a response with status code 202, with default header values.
 
 Accepted (deleted by at least one of the nodes, quorum is not met yet)
 */
@@ -108,7 +106,6 @@ type DeleteAccepted struct {
 func (o *DeleteAccepted) Error() string {
 	return fmt.Sprintf("[DELETE /{db}][%d] deleteAccepted  %+v", 202, o.Payload)
 }
-
 func (o *DeleteAccepted) GetPayload() *models.OK {
 	return o.Payload
 }
@@ -130,7 +127,7 @@ func NewDeleteBadRequest() *DeleteBadRequest {
 	return &DeleteBadRequest{}
 }
 
-/*DeleteBadRequest handles this case with default header values.
+/* DeleteBadRequest describes a response with status code 400, with default header values.
 
 Invalid database name or forgotten document id by accident
 */
@@ -141,7 +138,6 @@ type DeleteBadRequest struct {
 func (o *DeleteBadRequest) Error() string {
 	return fmt.Sprintf("[DELETE /{db}][%d] deleteBadRequest  %+v", 400, o.Payload)
 }
-
 func (o *DeleteBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -163,7 +159,7 @@ func NewDeleteUnauthorized() *DeleteUnauthorized {
 	return &DeleteUnauthorized{}
 }
 
-/*DeleteUnauthorized handles this case with default header values.
+/* DeleteUnauthorized describes a response with status code 401, with default header values.
 
 CouchDB Server Administrator privileges required
 */
@@ -174,7 +170,6 @@ type DeleteUnauthorized struct {
 func (o *DeleteUnauthorized) Error() string {
 	return fmt.Sprintf("[DELETE /{db}][%d] deleteUnauthorized  %+v", 401, o.Payload)
 }
-
 func (o *DeleteUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -196,7 +191,7 @@ func NewDeleteNotFound() *DeleteNotFound {
 	return &DeleteNotFound{}
 }
 
-/*DeleteNotFound handles this case with default header values.
+/* DeleteNotFound describes a response with status code 404, with default header values.
 
 Database doesn’t exist or invalid database name
 */
@@ -207,7 +202,6 @@ type DeleteNotFound struct {
 func (o *DeleteNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /{db}][%d] deleteNotFound  %+v", 404, o.Payload)
 }
-
 func (o *DeleteNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }

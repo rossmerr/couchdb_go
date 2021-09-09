@@ -6,6 +6,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -44,7 +46,6 @@ func (m *Request) Validate(formats strfmt.Registry) error {
 }
 
 func (m *Request) validateHeaders(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Headers) { // not required
 		return nil
 	}
@@ -62,13 +63,40 @@ func (m *Request) validateHeaders(formats strfmt.Registry) error {
 }
 
 func (m *Request) validateURL(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.URL) { // not required
 		return nil
 	}
 
 	if err := validate.FormatOf("url", "body", "uri", m.URL.String(), formats); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validate this request based on the context it is used
+func (m *Request) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateHeaders(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Request) contextValidateHeaders(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Headers != nil {
+		if err := m.Headers.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("headers")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -85,38 +113,6 @@ func (m *Request) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Request) UnmarshalBinary(b []byte) error {
 	var res Request
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// RequestHeaders request headers
-//
-// swagger:model RequestHeaders
-type RequestHeaders struct {
-
-	// authorization
-	Authorization string `json:"Authorization,omitempty"`
-}
-
-// Validate validates this request headers
-func (m *RequestHeaders) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *RequestHeaders) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *RequestHeaders) UnmarshalBinary(b []byte) error {
-	var res RequestHeaders
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

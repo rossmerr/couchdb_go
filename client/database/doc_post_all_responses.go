@@ -35,7 +35,6 @@ func (o *DocPostAllReader) ReadResponse(response runtime.ClientResponse, consume
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -46,7 +45,7 @@ func NewDocPostAllOK() *DocPostAllOK {
 	return &DocPostAllOK{}
 }
 
-/*DocPostAllOK handles this case with default header values.
+/* DocPostAllOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
@@ -57,7 +56,6 @@ type DocPostAllOK struct {
 func (o *DocPostAllOK) Error() string {
 	return fmt.Sprintf("[POST /{db}/_all_docs][%d] docPostAllOK  %+v", 200, o.Payload)
 }
-
 func (o *DocPostAllOK) GetPayload() *models.Pagination {
 	return o.Payload
 }
@@ -79,7 +77,7 @@ func NewDocPostAllNotFound() *DocPostAllNotFound {
 	return &DocPostAllNotFound{}
 }
 
-/*DocPostAllNotFound handles this case with default header values.
+/* DocPostAllNotFound describes a response with status code 404, with default header values.
 
 Requested database not found
 */
@@ -90,7 +88,6 @@ type DocPostAllNotFound struct {
 func (o *DocPostAllNotFound) Error() string {
 	return fmt.Sprintf("[POST /{db}/_all_docs][%d] docPostAllNotFound  %+v", 404, o.Payload)
 }
-
 func (o *DocPostAllNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }

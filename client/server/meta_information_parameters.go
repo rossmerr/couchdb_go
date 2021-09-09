@@ -16,52 +16,66 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewMetaInformationParams creates a new MetaInformationParams object
-// with the default values initialized.
+// NewMetaInformationParams creates a new MetaInformationParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewMetaInformationParams() *MetaInformationParams {
-
 	return &MetaInformationParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewMetaInformationParamsWithTimeout creates a new MetaInformationParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewMetaInformationParamsWithTimeout(timeout time.Duration) *MetaInformationParams {
-
 	return &MetaInformationParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewMetaInformationParamsWithContext creates a new MetaInformationParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewMetaInformationParamsWithContext(ctx context.Context) *MetaInformationParams {
-
 	return &MetaInformationParams{
-
 		Context: ctx,
 	}
 }
 
 // NewMetaInformationParamsWithHTTPClient creates a new MetaInformationParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewMetaInformationParamsWithHTTPClient(client *http.Client) *MetaInformationParams {
-
 	return &MetaInformationParams{
 		HTTPClient: client,
 	}
 }
 
-/*MetaInformationParams contains all the parameters to send to the API endpoint
-for the meta information operation typically these are written to a http.Request
+/* MetaInformationParams contains all the parameters to send to the API endpoint
+   for the meta information operation.
+
+   Typically these are written to a http.Request.
 */
 type MetaInformationParams struct {
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the meta information params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *MetaInformationParams) WithDefaults() *MetaInformationParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the meta information params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *MetaInformationParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the meta information params

@@ -59,7 +59,6 @@ func (o *PostReader) ReadResponse(response runtime.ClientResponse, consumer runt
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -70,7 +69,7 @@ func NewPostCreated() *PostCreated {
 	return &PostCreated{}
 }
 
-/*PostCreated handles this case with default header values.
+/* PostCreated describes a response with status code 201, with default header values.
 
 Document created and stored on disk
 */
@@ -81,7 +80,6 @@ type PostCreated struct {
 func (o *PostCreated) Error() string {
 	return fmt.Sprintf("[POST /{db}][%d] postCreated  %+v", 201, o.Payload)
 }
-
 func (o *PostCreated) GetPayload() *models.DocumentOK {
 	return o.Payload
 }
@@ -103,7 +101,7 @@ func NewPostAccepted() *PostAccepted {
 	return &PostAccepted{}
 }
 
-/*PostAccepted handles this case with default header values.
+/* PostAccepted describes a response with status code 202, with default header values.
 
 Document data accepted, but not yet stored on disk
 */
@@ -114,7 +112,6 @@ type PostAccepted struct {
 func (o *PostAccepted) Error() string {
 	return fmt.Sprintf("[POST /{db}][%d] postAccepted  %+v", 202, o.Payload)
 }
-
 func (o *PostAccepted) GetPayload() *models.DocumentOK {
 	return o.Payload
 }
@@ -136,7 +133,7 @@ func NewPostBadRequest() *PostBadRequest {
 	return &PostBadRequest{}
 }
 
-/*PostBadRequest handles this case with default header values.
+/* PostBadRequest describes a response with status code 400, with default header values.
 
 Invalid database name
 */
@@ -147,7 +144,6 @@ type PostBadRequest struct {
 func (o *PostBadRequest) Error() string {
 	return fmt.Sprintf("[POST /{db}][%d] postBadRequest  %+v", 400, o.Payload)
 }
-
 func (o *PostBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -169,7 +165,7 @@ func NewPostUnauthorized() *PostUnauthorized {
 	return &PostUnauthorized{}
 }
 
-/*PostUnauthorized handles this case with default header values.
+/* PostUnauthorized describes a response with status code 401, with default header values.
 
 Write privileges required
 */
@@ -180,7 +176,6 @@ type PostUnauthorized struct {
 func (o *PostUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /{db}][%d] postUnauthorized  %+v", 401, o.Payload)
 }
-
 func (o *PostUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -202,7 +197,7 @@ func NewPostNotFound() *PostNotFound {
 	return &PostNotFound{}
 }
 
-/*PostNotFound handles this case with default header values.
+/* PostNotFound describes a response with status code 404, with default header values.
 
 Database doesn’t exist
 */
@@ -213,7 +208,6 @@ type PostNotFound struct {
 func (o *PostNotFound) Error() string {
 	return fmt.Sprintf("[POST /{db}][%d] postNotFound  %+v", 404, o.Payload)
 }
-
 func (o *PostNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -235,7 +229,7 @@ func NewPostConflict() *PostConflict {
 	return &PostConflict{}
 }
 
-/*PostConflict handles this case with default header values.
+/* PostConflict describes a response with status code 409, with default header values.
 
 A Conflicting Document with same ID already exists
 */
@@ -246,7 +240,6 @@ type PostConflict struct {
 func (o *PostConflict) Error() string {
 	return fmt.Sprintf("[POST /{db}][%d] postConflict  %+v", 409, o.Payload)
 }
-
 func (o *PostConflict) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }

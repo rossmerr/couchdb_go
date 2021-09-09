@@ -17,74 +17,95 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NewPutParams creates a new PutParams object
-// with the default values initialized.
+// NewPutParams creates a new PutParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewPutParams() *PutParams {
-	var ()
 	return &PutParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewPutParamsWithTimeout creates a new PutParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewPutParamsWithTimeout(timeout time.Duration) *PutParams {
-	var ()
 	return &PutParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewPutParamsWithContext creates a new PutParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewPutParamsWithContext(ctx context.Context) *PutParams {
-	var ()
 	return &PutParams{
-
 		Context: ctx,
 	}
 }
 
 // NewPutParamsWithHTTPClient creates a new PutParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewPutParamsWithHTTPClient(client *http.Client) *PutParams {
-	var ()
 	return &PutParams{
 		HTTPClient: client,
 	}
 }
 
-/*PutParams contains all the parameters to send to the API endpoint
-for the put operation typically these are written to a http.Request
+/* PutParams contains all the parameters to send to the API endpoint
+   for the put operation.
+
+   Typically these are written to a http.Request.
 */
 type PutParams struct {
 
-	/*Db
-	  Database name
+	/* Db.
 
+	   Database name
 	*/
 	Db string
-	/*N
-	  Replicas. The number of copies of the database in the cluster. The default is 3, unless overridden in the cluster config .
 
+	/* N.
+
+	   Replicas. The number of copies of the database in the cluster. The default is 3, unless overridden in the cluster config .
+
+	   Format: int32
 	*/
 	N *int32
-	/*Partitioned
-	  Whether to create a partitioned database. Default is false.
 
+	/* Partitioned.
+
+	   Whether to create a partitioned database. Default is false.
 	*/
 	Partitioned *bool
-	/*Q
-	  Shards, aka the number of range partitions. Default is 8, unless overridden in the cluster config.
 
+	/* Q.
+
+	   Shards, aka the number of range partitions. Default is 8, unless overridden in the cluster config.
+
+	   Format: int32
 	*/
 	Q *int32
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the put params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *PutParams) WithDefaults() *PutParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the put params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *PutParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the put params
@@ -181,48 +202,51 @@ func (o *PutParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry)
 
 		// query param n
 		var qrN int32
+
 		if o.N != nil {
 			qrN = *o.N
 		}
 		qN := swag.FormatInt32(qrN)
 		if qN != "" {
+
 			if err := r.SetQueryParam("n", qN); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Partitioned != nil {
 
 		// query param partitioned
 		var qrPartitioned bool
+
 		if o.Partitioned != nil {
 			qrPartitioned = *o.Partitioned
 		}
 		qPartitioned := swag.FormatBool(qrPartitioned)
 		if qPartitioned != "" {
+
 			if err := r.SetQueryParam("partitioned", qPartitioned); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Q != nil {
 
 		// query param q
 		var qrQ int32
+
 		if o.Q != nil {
 			qrQ = *o.Q
 		}
 		qQ := swag.FormatInt32(qrQ)
 		if qQ != "" {
+
 			if err := r.SetQueryParam("q", qQ); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if len(res) > 0 {

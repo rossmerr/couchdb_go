@@ -35,7 +35,6 @@ func (o *GetReader) ReadResponse(response runtime.ClientResponse, consumer runti
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -46,7 +45,7 @@ func NewGetOK() *GetOK {
 	return &GetOK{}
 }
 
-/*GetOK handles this case with default header values.
+/* GetOK describes a response with status code 200, with default header values.
 
 Request completed successfully
 */
@@ -57,7 +56,6 @@ type GetOK struct {
 func (o *GetOK) Error() string {
 	return fmt.Sprintf("[GET /{db}][%d] getOK  %+v", 200, o.Payload)
 }
-
 func (o *GetOK) GetPayload() *models.Database {
 	return o.Payload
 }
@@ -79,7 +77,7 @@ func NewGetNotFound() *GetNotFound {
 	return &GetNotFound{}
 }
 
-/*GetNotFound handles this case with default header values.
+/* GetNotFound describes a response with status code 404, with default header values.
 
 Requested database not found
 */
@@ -90,7 +88,6 @@ type GetNotFound struct {
 func (o *GetNotFound) Error() string {
 	return fmt.Sprintf("[GET /{db}][%d] getNotFound  %+v", 404, o.Payload)
 }
-
 func (o *GetNotFound) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }

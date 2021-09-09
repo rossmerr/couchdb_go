@@ -213,15 +213,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "object",
-                "properties": {
-                  "key": {
-                    "type": "string"
-                  },
-                  "info": {
-                    "$ref": "#/definitions/Database"
-                  }
-                }
+                "$ref": "#/definitions/inline_response_200"
               }
             }
           },
@@ -266,20 +258,7 @@
           "200": {
             "description": "Request completed successfully",
             "schema": {
-              "type": "object",
-              "properties": {
-                "state": {
-                  "type": "string",
-                  "description": "Current state of the node and/or cluster (see below)",
-                  "enum": [
-                    "cluster_disabled",
-                    "single_node_disabled",
-                    "single_node_enabled",
-                    "cluster_enabled",
-                    "cluster_finished"
-                  ]
-                }
-              }
+              "$ref": "#/definitions/inline_response_200_1"
             }
           }
         }
@@ -311,7 +290,13 @@
           "200": {
             "description": "Request completed successfully",
             "schema": {
-              "type": "object"
+              "$ref": "#/definitions/OK"
+            }
+          },
+          "500": {
+            "description": "JSON specification was invalid",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -338,21 +323,7 @@
           "200": {
             "description": "Request completed successfully",
             "schema": {
-              "type": "object",
-              "properties": {
-                "all_nodes": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "cluster_nodes": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
+              "$ref": "#/definitions/inline_response_200_2"
             }
           }
         }
@@ -445,17 +416,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "field": {
-                  "type": "string",
-                  "description": "Type of analyzer"
-                },
-                "text": {
-                  "type": "string",
-                  "description": "Analyzer token you want to test"
-                }
-              }
+              "$ref": "#/definitions/body"
             }
           }
         ],
@@ -463,15 +424,7 @@
           "200": {
             "description": "Request completed successfully",
             "schema": {
-              "type": "object",
-              "properties": {
-                "tokens": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
+              "$ref": "#/definitions/inline_response_200_3"
             }
           },
           "400": {
@@ -510,12 +463,7 @@
           "200": {
             "description": "Request completed successfully",
             "schema": {
-              "type": "object",
-              "properties": {
-                "status": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/inline_response_200_4"
             }
           },
           "404": {
@@ -1798,15 +1746,7 @@
             "description": "List of document objects, with id, and optionally rev and atts_since",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "docs": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/BasicDoc"
-                  }
-                }
-              }
+              "$ref": "#/definitions/body_1"
             }
           },
           {
@@ -1881,16 +1821,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "docs": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/Document"
-                  }
-                }
-              },
-              "description": "List of documents objects"
+              "$ref": "#/definitions/body_2"
             }
           }
         ],
@@ -2114,15 +2045,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "docs": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/Keys"
-                  }
-                }
-              }
+              "$ref": "#/definitions/body_3"
             }
           },
           {
@@ -2297,15 +2220,7 @@
           "200": {
             "description": "Request completed successfully",
             "schema": {
-              "type": "object",
-              "properties": {
-                "admins": {
-                  "$ref": "#/definitions/Admins"
-                },
-                "members": {
-                  "$ref": "#/definitions/Members"
-                }
-              }
+              "$ref": "#/definitions/inline_response_200_5"
             }
           }
         }
@@ -2338,15 +2253,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "admins": {
-                  "$ref": "#/definitions/Admins"
-                },
-                "members": {
-                  "$ref": "#/definitions/Members"
-                }
-              }
+              "$ref": "#/definitions/body_4"
             }
           }
         ],
@@ -3960,15 +3867,7 @@
           "200": {
             "description": "DRequest completed successfully",
             "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "view_index": {
-                  "$ref": "#/definitions/ViewIndex"
-                }
-              }
+              "$ref": "#/definitions/inline_response_200_6"
             }
           }
         }
@@ -4785,15 +4684,7 @@
               }
             },
             "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "search_index": {
-                  "$ref": "#/definitions/SearchIndex"
-                }
-              }
+              "$ref": "#/definitions/inline_response_200_7"
             }
           },
           "400": {
@@ -4870,21 +4761,7 @@
           "description": "MD5 signature of the views for the design document"
         },
         "sizes": {
-          "type": "object",
-          "properties": {
-            "active": {
-              "type": "integer",
-              "description": "The size of live data inside the view, in bytes"
-            },
-            "disk": {
-              "type": "integer",
-              "description": "Size in bytes of the view as stored on disk"
-            },
-            "external": {
-              "type": "integer",
-              "description": "The uncompressed size of view contents in bytes"
-            }
-          }
+          "$ref": "#/definitions/ViewIndex_sizes"
         },
         "update_seq": {
           "type": "string",
@@ -4961,15 +4838,7 @@
           "type": "string"
         },
         "sizes": {
-          "type": "object",
-          "properties": {
-            "active": {
-              "type": "integer"
-            },
-            "external": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/Partition_sizes"
         }
       }
     },
@@ -4990,34 +4859,7 @@
         "results": {
           "type": "array",
           "items": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "docs": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "ok": {
-                      "$ref": "#/definitions/Document"
-                    },
-                    "error": {
-                      "type": "object",
-                      "allOf": [
-                        {
-                          "$ref": "#/definitions/ErrorResponse"
-                        },
-                        {
-                          "$ref": "#/definitions/BasicDoc"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/definitions/Results_results"
           }
         }
       }
@@ -5134,25 +4976,7 @@
           "description": "The name of the database."
         },
         "cluster": {
-          "type": "object",
-          "properties": {
-            "n": {
-              "type": "integer",
-              "description": "Replicas. The number of copies of every document."
-            },
-            "q": {
-              "type": "integer",
-              "description": "Shards. The number of range partitions."
-            },
-            "r": {
-              "type": "integer",
-              "description": "Read quorum. The number of consistent copies of a document that need to be read before a successful reply."
-            },
-            "w": {
-              "type": "integer",
-              "description": "Write quorum. The number of copies of a document that need to be written before a successful reply."
-            }
-          }
+          "$ref": "#/definitions/Database_cluster"
         },
         "compact_running": {
           "type": "boolean",
@@ -5179,34 +5003,14 @@
           "description": "An opaque string that describes the purge state of the database. Do not rely on this string for counting the number of purge operations."
         },
         "sizes": {
-          "type": "object",
-          "properties": {
-            "active": {
-              "type": "integer",
-              "description": "The size of live data inside the database, in bytes."
-            },
-            "external": {
-              "type": "integer",
-              "description": "The uncompressed size of database contents in bytes. sizes.file (number) – The size of the database file on disk in bytes. Views indexes are not included in the calculation."
-            },
-            "file": {
-              "type": "integer",
-              "description": "An opaque string that describes the state of the database. Do not rely on this string for counting the number of updates."
-            }
-          }
+          "$ref": "#/definitions/Database_sizes"
         },
         "update_seq": {
           "type": "string",
           "description": "Always \"0\". (Returned for legacy reasons.)"
         },
         "props": {
-          "type": "object",
-          "properties": {
-            "partitioned": {
-              "type": "boolean",
-              "description": "If present and true, this indicates that the database is partitioned."
-            }
-          }
+          "$ref": "#/definitions/Database_props"
         }
       }
     },
@@ -5221,15 +5025,7 @@
           "format": "uuidl"
         },
         "vendor": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "version": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/Server_vendor"
         },
         "version": {
           "type": "string"
@@ -5354,12 +5150,7 @@
           "description": "Creates the target database. Required administrator’s privileges on target server."
         },
         "create_target_params": {
-          "type": "object",
-          "properties": {
-            "partitioned": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/Replicate_create_target_params"
         },
         "doc_ids": {
           "type": "array",
@@ -5394,12 +5185,7 @@
       "type": "object",
       "properties": {
         "headers": {
-          "type": "object",
-          "properties": {
-            "Authorization": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/Request_headers"
         },
         "url": {
           "type": "string",
@@ -5515,6 +5301,290 @@
           "type": "string"
         },
         "rev": {
+          "type": "string"
+        }
+      }
+    },
+    "inline_response_200": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "info": {
+          "$ref": "#/definitions/Database"
+        }
+      }
+    },
+    "inline_response_200_1": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "description": "Current state of the node and/or cluster (see below)",
+          "enum": [
+            "cluster_disabled",
+            "single_node_disabled",
+            "single_node_enabled",
+            "cluster_enabled",
+            "cluster_finished"
+          ]
+        }
+      }
+    },
+    "inline_response_200_2": {
+      "type": "object",
+      "properties": {
+        "all_nodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cluster_nodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "body": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string",
+          "description": "Type of analyzer"
+        },
+        "text": {
+          "type": "string",
+          "description": "Analyzer token you want to test"
+        }
+      }
+    },
+    "inline_response_200_3": {
+      "type": "object",
+      "properties": {
+        "tokens": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "inline_response_200_4": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "body_1": {
+      "type": "object",
+      "properties": {
+        "docs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BasicDoc"
+          }
+        }
+      }
+    },
+    "body_2": {
+      "type": "object",
+      "properties": {
+        "docs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Document"
+          }
+        }
+      },
+      "description": "List of documents objects"
+    },
+    "body_3": {
+      "type": "object",
+      "properties": {
+        "docs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Keys"
+          }
+        }
+      }
+    },
+    "inline_response_200_5": {
+      "type": "object",
+      "properties": {
+        "admins": {
+          "$ref": "#/definitions/Admins"
+        },
+        "members": {
+          "$ref": "#/definitions/Members"
+        }
+      }
+    },
+    "body_4": {
+      "type": "object",
+      "properties": {
+        "admins": {
+          "$ref": "#/definitions/Admins"
+        },
+        "members": {
+          "$ref": "#/definitions/Members"
+        }
+      }
+    },
+    "inline_response_200_6": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "view_index": {
+          "$ref": "#/definitions/ViewIndex"
+        }
+      }
+    },
+    "inline_response_200_7": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "search_index": {
+          "$ref": "#/definitions/SearchIndex"
+        }
+      }
+    },
+    "ViewIndex_sizes": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "integer",
+          "description": "The size of live data inside the view, in bytes"
+        },
+        "disk": {
+          "type": "integer",
+          "description": "Size in bytes of the view as stored on disk"
+        },
+        "external": {
+          "type": "integer",
+          "description": "The uncompressed size of view contents in bytes"
+        }
+      }
+    },
+    "Partition_sizes": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "integer"
+        },
+        "external": {
+          "type": "integer"
+        }
+      }
+    },
+    "Results_error": {
+      "type": "object"
+    },
+    "Results_docs": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "$ref": "#/definitions/Document"
+        },
+        "error": {
+          "$ref": "#/definitions/Results_error"
+        }
+      }
+    },
+    "Results_results": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "docs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Results_docs"
+          }
+        }
+      }
+    },
+    "Database_cluster": {
+      "type": "object",
+      "properties": {
+        "n": {
+          "type": "integer",
+          "description": "Replicas. The number of copies of every document."
+        },
+        "q": {
+          "type": "integer",
+          "description": "Shards. The number of range partitions."
+        },
+        "r": {
+          "type": "integer",
+          "description": "Read quorum. The number of consistent copies of a document that need to be read before a successful reply."
+        },
+        "w": {
+          "type": "integer",
+          "description": "Write quorum. The number of copies of a document that need to be written before a successful reply."
+        }
+      }
+    },
+    "Database_sizes": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "integer",
+          "description": "The size of live data inside the database, in bytes."
+        },
+        "external": {
+          "type": "integer",
+          "description": "The uncompressed size of database contents in bytes. sizes.file (number) – The size of the database file on disk in bytes. Views indexes are not included in the calculation."
+        },
+        "file": {
+          "type": "integer",
+          "description": "An opaque string that describes the state of the database. Do not rely on this string for counting the number of updates."
+        }
+      }
+    },
+    "Database_props": {
+      "type": "object",
+      "properties": {
+        "partitioned": {
+          "type": "boolean",
+          "description": "If present and true, this indicates that the database is partitioned."
+        }
+      }
+    },
+    "Server_vendor": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "Replicate_create_target_params": {
+      "type": "object",
+      "properties": {
+        "partitioned": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Request_headers": {
+      "type": "object",
+      "properties": {
+        "Authorization": {
           "type": "string"
         }
       }

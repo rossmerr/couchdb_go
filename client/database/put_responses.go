@@ -53,7 +53,6 @@ func (o *PutReader) ReadResponse(response runtime.ClientResponse, consumer runti
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -64,7 +63,7 @@ func NewPutCreated() *PutCreated {
 	return &PutCreated{}
 }
 
-/*PutCreated handles this case with default header values.
+/* PutCreated describes a response with status code 201, with default header values.
 
 Database created successfully (quorum is met)
 */
@@ -75,7 +74,6 @@ type PutCreated struct {
 func (o *PutCreated) Error() string {
 	return fmt.Sprintf("[PUT /{db}][%d] putCreated  %+v", 201, o.Payload)
 }
-
 func (o *PutCreated) GetPayload() *models.OK {
 	return o.Payload
 }
@@ -97,7 +95,7 @@ func NewPutAccepted() *PutAccepted {
 	return &PutAccepted{}
 }
 
-/*PutAccepted handles this case with default header values.
+/* PutAccepted describes a response with status code 202, with default header values.
 
 Accepted (at least by one node)
 */
@@ -108,7 +106,6 @@ type PutAccepted struct {
 func (o *PutAccepted) Error() string {
 	return fmt.Sprintf("[PUT /{db}][%d] putAccepted  %+v", 202, o.Payload)
 }
-
 func (o *PutAccepted) GetPayload() *models.OK {
 	return o.Payload
 }
@@ -130,7 +127,7 @@ func NewPutBadRequest() *PutBadRequest {
 	return &PutBadRequest{}
 }
 
-/*PutBadRequest handles this case with default header values.
+/* PutBadRequest describes a response with status code 400, with default header values.
 
 Invalid database name
 */
@@ -141,7 +138,6 @@ type PutBadRequest struct {
 func (o *PutBadRequest) Error() string {
 	return fmt.Sprintf("[PUT /{db}][%d] putBadRequest  %+v", 400, o.Payload)
 }
-
 func (o *PutBadRequest) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -163,7 +159,7 @@ func NewPutUnauthorized() *PutUnauthorized {
 	return &PutUnauthorized{}
 }
 
-/*PutUnauthorized handles this case with default header values.
+/* PutUnauthorized describes a response with status code 401, with default header values.
 
 CouchDB Server Administrator privileges required
 */
@@ -174,7 +170,6 @@ type PutUnauthorized struct {
 func (o *PutUnauthorized) Error() string {
 	return fmt.Sprintf("[PUT /{db}][%d] putUnauthorized  %+v", 401, o.Payload)
 }
-
 func (o *PutUnauthorized) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
@@ -196,7 +191,7 @@ func NewPutPreconditionFailed() *PutPreconditionFailed {
 	return &PutPreconditionFailed{}
 }
 
-/*PutPreconditionFailed handles this case with default header values.
+/* PutPreconditionFailed describes a response with status code 412, with default header values.
 
 Database already exists
 */
@@ -207,7 +202,6 @@ type PutPreconditionFailed struct {
 func (o *PutPreconditionFailed) Error() string {
 	return fmt.Sprintf("[PUT /{db}][%d] putPreconditionFailed  %+v", 412, o.Payload)
 }
-
 func (o *PutPreconditionFailed) GetPayload() *models.ErrorResponse {
 	return o.Payload
 }
