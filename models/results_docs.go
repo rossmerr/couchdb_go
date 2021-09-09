@@ -8,6 +8,7 @@ package models
 import (
 	"context"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -18,7 +19,7 @@ import (
 type ResultsDocs struct {
 
 	// error
-	Error ResultsError `json:"error,omitempty"`
+	Error *ErrorBulkGetResponse `json:"error,omitempty"`
 
 	// ok
 	Ok Document `json:"ok,omitempty"`
@@ -26,11 +27,60 @@ type ResultsDocs struct {
 
 // Validate validates this results docs
 func (m *ResultsDocs) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateError(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
 	return nil
 }
 
-// ContextValidate validates this results docs based on context it is used
+func (m *ResultsDocs) validateError(formats strfmt.Registry) error {
+	if swag.IsZero(m.Error) { // not required
+		return nil
+	}
+
+	if m.Error != nil {
+		if err := m.Error.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("error")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this results docs based on the context it is used
 func (m *ResultsDocs) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateError(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *ResultsDocs) contextValidateError(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Error != nil {
+		if err := m.Error.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("error")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

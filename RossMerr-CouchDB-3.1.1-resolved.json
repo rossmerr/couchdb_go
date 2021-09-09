@@ -4968,6 +4968,25 @@
         }
       }
     },
+    "ErrorBulkGetResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "description": "Error type. Available if response code is 4xx"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Error description. Available if response code is 4xx"
+        },
+        "id": {
+          "type": "string"
+        },
+        "rev": {
+          "type": "string"
+        }
+      }
+    },
     "Database": {
       "type": "object",
       "properties": {
@@ -5487,9 +5506,6 @@
         }
       }
     },
-    "Results_error": {
-      "type": "object"
-    },
     "Results_docs": {
       "type": "object",
       "properties": {
@@ -5497,7 +5513,7 @@
           "$ref": "#/definitions/Document"
         },
         "error": {
-          "$ref": "#/definitions/Results_error"
+          "$ref": "#/definitions/ErrorBulkGetResponse"
         }
       }
     },

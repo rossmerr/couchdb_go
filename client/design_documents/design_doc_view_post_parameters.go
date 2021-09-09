@@ -117,7 +117,7 @@ type DesignDocViewPostParams struct {
 
 	   Stop returning records when the specified key is reached.
 	*/
-	Endkey *string
+	QueryEndKey *string
 
 	/* EndkeyDocid.
 
@@ -220,7 +220,7 @@ type DesignDocViewPostParams struct {
 
 	   Return records starting with the specified key.
 	*/
-	Startkey *string
+	QueryStartKey *string
 
 	/* StartkeyDocid.
 
@@ -399,15 +399,15 @@ func (o *DesignDocViewPostParams) SetEndKeyDocID(endKeyDocID *string) {
 	o.EndKeyDocID = endKeyDocID
 }
 
-// WithEndkey adds the endkey to the design doc view post params
-func (o *DesignDocViewPostParams) WithEndkey(endkey *string) *DesignDocViewPostParams {
-	o.SetEndkey(endkey)
+// WithQueryEndKey adds the endkey to the design doc view post params
+func (o *DesignDocViewPostParams) WithQueryEndKey(endkey *string) *DesignDocViewPostParams {
+	o.SetQueryEndKey(endkey)
 	return o
 }
 
-// SetEndkey adds the endkey to the design doc view post params
-func (o *DesignDocViewPostParams) SetEndkey(endkey *string) {
-	o.Endkey = endkey
+// SetQueryEndKey adds the endkey to the design doc view post params
+func (o *DesignDocViewPostParams) SetQueryEndKey(endkey *string) {
+	o.QueryEndKey = endkey
 }
 
 // WithEndkeyDocid adds the endkeyDocid to the design doc view post params
@@ -586,15 +586,15 @@ func (o *DesignDocViewPostParams) SetStartKeyDocID(startKeyDocID *string) {
 	o.StartKeyDocID = startKeyDocID
 }
 
-// WithStartkey adds the startkey to the design doc view post params
-func (o *DesignDocViewPostParams) WithStartkey(startkey *string) *DesignDocViewPostParams {
-	o.SetStartkey(startkey)
+// WithQueryStartKey adds the startkey to the design doc view post params
+func (o *DesignDocViewPostParams) WithQueryStartKey(startkey *string) *DesignDocViewPostParams {
+	o.SetQueryStartKey(startkey)
 	return o
 }
 
-// SetStartkey adds the startkey to the design doc view post params
-func (o *DesignDocViewPostParams) SetStartkey(startkey *string) {
-	o.Startkey = startkey
+// SetQueryStartKey adds the startkey to the design doc view post params
+func (o *DesignDocViewPostParams) SetQueryStartKey(startkey *string) {
+	o.QueryStartKey = startkey
 }
 
 // WithStartkeyDocid adds the startkeyDocid to the design doc view post params
@@ -766,13 +766,13 @@ func (o *DesignDocViewPostParams) WriteToRequest(r runtime.ClientRequest, reg st
 		}
 	}
 
-	if o.Endkey != nil {
+	if o.QueryEndKey != nil {
 
 		// query param endkey
 		var qrEndkey string
 
-		if o.Endkey != nil {
-			qrEndkey = *o.Endkey
+		if o.QueryEndKey != nil {
+			qrEndkey = *o.QueryEndKey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {
@@ -1049,13 +1049,13 @@ func (o *DesignDocViewPostParams) WriteToRequest(r runtime.ClientRequest, reg st
 		}
 	}
 
-	if o.Startkey != nil {
+	if o.QueryStartKey != nil {
 
 		// query param startkey
 		var qrStartkey string
 
-		if o.Startkey != nil {
-			qrStartkey = *o.Startkey
+		if o.QueryStartKey != nil {
+			qrStartkey = *o.QueryStartKey
 		}
 		qStartkey := qrStartkey
 		if qStartkey != "" {

@@ -106,7 +106,7 @@ type DocGetAllParams struct {
 
 	   Stop returning records when the specified key is reached.
 	*/
-	QueryEndKey *string
+	Endkey *string
 
 	/* EndkeyDocid.
 
@@ -360,15 +360,15 @@ func (o *DocGetAllParams) SetEndKeyDocID(endKeyDocID *string) {
 	o.EndKeyDocID = endKeyDocID
 }
 
-// WithQueryEndKey adds the endkey to the doc get all params
-func (o *DocGetAllParams) WithQueryEndKey(endkey *string) *DocGetAllParams {
-	o.SetQueryEndKey(endkey)
+// WithEndkey adds the endkey to the doc get all params
+func (o *DocGetAllParams) WithEndkey(endkey *string) *DocGetAllParams {
+	o.SetEndkey(endkey)
 	return o
 }
 
-// SetQueryEndKey adds the endkey to the doc get all params
-func (o *DocGetAllParams) SetQueryEndKey(endkey *string) {
-	o.QueryEndKey = endkey
+// SetEndkey adds the endkey to the doc get all params
+func (o *DocGetAllParams) SetEndkey(endkey *string) {
+	o.Endkey = endkey
 }
 
 // WithEndkeyDocid adds the endkeyDocid to the doc get all params
@@ -706,13 +706,13 @@ func (o *DocGetAllParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 		}
 	}
 
-	if o.QueryEndKey != nil {
+	if o.Endkey != nil {
 
 		// query param endkey
 		var qrEndkey string
 
-		if o.QueryEndKey != nil {
-			qrEndkey = *o.QueryEndKey
+		if o.Endkey != nil {
+			qrEndkey = *o.Endkey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {
