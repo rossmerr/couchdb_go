@@ -260,6 +260,12 @@
             "schema": {
               "$ref": "#/definitions/inline_response_200_1"
             }
+          },
+          "400": {
+            "description": "Failed",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           }
         }
       },

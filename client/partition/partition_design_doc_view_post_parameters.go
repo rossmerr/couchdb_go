@@ -117,7 +117,7 @@ type PartitionDesignDocViewPostParams struct {
 
 	   Stop returning records when the specified key is reached.
 	*/
-	Endkey *string
+	QueryEndKey *string
 
 	/* EndkeyDocid.
 
@@ -226,7 +226,7 @@ type PartitionDesignDocViewPostParams struct {
 
 	   Return records starting with the specified key.
 	*/
-	QueryStartKey *string
+	Startkey *string
 
 	/* StartkeyDocid.
 
@@ -405,15 +405,15 @@ func (o *PartitionDesignDocViewPostParams) SetEndKeyDocID(endKeyDocID *string) {
 	o.EndKeyDocID = endKeyDocID
 }
 
-// WithEndkey adds the endkey to the partition design doc view post params
-func (o *PartitionDesignDocViewPostParams) WithEndkey(endkey *string) *PartitionDesignDocViewPostParams {
-	o.SetEndkey(endkey)
+// WithQueryEndKey adds the endkey to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithQueryEndKey(endkey *string) *PartitionDesignDocViewPostParams {
+	o.SetQueryEndKey(endkey)
 	return o
 }
 
-// SetEndkey adds the endkey to the partition design doc view post params
-func (o *PartitionDesignDocViewPostParams) SetEndkey(endkey *string) {
-	o.Endkey = endkey
+// SetQueryEndKey adds the endkey to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetQueryEndKey(endkey *string) {
+	o.QueryEndKey = endkey
 }
 
 // WithEndkeyDocid adds the endkeyDocid to the partition design doc view post params
@@ -603,15 +603,15 @@ func (o *PartitionDesignDocViewPostParams) SetStartKeyDocID(startKeyDocID *strin
 	o.StartKeyDocID = startKeyDocID
 }
 
-// WithQueryStartKey adds the startkey to the partition design doc view post params
-func (o *PartitionDesignDocViewPostParams) WithQueryStartKey(startkey *string) *PartitionDesignDocViewPostParams {
-	o.SetQueryStartKey(startkey)
+// WithStartkey adds the startkey to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) WithStartkey(startkey *string) *PartitionDesignDocViewPostParams {
+	o.SetStartkey(startkey)
 	return o
 }
 
-// SetQueryStartKey adds the startkey to the partition design doc view post params
-func (o *PartitionDesignDocViewPostParams) SetQueryStartKey(startkey *string) {
-	o.QueryStartKey = startkey
+// SetStartkey adds the startkey to the partition design doc view post params
+func (o *PartitionDesignDocViewPostParams) SetStartkey(startkey *string) {
+	o.Startkey = startkey
 }
 
 // WithStartkeyDocid adds the startkeyDocid to the partition design doc view post params
@@ -783,13 +783,13 @@ func (o *PartitionDesignDocViewPostParams) WriteToRequest(r runtime.ClientReques
 		}
 	}
 
-	if o.Endkey != nil {
+	if o.QueryEndKey != nil {
 
 		// query param endkey
 		var qrEndkey string
 
-		if o.Endkey != nil {
-			qrEndkey = *o.Endkey
+		if o.QueryEndKey != nil {
+			qrEndkey = *o.QueryEndKey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {
@@ -1077,13 +1077,13 @@ func (o *PartitionDesignDocViewPostParams) WriteToRequest(r runtime.ClientReques
 		}
 	}
 
-	if o.QueryStartKey != nil {
+	if o.Startkey != nil {
 
 		// query param startkey
 		var qrStartkey string
 
-		if o.QueryStartKey != nil {
-			qrStartkey = *o.QueryStartKey
+		if o.Startkey != nil {
+			qrStartkey = *o.Startkey
 		}
 		qStartkey := qrStartkey
 		if qStartkey != "" {
