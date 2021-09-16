@@ -14,7 +14,6 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 )
 
 // NewClusterSetupGetParams creates a new ClusterSetupGetParams object,
@@ -59,13 +58,6 @@ func NewClusterSetupGetParamsWithHTTPClient(client *http.Client) *ClusterSetupGe
    Typically these are written to a http.Request.
 */
 type ClusterSetupGetParams struct {
-
-	/* EnsureDbsExist.
-
-	   List of system databases to ensure exist on the node/cluster. Defaults to ["_users","_replicator"].
-	*/
-	EnsureDbsExist []string
-
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -119,17 +111,6 @@ func (o *ClusterSetupGetParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithEnsureDbsExist adds the ensureDbsExist to the cluster setup get params
-func (o *ClusterSetupGetParams) WithEnsureDbsExist(ensureDbsExist []string) *ClusterSetupGetParams {
-	o.SetEnsureDbsExist(ensureDbsExist)
-	return o
-}
-
-// SetEnsureDbsExist adds the ensureDbsExist to the cluster setup get params
-func (o *ClusterSetupGetParams) SetEnsureDbsExist(ensureDbsExist []string) {
-	o.EnsureDbsExist = ensureDbsExist
-}
-
 // WriteToRequest writes these params to a swagger request
 func (o *ClusterSetupGetParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -138,36 +119,8 @@ func (o *ClusterSetupGetParams) WriteToRequest(r runtime.ClientRequest, reg strf
 	}
 	var res []error
 
-	if o.EnsureDbsExist != nil {
-
-		// binding items for ensure_dbs_exist
-		joinedEnsureDbsExist := o.bindParamEnsureDbsExist(reg)
-
-		// query array param ensure_dbs_exist
-		if err := r.SetQueryParam("ensure_dbs_exist", joinedEnsureDbsExist...); err != nil {
-			return err
-		}
-	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
 	return nil
-}
-
-// bindParamClusterSetupGet binds the parameter ensure_dbs_exist
-func (o *ClusterSetupGetParams) bindParamEnsureDbsExist(formats strfmt.Registry) []string {
-	ensureDbsExistIR := o.EnsureDbsExist
-
-	var ensureDbsExistIC []string
-	for _, ensureDbsExistIIR := range ensureDbsExistIR { // explode []string
-
-		ensureDbsExistIIV := ensureDbsExistIIR // string as string
-		ensureDbsExistIC = append(ensureDbsExistIC, ensureDbsExistIIV)
-	}
-
-	// items.CollectionFormat: "multi"
-	ensureDbsExistIS := swag.JoinByFormat(ensureDbsExistIC, "multi")
-
-	return ensureDbsExistIS
 }

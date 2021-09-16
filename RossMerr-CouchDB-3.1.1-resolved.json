@@ -241,19 +241,7 @@
           "application/json",
           "text/plain"
         ],
-        "parameters": [
-          {
-            "name": "ensure_dbs_exist",
-            "in": "query",
-            "description": "List of system databases to ensure exist on the node/cluster. Defaults to [\"_users\",\"_replicator\"].",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Request completed successfully",
