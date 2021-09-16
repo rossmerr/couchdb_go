@@ -38,7 +38,7 @@ type ClientService interface {
 
 	ClusterSetupGet(params *ClusterSetupGetParams, opts ...ClientOption) (*ClusterSetupGetOK, error)
 
-	ClusterSetupPost(params *ClusterSetupPostParams, opts ...ClientOption) (*ClusterSetupPostOK, error)
+	ClusterSetupPost(params *ClusterSetupPostParams, opts ...ClientOption) (*ClusterSetupPostOK, *ClusterSetupPostCreated, error)
 
 	Membership(params *MembershipParams, opts ...ClientOption) (*MembershipOK, error)
 
@@ -214,7 +214,7 @@ func (a *Client) ClusterSetupGet(params *ClusterSetupGetParams, opts ...ClientOp
 /*
   ClusterSetupPost configures a node as a single standalone node as part of a cluster or finalise a cluster
 */
-func (a *Client) ClusterSetupPost(params *ClusterSetupPostParams, opts ...ClientOption) (*ClusterSetupPostOK, error) {
+func (a *Client) ClusterSetupPost(params *ClusterSetupPostParams, opts ...ClientOption) (*ClusterSetupPostOK, *ClusterSetupPostCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewClusterSetupPostParams()
@@ -237,15 +237,16 @@ func (a *Client) ClusterSetupPost(params *ClusterSetupPostParams, opts ...Client
 
 	result, err := a.transport.Submit(op)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	success, ok := result.(*ClusterSetupPostOK)
-	if ok {
-		return success, nil
+	switch value := result.(type) {
+	case *ClusterSetupPostOK:
+		return value, nil, nil
+	case *ClusterSetupPostCreated:
+		return nil, value, nil
 	}
-	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for clusterSetupPost: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for server: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

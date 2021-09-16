@@ -293,6 +293,12 @@
               "$ref": "#/definitions/OK"
             }
           },
+          "201": {
+            "description": "Request completed successfully",
+            "schema": {
+              "$ref": "#/definitions/OK"
+            }
+          },
           "400": {
             "description": "Failed",
             "schema": {

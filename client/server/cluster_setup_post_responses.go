@@ -29,6 +29,12 @@ func (o *ClusterSetupPostReader) ReadResponse(response runtime.ClientResponse, c
 			return nil, err
 		}
 		return result, nil
+	case 201:
+		result := NewClusterSetupPostCreated()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return result, nil
 	case 400:
 		result := NewClusterSetupPostBadRequest()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -67,6 +73,38 @@ func (o *ClusterSetupPostOK) GetPayload() *models.OK {
 }
 
 func (o *ClusterSetupPostOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.OK)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewClusterSetupPostCreated creates a ClusterSetupPostCreated with default headers values
+func NewClusterSetupPostCreated() *ClusterSetupPostCreated {
+	return &ClusterSetupPostCreated{}
+}
+
+/* ClusterSetupPostCreated describes a response with status code 201, with default header values.
+
+Request completed successfully
+*/
+type ClusterSetupPostCreated struct {
+	Payload *models.OK
+}
+
+func (o *ClusterSetupPostCreated) Error() string {
+	return fmt.Sprintf("[POST /_cluster_setup][%d] clusterSetupPostCreated  %+v", 201, o.Payload)
+}
+func (o *ClusterSetupPostCreated) GetPayload() *models.OK {
+	return o.Payload
+}
+
+func (o *ClusterSetupPostCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	o.Payload = new(models.OK)
 
