@@ -62,7 +62,7 @@ func NewClusterSetupPostParamsWithHTTPClient(client *http.Client) *ClusterSetupP
 type ClusterSetupPostParams struct {
 
 	// Body.
-	Body *models.Cluster
+	Body *models.Body
 
 	timeout    time.Duration
 	Context    context.Context
@@ -118,13 +118,13 @@ func (o *ClusterSetupPostParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithBody adds the body to the cluster setup post params
-func (o *ClusterSetupPostParams) WithBody(body *models.Cluster) *ClusterSetupPostParams {
+func (o *ClusterSetupPostParams) WithBody(body *models.Body) *ClusterSetupPostParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the cluster setup post params
-func (o *ClusterSetupPostParams) SetBody(body *models.Cluster) {
+func (o *ClusterSetupPostParams) SetBody(body *models.Body) {
 	o.Body = body
 }
 

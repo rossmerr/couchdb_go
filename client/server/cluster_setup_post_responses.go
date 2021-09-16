@@ -29,6 +29,12 @@ func (o *ClusterSetupPostReader) ReadResponse(response runtime.ClientResponse, c
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewClusterSetupPostBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 500:
 		result := NewClusterSetupPostInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -63,6 +69,38 @@ func (o *ClusterSetupPostOK) GetPayload() *models.OK {
 func (o *ClusterSetupPostOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	o.Payload = new(models.OK)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewClusterSetupPostBadRequest creates a ClusterSetupPostBadRequest with default headers values
+func NewClusterSetupPostBadRequest() *ClusterSetupPostBadRequest {
+	return &ClusterSetupPostBadRequest{}
+}
+
+/* ClusterSetupPostBadRequest describes a response with status code 400, with default header values.
+
+Failed
+*/
+type ClusterSetupPostBadRequest struct {
+	Payload *models.ErrorResponse
+}
+
+func (o *ClusterSetupPostBadRequest) Error() string {
+	return fmt.Sprintf("[POST /_cluster_setup][%d] clusterSetupPostBadRequest  %+v", 400, o.Payload)
+}
+func (o *ClusterSetupPostBadRequest) GetPayload() *models.ErrorResponse {
+	return o.Payload
+}
+
+func (o *ClusterSetupPostBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.ErrorResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

@@ -7,27 +7,89 @@ package models
 
 import (
 	"context"
+	"strconv"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
-// Body2 List of documents objects
+// Body2 body 2
 //
 // swagger:model body_2
 type Body2 struct {
 
 	// docs
-	Docs []Document `json:"docs"`
+	Docs []*BasicDoc `json:"docs"`
 }
 
 // Validate validates this body 2
 func (m *Body2) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateDocs(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
 	return nil
 }
 
-// ContextValidate validates this body 2 based on context it is used
+func (m *Body2) validateDocs(formats strfmt.Registry) error {
+	if swag.IsZero(m.Docs) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Docs); i++ {
+		if swag.IsZero(m.Docs[i]) { // not required
+			continue
+		}
+
+		if m.Docs[i] != nil {
+			if err := m.Docs[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("docs" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// ContextValidate validate this body 2 based on the context it is used
 func (m *Body2) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateDocs(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Body2) contextValidateDocs(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Docs); i++ {
+
+		if m.Docs[i] != nil {
+			if err := m.Docs[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("docs" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 

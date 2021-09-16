@@ -62,7 +62,7 @@ func NewSbSecurityPutParamsWithHTTPClient(client *http.Client) *SbSecurityPutPar
 type SbSecurityPutParams struct {
 
 	// Body.
-	Body *models.Body4
+	Body *models.Body5
 
 	/* Db.
 
@@ -124,13 +124,13 @@ func (o *SbSecurityPutParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithBody adds the body to the sb security put params
-func (o *SbSecurityPutParams) WithBody(body *models.Body4) *SbSecurityPutParams {
+func (o *SbSecurityPutParams) WithBody(body *models.Body5) *SbSecurityPutParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the sb security put params
-func (o *SbSecurityPutParams) SetBody(body *models.Body4) {
+func (o *SbSecurityPutParams) SetBody(body *models.Body5) {
 	o.Body = body
 }
 

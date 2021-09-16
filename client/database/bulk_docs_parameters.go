@@ -62,7 +62,7 @@ func NewBulkDocsParamsWithHTTPClient(client *http.Client) *BulkDocsParams {
 type BulkDocsParams struct {
 
 	// Body.
-	Body *models.Body2
+	Body *models.Body3
 
 	/* Db.
 
@@ -124,13 +124,13 @@ func (o *BulkDocsParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithBody adds the body to the bulk docs params
-func (o *BulkDocsParams) WithBody(body *models.Body2) *BulkDocsParams {
+func (o *BulkDocsParams) WithBody(body *models.Body3) *BulkDocsParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the bulk docs params
-func (o *BulkDocsParams) SetBody(body *models.Body2) {
+func (o *BulkDocsParams) SetBody(body *models.Body3) {
 	o.Body = body
 }
 

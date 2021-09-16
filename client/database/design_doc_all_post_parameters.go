@@ -63,7 +63,7 @@ func NewDesignDocAllPostParamsWithHTTPClient(client *http.Client) *DesignDocAllP
 type DesignDocAllPostParams struct {
 
 	// Body.
-	Body *models.Body3
+	Body *models.Body4
 
 	/* Conflicts.
 
@@ -99,7 +99,7 @@ type DesignDocAllPostParams struct {
 
 	   Stop returning records when the specified key is reached. Optional.
 	*/
-	Endkey *string
+	QueryEndKey *string
 
 	/* EndkeyDocid.
 
@@ -227,13 +227,13 @@ func (o *DesignDocAllPostParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithBody adds the body to the design doc all post params
-func (o *DesignDocAllPostParams) WithBody(body *models.Body3) *DesignDocAllPostParams {
+func (o *DesignDocAllPostParams) WithBody(body *models.Body4) *DesignDocAllPostParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the design doc all post params
-func (o *DesignDocAllPostParams) SetBody(body *models.Body3) {
+func (o *DesignDocAllPostParams) SetBody(body *models.Body4) {
 	o.Body = body
 }
 
@@ -292,15 +292,15 @@ func (o *DesignDocAllPostParams) SetEndKeyDocID(endKeyDocID *string) {
 	o.EndKeyDocID = endKeyDocID
 }
 
-// WithEndkey adds the endkey to the design doc all post params
-func (o *DesignDocAllPostParams) WithEndkey(endkey *string) *DesignDocAllPostParams {
-	o.SetEndkey(endkey)
+// WithQueryEndKey adds the endkey to the design doc all post params
+func (o *DesignDocAllPostParams) WithQueryEndKey(endkey *string) *DesignDocAllPostParams {
+	o.SetQueryEndKey(endkey)
 	return o
 }
 
-// SetEndkey adds the endkey to the design doc all post params
-func (o *DesignDocAllPostParams) SetEndkey(endkey *string) {
-	o.Endkey = endkey
+// SetQueryEndKey adds the endkey to the design doc all post params
+func (o *DesignDocAllPostParams) SetQueryEndKey(endkey *string) {
+	o.QueryEndKey = endkey
 }
 
 // WithEndkeyDocid adds the endkeyDocid to the design doc all post params
@@ -521,13 +521,13 @@ func (o *DesignDocAllPostParams) WriteToRequest(r runtime.ClientRequest, reg str
 		}
 	}
 
-	if o.Endkey != nil {
+	if o.QueryEndKey != nil {
 
 		// query param endkey
 		var qrEndkey string
 
-		if o.Endkey != nil {
-			qrEndkey = *o.Endkey
+		if o.QueryEndKey != nil {
+			qrEndkey = *o.QueryEndKey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {

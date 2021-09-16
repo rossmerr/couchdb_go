@@ -282,7 +282,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Cluster"
+              "$ref": "#/definitions/body"
             }
           }
         ],
@@ -291,6 +291,12 @@
             "description": "Request completed successfully",
             "schema": {
               "$ref": "#/definitions/OK"
+            }
+          },
+          "400": {
+            "description": "Failed",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "500": {
@@ -416,7 +422,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/body"
+              "$ref": "#/definitions/body_1"
             }
           }
         ],
@@ -1746,7 +1752,7 @@
             "description": "List of document objects, with id, and optionally rev and atts_since",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/body_1"
+              "$ref": "#/definitions/body_2"
             }
           },
           {
@@ -1821,7 +1827,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/body_2"
+              "$ref": "#/definitions/body_3"
             }
           }
         ],
@@ -2045,7 +2051,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/body_3"
+              "$ref": "#/definitions/body_4"
             }
           },
           {
@@ -2253,7 +2259,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/body_4"
+              "$ref": "#/definitions/body_5"
             }
           }
         ],
@@ -5351,6 +5357,20 @@
         }
       }
     },
+    "body": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": [
+            "enable_single_node",
+            "enable_cluster",
+            "add_node",
+            "finish_cluster"
+          ]
+        }
+      }
+    },
     "inline_response_200_2": {
       "type": "object",
       "properties": {
@@ -5368,7 +5388,7 @@
         }
       }
     },
-    "body": {
+    "body_1": {
       "type": "object",
       "properties": {
         "field": {
@@ -5400,7 +5420,7 @@
         }
       }
     },
-    "body_1": {
+    "body_2": {
       "type": "object",
       "properties": {
         "docs": {
@@ -5411,7 +5431,7 @@
         }
       }
     },
-    "body_2": {
+    "body_3": {
       "type": "object",
       "properties": {
         "docs": {
@@ -5423,7 +5443,7 @@
       },
       "description": "List of documents objects"
     },
-    "body_3": {
+    "body_4": {
       "type": "object",
       "properties": {
         "docs": {
@@ -5445,7 +5465,7 @@
         }
       }
     },
-    "body_4": {
+    "body_5": {
       "type": "object",
       "properties": {
         "admins": {

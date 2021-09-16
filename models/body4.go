@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -18,22 +19,15 @@ import (
 // swagger:model body_4
 type Body4 struct {
 
-	// admins
-	Admins *Admins `json:"admins,omitempty"`
-
-	// members
-	Members *Members `json:"members,omitempty"`
+	// docs
+	Docs []*Keys `json:"docs"`
 }
 
 // Validate validates this body 4
 func (m *Body4) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateAdmins(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateMembers(formats); err != nil {
+	if err := m.validateDocs(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -43,35 +37,25 @@ func (m *Body4) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Body4) validateAdmins(formats strfmt.Registry) error {
-	if swag.IsZero(m.Admins) { // not required
+func (m *Body4) validateDocs(formats strfmt.Registry) error {
+	if swag.IsZero(m.Docs) { // not required
 		return nil
 	}
 
-	if m.Admins != nil {
-		if err := m.Admins.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("admins")
-			}
-			return err
+	for i := 0; i < len(m.Docs); i++ {
+		if swag.IsZero(m.Docs[i]) { // not required
+			continue
 		}
-	}
 
-	return nil
-}
-
-func (m *Body4) validateMembers(formats strfmt.Registry) error {
-	if swag.IsZero(m.Members) { // not required
-		return nil
-	}
-
-	if m.Members != nil {
-		if err := m.Members.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("members")
+		if m.Docs[i] != nil {
+			if err := m.Docs[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("docs" + "." + strconv.Itoa(i))
+				}
+				return err
 			}
-			return err
 		}
+
 	}
 
 	return nil
@@ -81,11 +65,7 @@ func (m *Body4) validateMembers(formats strfmt.Registry) error {
 func (m *Body4) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.contextValidateAdmins(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateMembers(ctx, formats); err != nil {
+	if err := m.contextValidateDocs(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -95,29 +75,19 @@ func (m *Body4) ContextValidate(ctx context.Context, formats strfmt.Registry) er
 	return nil
 }
 
-func (m *Body4) contextValidateAdmins(ctx context.Context, formats strfmt.Registry) error {
+func (m *Body4) contextValidateDocs(ctx context.Context, formats strfmt.Registry) error {
 
-	if m.Admins != nil {
-		if err := m.Admins.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("admins")
+	for i := 0; i < len(m.Docs); i++ {
+
+		if m.Docs[i] != nil {
+			if err := m.Docs[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("docs" + "." + strconv.Itoa(i))
+				}
+				return err
 			}
-			return err
 		}
-	}
 
-	return nil
-}
-
-func (m *Body4) contextValidateMembers(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.Members != nil {
-		if err := m.Members.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("members")
-			}
-			return err
-		}
 	}
 
 	return nil

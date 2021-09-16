@@ -62,7 +62,7 @@ func NewSearchAnalyzeParamsWithHTTPClient(client *http.Client) *SearchAnalyzePar
 type SearchAnalyzeParams struct {
 
 	// Body.
-	Body *models.Body
+	Body *models.Body1
 
 	timeout    time.Duration
 	Context    context.Context
@@ -118,13 +118,13 @@ func (o *SearchAnalyzeParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithBody adds the body to the search analyze params
-func (o *SearchAnalyzeParams) WithBody(body *models.Body) *SearchAnalyzeParams {
+func (o *SearchAnalyzeParams) WithBody(body *models.Body1) *SearchAnalyzeParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the search analyze params
-func (o *SearchAnalyzeParams) SetBody(body *models.Body) {
+func (o *SearchAnalyzeParams) SetBody(body *models.Body1) {
 	o.Body = body
 }
 

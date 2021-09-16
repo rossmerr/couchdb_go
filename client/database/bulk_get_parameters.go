@@ -66,7 +66,7 @@ type BulkGetParams struct {
 
 	   List of document objects, with id, and optionally rev and atts_since
 	*/
-	Body *models.Body1
+	Body *models.Body2
 
 	/* Db.
 
@@ -134,13 +134,13 @@ func (o *BulkGetParams) SetHTTPClient(client *http.Client) {
 }
 
 // WithBody adds the body to the bulk get params
-func (o *BulkGetParams) WithBody(body *models.Body1) *BulkGetParams {
+func (o *BulkGetParams) WithBody(body *models.Body2) *BulkGetParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the bulk get params
-func (o *BulkGetParams) SetBody(body *models.Body1) {
+func (o *BulkGetParams) SetBody(body *models.Body2) {
 	o.Body = body
 }
 

@@ -7,9 +7,12 @@ package models
 
 import (
 	"context"
+	"encoding/json"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // Body body
@@ -17,15 +20,70 @@ import (
 // swagger:model body
 type Body struct {
 
-	// Type of analyzer
-	Field string `json:"field,omitempty"`
-
-	// Analyzer token you want to test
-	Text string `json:"text,omitempty"`
+	// action
+	// Enum: [enable_single_node enable_cluster add_node finish_cluster]
+	Action string `json:"action,omitempty"`
 }
 
 // Validate validates this body
 func (m *Body) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateAction(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+var bodyTypeActionPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enable_single_node","enable_cluster","add_node","finish_cluster"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		bodyTypeActionPropEnum = append(bodyTypeActionPropEnum, v)
+	}
+}
+
+const (
+
+	// BodyActionEnableSingleNode captures enum value "enable_single_node"
+	BodyActionEnableSingleNode string = "enable_single_node"
+
+	// BodyActionEnableCluster captures enum value "enable_cluster"
+	BodyActionEnableCluster string = "enable_cluster"
+
+	// BodyActionAddNode captures enum value "add_node"
+	BodyActionAddNode string = "add_node"
+
+	// BodyActionFinishCluster captures enum value "finish_cluster"
+	BodyActionFinishCluster string = "finish_cluster"
+)
+
+// prop value enum
+func (m *Body) validateActionEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, bodyTypeActionPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Body) validateAction(formats strfmt.Registry) error {
+	if swag.IsZero(m.Action) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateActionEnum("action", "body", m.Action); err != nil {
+		return err
+	}
+
 	return nil
 }
 

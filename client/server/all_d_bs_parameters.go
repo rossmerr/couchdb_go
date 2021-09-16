@@ -76,7 +76,7 @@ type AllDBsParams struct {
 
 	   Stop returning databases when the specified key is reached.
 	*/
-	QueryEndKey *string
+	Endkey *string
 
 	/* Limit.
 
@@ -177,15 +177,15 @@ func (o *AllDBsParams) SetEndKey(endKey *string) {
 	o.EndKey = endKey
 }
 
-// WithQueryEndKey adds the endkey to the all d bs params
-func (o *AllDBsParams) WithQueryEndKey(endkey *string) *AllDBsParams {
-	o.SetQueryEndKey(endkey)
+// WithEndkey adds the endkey to the all d bs params
+func (o *AllDBsParams) WithEndkey(endkey *string) *AllDBsParams {
+	o.SetEndkey(endkey)
 	return o
 }
 
-// SetQueryEndKey adds the endkey to the all d bs params
-func (o *AllDBsParams) SetQueryEndKey(endkey *string) {
-	o.QueryEndKey = endkey
+// SetEndkey adds the endkey to the all d bs params
+func (o *AllDBsParams) SetEndkey(endkey *string) {
+	o.Endkey = endkey
 }
 
 // WithLimit adds the limit to the all d bs params
@@ -274,13 +274,13 @@ func (o *AllDBsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regist
 		}
 	}
 
-	if o.QueryEndKey != nil {
+	if o.Endkey != nil {
 
 		// query param endkey
 		var qrEndkey string
 
-		if o.QueryEndKey != nil {
-			qrEndkey = *o.QueryEndKey
+		if o.Endkey != nil {
+			qrEndkey = *o.Endkey
 		}
 		qEndkey := qrEndkey
 		if qEndkey != "" {

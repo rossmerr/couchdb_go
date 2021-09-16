@@ -7,9 +7,7 @@ package models
 
 import (
 	"context"
-	"strconv"
 
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -19,77 +17,20 @@ import (
 // swagger:model body_1
 type Body1 struct {
 
-	// docs
-	Docs []*BasicDoc `json:"docs"`
+	// Type of analyzer
+	Field string `json:"field,omitempty"`
+
+	// Analyzer token you want to test
+	Text string `json:"text,omitempty"`
 }
 
 // Validate validates this body 1
 func (m *Body1) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateDocs(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
 	return nil
 }
 
-func (m *Body1) validateDocs(formats strfmt.Registry) error {
-	if swag.IsZero(m.Docs) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.Docs); i++ {
-		if swag.IsZero(m.Docs[i]) { // not required
-			continue
-		}
-
-		if m.Docs[i] != nil {
-			if err := m.Docs[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("docs" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-// ContextValidate validate this body 1 based on the context it is used
+// ContextValidate validates this body 1 based on context it is used
 func (m *Body1) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.contextValidateDocs(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *Body1) contextValidateDocs(ctx context.Context, formats strfmt.Registry) error {
-
-	for i := 0; i < len(m.Docs); i++ {
-
-		if m.Docs[i] != nil {
-			if err := m.Docs[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("docs" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
 	return nil
 }
 
