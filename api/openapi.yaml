@@ -1,0 +1,5660 @@
+openapi: 3.0.1
+info:
+  description: |
+    *Note*
+    This is not a definitive implementation of the CouchDB API, it's missing a lot of the endpoints for server/database managment and everything for attachments all COPY operations and probably a few other parts.
+
+    It also targets golang, as such the '#/definitions/Document' is intentionally left empty to generate a go `interface`, which you can then cast to a `map[string]interface{}`.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: CouchDB API
+  version: 4.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/RossMerr/CouchDB/4.0.0
+- url: http://virtserver.swaggerhub.com/RossMerr/CouchDB/4.0.0
+tags:
+- description: The CouchDB server interface provides the basic interface to a CouchDB
+    server for obtaining CouchDB information and getting and setting configuration
+    information.
+  name: Server
+- description: "The Database endpoint provides an interface to an entire database\
+    \ with in CouchDB. These are database-level, rather than document-level requests."
+  name: Database
+- description: "Details on how to create, read, update and delete documents within\
+    \ a database."
+  name: Document
+- description: "In CouchDB, design documents provide the main interface for building\
+    \ a CouchDB application. The design document defines the views used to extract\
+    \ information from CouchDB through one or more views. Design documents are created\
+    \ within your CouchDB instance in the same way as you create database documents,\
+    \ but the content and definition of the documents is different. Design Documents\
+    \ are named using an ID defined with the design document URL path, and this URL\
+    \ can then be used to access the database contents."
+  name: Design Documents
+- description: "Partitioned databases allow for data colocation in a cluster, which\
+    \ provides significant performance improvements for queries constrained to a single\
+    \ partition."
+  name: Partition
+paths:
+  /:
+    get:
+      description: |
+        The response is a JSON structure containing information about the server, including a welcome message and the version of the server.
+      operationId: metaInformation
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Server'
+                type: array
+            text/plain:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Server'
+                type: array
+          description: Request completed successfully
+      summary: Accessing the root of a CouchDB instance returns meta information about
+        the instance.
+      tags:
+      - Server
+  /_active_tasks:
+    get:
+      description: |
+        The result is a JSON array of the currently running tasks, with each task being described with a single object. Depending on operation type set of response object fields might be different.
+      operationId: activeTasks
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Task'
+                type: array
+            text/plain:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Task'
+                type: array
+          description: Request completed successfully
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: CouchDB Server Administrator privileges required
+      summary: "List of running tasks, including the task type, name, status and process\
+        \ ID."
+      tags:
+      - Server
+  /_all_dbs:
+    get:
+      operationId: allDBs
+      parameters:
+      - description: Return the databases in descending order by key. Default is false.
+        in: query
+        name: descending
+        schema:
+          type: boolean
+      - description: Stop returning databases when the specified key is reached.
+        in: query
+        name: endkey
+        schema:
+          type: string
+      - description: Alias for endkey param
+        in: query
+        name: end_key
+        schema:
+          type: string
+      - description: Limit the number of the returned databases to the specified number.
+        in: query
+        name: limit
+        schema:
+          type: integer
+      - description: Skip this number of databases before starting to return the results.
+          Default is 0.
+        in: query
+        name: skip
+        schema:
+          type: integer
+      - description: Return databases starting with the specified key.
+        in: query
+        name: startkey
+        schema:
+          type: string
+      - description: Alias for startkey.
+        in: query
+        name: start_key
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  type: string
+                type: array
+            text/plain:
+              schema:
+                items:
+                  type: string
+                type: array
+          description: Request completed successfully
+      summary: Returns a list of all the databases in the CouchDB instance.
+      tags:
+      - Server
+  /_dbs_info:
+    post:
+      description: |
+        This enables you to request information about multiple databases in a single request, in place of multiple GET /{db} requests.
+      operationId: DBsInfo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Keys'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/inline_response_200'
+                type: array
+          description: Request completed successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Missing keys or exceeded keys in request
+      summary: Returns information of a list of the specified databases in the CouchDB
+        instance.
+      tags:
+      - Server
+      x-codegen-request-body-name: body
+  /_cluster_setup:
+    get:
+      operationId: clusterSetupGet
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+          description: Request completed successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Failed
+      summary: "Returns the status of the node or cluster, per the cluster setup wizard."
+      tags:
+      - Server
+    post:
+      operationId: clusterSetupPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body'
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/body'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OK'
+          description: Request completed successfully
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OK'
+          description: Request completed successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Failed
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: JSON specification was invalid
+      summary: "Configure a node as a single (standalone) node, as part of a cluster,\
+        \ or finalise a cluster."
+      tags:
+      - Server
+      x-codegen-request-body-name: body
+  /_membership:
+    get:
+      description: |
+        The field all_nodes displays all nodes this node knows about, including the ones that are part of the cluster. The endpoint is useful when setting up a cluster, see Node Management
+      operationId: membership
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+          description: Request completed successfully
+      summary: Displays the nodes that are part of the cluster as cluster_nodes.
+      tags:
+      - Server
+  /_replicate:
+    post:
+      operationId: replication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Replicate'
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/Replicate'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Replication'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Replication'
+          description: Replication request successfully completed
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Replication'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Replication'
+          description: Continuous replication request has been accepted
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid JSON data
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: CouchDB Server Administrator privileges required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Either the source or target DB is not found or attempt to cancel
+            unknown replication task
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: JSON specification was invalid
+      summary: "Request, configure, or stop, a replication operation."
+      tags:
+      - Server
+      x-codegen-request-body-name: body
+  /_search_analyze:
+    post:
+      description: |
+        *Warning*
+        Search endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.
+      operationId: searchAnalyze
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_1'
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/body_1'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+          description: Request completed successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request body is wrong (malformed or missing one of the mandatory
+            fields)
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: A server error (or other kind of error) occurred
+      summary: Tests the results of Lucene analyzer tokenization on sample text.
+      tags:
+      - Server
+      x-codegen-request-body-name: body
+  /_up:
+    get:
+      description: |
+        If maintenance_mode is true or nolb, the endpoint will return a 404 response.
+      operationId: up
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_4'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_4'
+          description: Request completed successfully
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: The server is unavailable for requests at this time.
+      summary: "Confirms that the server is up, running, and ready to respond to requests."
+      tags:
+      - Server
+  /{db}:
+    delete:
+      description: "*Note*\nTo avoid deleting a database, CouchDB will respond with\
+        \ the HTTP status code 400 when the request \nURL includes a ?rev= parameter.\
+        \ This suggests that one wants to delete a document but forgot to add \nthe\
+        \ document id to the URL.\n"
+      operationId: delete
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OK'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/OK'
+          description: Database removed successfully (quorum is met and database is
+            deleted by at least one node)
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OK'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/OK'
+          description: "Accepted (deleted by at least one of the nodes, quorum is\
+            \ not met yet)"
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid database name or forgotten document id by accident
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: CouchDB Server Administrator privileges required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Database doesn’t exist or invalid database name
+      summary: "Deletes the specified database, and all the documents and attachments\
+        \ contained within it."
+      tags:
+      - Database
+    get:
+      description: |
+        By passing in the appropriate options, you can search for
+        available inventory in the system
+      operationId: get
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Database'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Database'
+          description: Request completed successfully
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Requested database not found
+      summary: Gets information about the specified database.
+      tags:
+      - Database
+    head:
+      description: |
+        Since the response body is empty, using the HEAD method is a lightweight way to check if the database exists already or not.
+      operationId: exists
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      responses:
+        "200":
+          content: {}
+          description: Database exists
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Requested database not found
+      summary: Returns the HTTP Headers containing a minimal amount of information
+        about the specified database.
+      tags:
+      - Database
+    post:
+      description: "If the JSON structure includes the _id field, then the document\
+        \ will be created with the \nspecified document ID.\n\nIf the _id field is\
+        \ not specified, a new unique ID will be generated, following whatever \n\
+        UUID algorithm is configured for that server.\n"
+      operationId: post
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: |
+          Stores document in batch mode Possible values: ok. Optional
+        in: query
+        name: batch
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Document'
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/Document'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+          description: Document created and stored on disk
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+          description: "Document data accepted, but not yet stored on disk"
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid database name
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Write privileges required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Database doesn’t exist
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: A Conflicting Document with same ID already exists
+      summary: "Creates a new document in the specified database, using the supplied\
+        \ JSON document structure."
+      tags:
+      - Document
+      x-codegen-request-body-name: body
+    put:
+      description: "The database name {db} must be composed by following next rules:\n\
+        Name must begin with a lowercase letter (a-z)\n* Lowercase characters (a-z)\n\
+        * Digits (0-9)\n* Any of the characters _, $, (, ), +, -, and /.\n\nIf you’\
+        re familiar with Regular Expressions, the rules above could be written as\
+        \ \n"
+      operationId: put
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: "Shards, aka the number of range partitions. Default is 8, unless\
+          \ overridden in the cluster config."
+        in: query
+        name: q
+        schema:
+          format: int32
+          type: integer
+      - description: "Replicas. The number of copies of the database in the cluster.\
+          \ The default is 3, unless overridden in the cluster config ."
+        in: query
+        name: "n"
+        schema:
+          format: int32
+          type: integer
+      - description: Whether to create a partitioned database. Default is false.
+        in: query
+        name: partitioned
+        schema:
+          type: boolean
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OK'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/OK'
+          description: Database created successfully (quorum is met)
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OK'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/OK'
+          description: Accepted (at least by one node)
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid database name
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: CouchDB Server Administrator privileges required
+        "412":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Database already exists
+      summary: Creates a new database.
+      tags:
+      - Database
+  /{db}/{docid}:
+    delete:
+      description: "Documents with this field will not be returned within requests\
+        \ anymore, but stay in the database. \nYou must supply the current (latest)\
+        \ revision, either by using the rev parameter or by using the\nIf-Match header\
+        \ to specify the revision.\n\n*Notes*\nCouchDB doesn’t completely delete the\
+        \ specified document. Instead, it leaves a tombstone with very \nbasic information\
+        \ about the document. The tombstone is required so that the delete action\
+        \ can be \nreplicated across databases.\n"
+      operationId: docDelete
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: DDocument ID
+        in: path
+        name: docid
+        required: true
+        schema:
+          type: string
+      - description: Document’s revision. Alternative to rev query parameter
+        in: header
+        name: If-Match
+        schema:
+          type: string
+      - description: Actual document’s revision
+        in: query
+        name: rev
+        schema:
+          type: string
+      - description: |
+          Stores document in batch mode Possible values: ok. Optional
+        in: query
+        name: batch
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+          description: Document successfully removed
+          headers:
+            ETag:
+              description: Double quoted document’s revision token
+              schema:
+                type: string
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+          description: "Request was accepted, but changes are not yet stored on disk"
+          headers:
+            ETag:
+              description: Double quoted document’s revision token
+              schema:
+                type: string
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request body or parameters
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Write privileges required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Specified database or document ID doesn’t exists
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Specified revision is not the latest for target document
+      summary: Marks the specified document as deleted by adding a field _deleted
+        with the value true.
+      tags:
+      - Document
+    get:
+      operationId: docGet
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: DDocument ID
+        in: path
+        name: docid
+        required: true
+        schema:
+          type: string
+      - description: Double quoted document’s revision token
+        in: header
+        name: If-None-Match
+        required: true
+        schema:
+          type: string
+      - description: Includes attachments bodies in response. Default is false
+        in: query
+        name: attachments
+        schema:
+          type: boolean
+      - description: Includes encoding information in attachment stubs if the particular
+          attachment is compressed. Default is false.
+        in: query
+        name: att_encoding_info
+        schema:
+          type: boolean
+      - description: Includes attachments only since specified revisions. Doesn’t
+          includes attachments for specified revisions. Optional
+        explode: true
+        in: query
+        name: atts_since
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Includes information about conflicts in document. Default is
+          false
+        in: query
+        name: conflicts
+        schema:
+          type: boolean
+      - description: Includes information about deleted conflicted revisions. Default
+          is false
+        in: query
+        name: deleted_conflicts
+        schema:
+          type: boolean
+      - description: "Forces retrieving latest “leaf” revision, no matter what rev\
+          \ was requested. Default is false"
+        in: query
+        name: latest
+        schema:
+          type: boolean
+      - description: Includes last update sequence for the document. Default is false
+        in: query
+        name: local_seq
+        schema:
+          type: boolean
+      - description: "Acts same as specifying all conflicts, deleted_conflicts and\
+          \ revs_info query parameters. Default is false"
+        in: query
+        name: meta
+        schema:
+          type: boolean
+      - description: "Retrieves documents of specified leaf revisions. Additionally,\
+          \ it accepts value as all to return all leaf revisions. Optional"
+        explode: true
+        in: query
+        name: open_revs
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Retrieves document of specified revision. Optional
+        in: query
+        name: rev
+        schema:
+          type: string
+      - description: Includes list of all known document revisions. Default is false
+        in: query
+        name: revs
+        schema:
+          type: boolean
+      - description: Includes detailed information for all known document revisions.
+          Default is false
+        in: query
+        name: revs_info
+        schema:
+          type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+            multipart/related:
+              schema:
+                $ref: '#/components/schemas/Document'
+            multipart/mixed:
+              schema:
+                $ref: '#/components/schemas/Document'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Document'
+          description: Request completed successfully
+          headers:
+            Transfer-Encoding:
+              description: chunked. Available if requested with query parameter open_revs
+              schema:
+                type: string
+            ETag:
+              description: Double quoted document’s revision token
+              schema:
+                type: string
+        "304":
+          content: {}
+          description: Document wasn’t modified since specified revision
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            multipart/related:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            multipart/mixed:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: The format of the request or revision was invalid
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            multipart/related:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            multipart/mixed:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Read privilege required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            multipart/related:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            multipart/mixed:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Document not found
+      summary: "Returns document by the specified docid from the specified db. Unless\
+        \ you request a specific revision, the latest revision of the document will\
+        \ always be returned."
+      tags:
+      - Document
+    head:
+      description: "The method supports the same query arguments as the GET /{db}/{docid}\
+        \ method, \nbut only the header information (including document size, and\
+        \ the revision as an ETag), is returned.\n\nThe ETag header shows the current\
+        \ revision for the requested document, and the Content-Length \nspecifies\
+        \ the length of the data, if the document were requested in full.\n\nAdding\
+        \ any of the query arguments (see GET /{db}/{docid}), then the resulting HTTP\
+        \ Headers \nwill correspond to what would be returned.\n"
+      operationId: docInfo
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: DDocument ID
+        in: path
+        name: docid
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content: {}
+          description: Document exists
+          headers:
+            ETag:
+              description: Double quoted document’s revision token
+              schema:
+                type: string
+            Content-Length:
+              description: Document size
+              schema:
+                type: integer
+        "304":
+          content: {}
+          description: Document wasn’t modified since specified revision
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Read privilege required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Document not found
+      summary: Returns the HTTP Headers containing a minimal amount of information
+        about the specified document.
+      tags:
+      - Document
+    put:
+      description: "When updating an existing document, the current document revision\
+        \ must be included in the document \n(i.e. the request body), as the rev query\
+        \ parameter, or in the If-Match request header.\n"
+      operationId: docPut
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: DDocument ID
+        in: path
+        name: docid
+        required: true
+        schema:
+          type: string
+      - description: Document’s revision. Alternative to rev query parameter or document
+          key. Optional
+        in: header
+        name: If-Match
+        schema:
+          type: string
+      - description: Document’s revision if updating an existing document. Alternative
+          to If-Match header or document key. Optional
+        in: query
+        name: rev
+        schema:
+          type: string
+      - description: |
+          Stores document in batch mode. Possible values: ok. Optional
+        in: query
+        name: batch
+        schema:
+          type: string
+      - description: "Prevents insertion of a conflicting document. Possible values:\
+          \ true (default) and false. If false, \na well-formed _rev must be included\
+          \ in the document. new_edits=false is used by the replicator \nto insert\
+          \ documents into the target database even if that leads to the creation\
+          \ of conflicts. Optional\n"
+        in: query
+        name: new_edits
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Document'
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/Document'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+          description: Document created and stored on disk
+          headers:
+            ETag:
+              description: Double quoted document’s revision token
+              schema:
+                type: string
+            Location:
+              description: Document URI
+              schema:
+                format: uri
+                type: string
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+          description: "Document data accepted, but not yet stored on disk"
+          headers:
+            Transfer-Encoding:
+              description: chunked. Available if requested with query parameter open_revs
+              schema:
+                type: string
+            ETag:
+              description: Double quoted document’s revision token
+              schema:
+                type: string
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request body or parameters
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Write privileges required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Specified database or document ID doesn’t exists
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Document with the specified ID already exists or specified
+            revision is not latest for target document
+      summary: "The PUT method creates a new named document, or creates a new revision\
+        \ of the existing document. Unlike the POST /{db}, you must specify the document\
+        \ ID in the request URL."
+      tags:
+      - Document
+      x-codegen-request-body-name: body
+  /{db}/_all_docs:
+    get:
+      description: "returning all of the documents in the database. With the exception\
+        \ of the URL parameters \n(described below), this endpoint works identically\
+        \ to any other view. Refer to the view endpoint \ndocumentation for a complete\
+        \ description of the available query parameters and the format of \nthe returned\
+        \ data.\n"
+      operationId: docGetAll
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Include conflicts information in response. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: conflicts
+        schema:
+          type: boolean
+      - description: Return the documents in descending order by key. Default is false.
+        in: query
+        name: descending
+        schema:
+          type: boolean
+      - description: Stop returning records when the specified key is reached.
+        in: query
+        name: endkey
+        schema:
+          type: string
+      - description: Alias for endkey param
+        in: query
+        name: end_key
+        schema:
+          type: string
+      - description: Stop returning records when the specified document ID is reached.
+          Ignored if endkey is not set.
+        in: query
+        name: endkey_docid
+        schema:
+          type: string
+      - description: Alias for endkey_docid.
+        in: query
+        name: end_key_doc_id
+        schema:
+          type: string
+      - description: Group the results using the reduce function to a group or single
+          row. Implies reduce is true and the maximum group_level. Default is false.
+        in: query
+        name: group
+        schema:
+          type: boolean
+      - description: Specify the group level to be used. Implies group is true.
+        in: query
+        name: group_level
+        schema:
+          type: integer
+      - description: Include the associated document with each row. Default is false.
+        in: query
+        name: include_docs
+        schema:
+          type: boolean
+      - description: Include the Base64-encoded content of attachments in the documents
+          that are included if include_docs is true. Ignored if include_docs isn’t
+          true. Default is false.
+        in: query
+        name: attachments
+        schema:
+          type: boolean
+      - description: Include encoding information in attachment stubs if include_docs
+          is true and the particular attachment is compressed. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: att_encoding_info
+        schema:
+          type: boolean
+      - description: Specifies whether the specified end key should be included in
+          the result. Default is true.
+        in: query
+        name: inclusive_end
+        schema:
+          type: boolean
+      - description: Includes detailed information for all known document revisions.
+          Default is false
+        in: query
+        name: revs_info
+        schema:
+          type: boolean
+      - description: eturn only documents that match the specified key.
+        in: query
+        name: key
+        schema:
+          type: string
+      - description: Return only documents where the key matches one of the keys specified
+          in the array.
+        explode: true
+        in: query
+        name: keys
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Limit the number of the returned documents to the specified number.
+        in: query
+        name: limit
+        schema:
+          type: integer
+      - description: Use the reduction function. Default is true when a reduce function
+          is defined.
+        in: query
+        name: reduce
+        schema:
+          type: boolean
+      - description: Skip this number of records before starting to return the results.
+          Default is 0.
+        in: query
+        name: skip
+        schema:
+          type: integer
+      - description: Sort returned rows (see Sorting Returned Rows). Setting this
+          to false offers a performance boost. The total_rows and offset fields are
+          not available when this is set to false. Default is true.
+        in: query
+        name: sorted
+        schema:
+          type: boolean
+      - description: Whether or not the view results should be returned from a stable
+          set of shards. Default is false.
+        in: query
+        name: stable
+        schema:
+          type: boolean
+      - description: |
+          Allow the results from a stale view to be used. Supported values: ok and update_after. ok is equivalent to stable=true&update=false. update_after is equivalent to stable=true&update=lazy. The default behavior is equivalent to stable=false&update=true. Note that this parameter is deprecated. Use stable and update instead. See Views Generation for more details.
+        in: query
+        name: stale
+        schema:
+          type: string
+      - description: Return records starting with the specified key.
+        in: query
+        name: startkey
+        schema:
+          type: string
+      - description: Alias for startkey.
+        in: query
+        name: start_key
+        schema:
+          type: string
+      - description: Return records starting with the specified document ID. Ignored
+          if startkey is not set.
+        in: query
+        name: startkey_docid
+        schema:
+          type: string
+      - description: Alias for startkey_docid param
+        in: query
+        name: start_key_doc_id
+        schema:
+          type: string
+      - description: |
+          Whether or not the view in question should be updated prior to responding to the user. Supported values: true, false, lazy. Default is true.
+        in: query
+        name: update
+        schema:
+          type: string
+      - description: Whether to include in the response an update_seq value indicating
+          the sequence id of the database the view reflects. Default is false.
+        in: query
+        name: update_seq
+        schema:
+          type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+          description: Request completed successfully
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Requested database not found
+      summary: Executes the built-in _all_docs view
+      tags:
+      - Database
+    post:
+      description: "POST _all_docs functionality supports identical parameters and\
+        \ behavior as specified in the \nGET /{db}/_all_docs API but allows for the\
+        \ query string parameters to be supplied as keys in a \nJSON object in the\
+        \ body of the POST request.\n"
+      operationId: docPostAll
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Include conflicts information in response. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: conflicts
+        schema:
+          type: boolean
+      - description: Return the documents in descending order by key. Default is false.
+        in: query
+        name: descending
+        schema:
+          type: boolean
+      - description: Stop returning records when the specified key is reached.
+        in: query
+        name: endkey
+        schema:
+          type: string
+      - description: Alias for endkey param
+        in: query
+        name: end_key
+        schema:
+          type: string
+      - description: Stop returning records when the specified document ID is reached.
+          Ignored if endkey is not set.
+        in: query
+        name: endkey_docid
+        schema:
+          type: string
+      - description: Alias for endkey_docid.
+        in: query
+        name: end_key_doc_id
+        schema:
+          type: string
+      - description: Group the results using the reduce function to a group or single
+          row. Implies reduce is true and the maximum group_level. Default is false.
+        in: query
+        name: group
+        schema:
+          type: boolean
+      - description: Specify the group level to be used. Implies group is true.
+        in: query
+        name: group_level
+        schema:
+          type: integer
+      - description: Include the associated document with each row. Default is false.
+        in: query
+        name: include_docs
+        schema:
+          type: boolean
+      - description: Include the Base64-encoded content of attachments in the documents
+          that are included if include_docs is true. Ignored if include_docs isn’t
+          true. Default is false.
+        in: query
+        name: attachments
+        schema:
+          type: boolean
+      - description: Include encoding information in attachment stubs if include_docs
+          is true and the particular attachment is compressed. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: att_encoding_info
+        schema:
+          type: boolean
+      - description: Specifies whether the specified end key should be included in
+          the result. Default is true.
+        in: query
+        name: inclusive_end
+        schema:
+          type: boolean
+      - description: Includes detailed information for all known document revisions.
+          Default is false
+        in: query
+        name: revs_info
+        schema:
+          type: boolean
+      - description: eturn only documents that match the specified key.
+        in: query
+        name: key
+        schema:
+          type: string
+      - description: Return only documents where the key matches one of the keys specified
+          in the array.
+        explode: true
+        in: query
+        name: keys
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Limit the number of the returned documents to the specified number.
+        in: query
+        name: limit
+        schema:
+          type: integer
+      - description: Use the reduction function. Default is true when a reduce function
+          is defined.
+        in: query
+        name: reduce
+        schema:
+          type: boolean
+      - description: Skip this number of records before starting to return the results.
+          Default is 0.
+        in: query
+        name: skip
+        schema:
+          type: integer
+      - description: Sort returned rows (see Sorting Returned Rows). Setting this
+          to false offers a performance boost. The total_rows and offset fields are
+          not available when this is set to false. Default is true.
+        in: query
+        name: sorted
+        schema:
+          type: boolean
+      - description: Whether or not the view results should be returned from a stable
+          set of shards. Default is false.
+        in: query
+        name: stable
+        schema:
+          type: boolean
+      - description: |
+          Allow the results from a stale view to be used. Supported values: ok and update_after. ok is equivalent to stable=true&update=false. update_after is equivalent to stable=true&update=lazy. The default behavior is equivalent to stable=false&update=true. Note that this parameter is deprecated. Use stable and update instead. See Views Generation for more details.
+        in: query
+        name: stale
+        schema:
+          type: string
+      - description: Return records starting with the specified key.
+        in: query
+        name: startkey
+        schema:
+          type: string
+      - description: Alias for startkey.
+        in: query
+        name: start_key
+        schema:
+          type: string
+      - description: Return records starting with the specified document ID. Ignored
+          if startkey is not set.
+        in: query
+        name: startkey_docid
+        schema:
+          type: string
+      - description: Alias for startkey_docid param
+        in: query
+        name: start_key_doc_id
+        schema:
+          type: string
+      - description: |
+          Whether or not the view in question should be updated prior to responding to the user. Supported values: true, false, lazy. Default is true.
+        in: query
+        name: update
+        schema:
+          type: string
+      - description: Whether to include in the response an update_seq value indicating
+          the sequence id of the database the view reflects. Default is false.
+        in: query
+        name: update_seq
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Keys'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+          description: Request completed successfully
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Requested database not found
+      summary: Executes the built-in _all_docs view
+      tags:
+      - Database
+      x-codegen-request-body-name: body
+  /{db}/_bulk_get:
+    post:
+      description: |
+        It is well suited for fetching a specific revision of documents, as replicators do for example, or for getting revision history.
+      operationId: bulkGet
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Give the revisions history
+        in: query
+        name: revs
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_2'
+          multipart/related:
+            schema:
+              $ref: '#/components/schemas/body_2'
+          multipart/mixed:
+            schema:
+              $ref: '#/components/schemas/body_2'
+        description: "List of document objects, with id, and optionally rev and atts_since"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Results'
+          description: Request completed successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: The request provided invalid JSON data or invalid query parameter
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Read permission required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Requested database not found
+        "415":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad Content-Type value
+      summary: This method can be called to query several documents in bulk.
+      tags:
+      - Database
+      x-codegen-request-body-name: body
+  /{db}/_bulk_docs:
+    post:
+      description: |
+        The basic operation is similar to creating or updating a single document, except that you batch the document structure and information.
+
+        When creating new documents the document ID (_id) is optional.
+
+        For updating existing documents, you must provide the document ID, revision information (_rev), and new document values.
+
+        In case of batch deleting documents all fields as document ID, revision information and deletion status (_deleted) are required.
+      operationId: bulkDocs
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_3'
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/body_3'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/BulkResponse'
+                type: array
+            text/plain:
+              schema:
+                items:
+                  $ref: '#/components/schemas/BulkResponse'
+                type: array
+          description: Document(s) have been created or updated
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: The request provided invalid JSON data
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Requested database not found
+      summary: The bulk document API allows you to create and update multiple documents
+        at the same time within a single request.
+      tags:
+      - Database
+      x-codegen-request-body-name: body
+  /{db}/_design_docs:
+    get:
+      description: |
+        The information is returned as a JSON structure containing meta information about the return structure, including a list of all design documents and basic contents, consisting the ID, revision and key. The key is the design document’s _id.
+      operationId: designDocAllGet
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Include conflicts information in response. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: conflicts
+        schema:
+          type: boolean
+      - description: Return the documents in descending order by key. Default is false.
+        in: query
+        name: descending
+        schema:
+          type: boolean
+      - description: Stop returning records when the specified key is reached. Optional.
+        in: query
+        name: endkey
+        schema:
+          type: string
+      - description: Alias for endkey param.
+        in: query
+        name: end_key
+        schema:
+          type: string
+      - description: Stop returning records when the specified design document ID
+          is reached. Optional.
+        in: query
+        name: endkey_docid
+        schema:
+          type: string
+      - description: Alias for endkey_docid param.
+        in: query
+        name: end_key_doc_id
+        schema:
+          type: string
+      - description: Include the full content of the design documents in the return.
+          Default is false.
+        in: query
+        name: include_docs
+        schema:
+          type: boolean
+      - description: Specifies whether the specified end key should be included in
+          the result. Default is true.
+        in: query
+        name: inclusive_end
+        schema:
+          type: boolean
+      - description: Return only design documents that match the specified key. Optional.
+        in: query
+        name: key
+        schema:
+          type: string
+      - description: Return only design documents that match the specified keys. Optional.
+        in: query
+        name: keys
+        schema:
+          type: string
+      - description: Limit the number of the returned design documents to the specified
+          number. Optional.
+        in: query
+        name: limit
+        schema:
+          type: integer
+      - description: Skip this number of records before starting to return the results.
+          Default is 0.
+        in: query
+        name: skip
+        schema:
+          type: integer
+      - description: Return records starting with the specified key. Optional.
+        in: query
+        name: startkey
+        schema:
+          type: string
+      - description: Alias for startkey param.
+        in: query
+        name: start_key
+        schema:
+          type: string
+      - description: Return records starting with the specified design document ID.
+          Optional.
+        in: query
+        name: startkey_docid
+        schema:
+          type: string
+      - description: Alias for startkey_docid param
+        in: query
+        name: start_key_doc_id
+        schema:
+          type: string
+      - description: Whether to include in the response an update_seq value indicating
+          the sequence id of the database the view reflects. Default is false.
+        in: query
+        name: update_seq
+        schema:
+          type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+            text/plan:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+          description: Request completed successfully
+          headers:
+            ETag:
+              description: Response signature
+              schema:
+                type: string
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plan:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Requested database not found
+      summary: Returns a JSON structure of all of the design documents in a given
+        database.
+      tags:
+      - Database
+    post:
+      description: |
+        API but allows for the query string parameters to be supplied as keys in a JSON object in the body of the POST request.
+      operationId: designDocAllPost
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Include conflicts information in response. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: conflicts
+        schema:
+          type: boolean
+      - description: Return the documents in descending order by key. Default is false.
+        in: query
+        name: descending
+        schema:
+          type: boolean
+      - description: Stop returning records when the specified key is reached. Optional.
+        in: query
+        name: endkey
+        schema:
+          type: string
+      - description: Alias for endkey param.
+        in: query
+        name: end_key
+        schema:
+          type: string
+      - description: Stop returning records when the specified design document ID
+          is reached. Optional.
+        in: query
+        name: endkey_docid
+        schema:
+          type: string
+      - description: Alias for endkey_docid param.
+        in: query
+        name: end_key_doc_id
+        schema:
+          type: string
+      - description: Include the full content of the design documents in the return.
+          Default is false.
+        in: query
+        name: include_docs
+        schema:
+          type: boolean
+      - description: Specifies whether the specified end key should be included in
+          the result. Default is true.
+        in: query
+        name: inclusive_end
+        schema:
+          type: boolean
+      - description: Return only design documents that match the specified key. Optional.
+        in: query
+        name: key
+        schema:
+          type: string
+      - description: Return only design documents that match the specified keys. Optional.
+        in: query
+        name: keys
+        schema:
+          type: string
+      - description: Limit the number of the returned design documents to the specified
+          number. Optional.
+        in: query
+        name: limit
+        schema:
+          type: integer
+      - description: Skip this number of records before starting to return the results.
+          Default is 0.
+        in: query
+        name: skip
+        schema:
+          type: integer
+      - description: Return records starting with the specified key. Optional.
+        in: query
+        name: startkey
+        schema:
+          type: string
+      - description: Alias for startkey param.
+        in: query
+        name: start_key
+        schema:
+          type: string
+      - description: Return records starting with the specified design document ID.
+          Optional.
+        in: query
+        name: startkey_docid
+        schema:
+          type: string
+      - description: Alias for startkey_docid param
+        in: query
+        name: start_key_doc_id
+        schema:
+          type: string
+      - description: Whether to include in the response an update_seq value indicating
+          the sequence id of the database the view reflects. Default is false.
+        in: query
+        name: update_seq
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_4'
+          text/plan:
+            schema:
+              $ref: '#/components/schemas/body_4'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+            text/plan:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+          description: Request completed successfully
+          headers:
+            ETag:
+              description: Response signature
+              schema:
+                type: string
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plan:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Requested database not found
+      summary: "POST _design_docs functionality supports identical parameters and\
+        \ behavior as specified in the GET /{db}/_design_docs"
+      tags:
+      - Database
+      x-codegen-request-body-name: body
+  /{db}/_security:
+    get:
+      description: |
+        The security object consists of two compulsory elements, admins and members, which are used to specify the list of users and/or roles that have admin and members rights to the database respectively:
+
+          - members: they can read all types of documents from the DB, and they can write (and edit) documents to the DB except for design documents.
+          - admins: they have all the privileges of members plus the privileges: write (and edit) design documents, add/remove database admins and members and set the database revisions limit. They can not create a database nor delete a database.
+
+        Both members and admins objects contain two array-typed fields:
+
+          - names: List of CouchDB user names
+          - roles: List of users roles
+
+        Any additional fields in the security object are optional. The entire security object is made available to validation and other internal functions so that the database can control and limit functionality.
+
+        If both the names and roles fields of either the admins or members properties are empty arrays, or are not existent, it means the database has no admins or members.
+
+        Having no admins, only server admins (with the reserved _admin role) are able to update design document and make other admin level changes.
+
+        Having no members, any user can write regular documents (any non-design document) and read documents from the database.
+
+        If there are any member names or roles defined for a database, then only authenticated users having a matching name or role are allowed to read documents from the database (or do a GET /{db} call).
+
+        *Note*
+        If the security object for a database has never been set, then the value returned will be empty.
+
+        Also note, that security objects are not regular versioned documents (that is, they are not under MVCC rules). This is a design choice to speed up authorization checks (avoids traversing a database’s documents B-Tree).
+      operationId: dbSecurityGet
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_5'
+            text/plan:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_5'
+          description: Request completed successfully
+      summary: Returns the current security object from the specified database.
+      tags:
+      - Database
+    put:
+      operationId: sbSecurityPut
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_5'
+          text/plan:
+            schema:
+              $ref: '#/components/schemas/body_5'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OK'
+            text/plan:
+              schema:
+                $ref: '#/components/schemas/OK'
+          description: Request completed successfully
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plan:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: CouchDB Server Administrator privileges required
+      summary: Sets the security object for the given database.
+      tags:
+      - Database
+      x-codegen-request-body-name: body
+  /{db}/_index:
+    get:
+      description: |
+        When you make a GET request to /db/_index, you get a list of all indexes in the database. In addition to the information available through this API, indexes are also stored in design documents <index-functions>. Design documents are regular documents that have an ID starting with _design/. Design documents can be retrieved and modified in the same way as any other document, although this is not necessary when using Mango.
+      operationId: dbIndexGet
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Indexes'
+            text/plan:
+              schema:
+                $ref: '#/components/schemas/Indexes'
+          description: Success
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plan:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plan:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Read permission required
+      summary: Returns the current indexes object from the specified database.
+      tags:
+      - Index
+    post:
+      operationId: sbIndexPost
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Index'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndexResponse'
+          description: Index created successfully or already exists
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Admin permission required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Requested database not found
+      summary: Sets the index for the given database.
+      tags:
+      - Index
+      x-codegen-request-body-name: body
+  /{db}/_find:
+    post:
+      description: |
+        Find documents using a declarative JSON querying syntax. Queries will use custom indexes, specified using the _index endpoint, if available. Otherwise, they use the built-in _all_docs index, which can be arbitrarily slow.
+      operationId: dbFindGet
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Query'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_6'
+          description: Request completed successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Read permission required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Requested database not found
+      summary: Finds the document.
+      tags:
+      - Index
+      x-codegen-request-body-name: body
+  /{db}/_partition/{partition}:
+    get:
+      operationId: partitionInfo
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Partition name
+        in: path
+        name: partition
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Partition'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Partition'
+          description: Request completed successfully
+      summary: This endpoint returns information describing the provided partition.
+        It includes document and deleted document counts along with external and active
+        data sizes.
+      tags:
+      - Partition
+  /{db}/_partition/{partition}/_all_docs:
+    get:
+      description: |
+        This endpoint is a convenience endpoint for automatically setting bounds on the provided partition range. Similar results can be had by using the global /db/_all_docs endpoint with appropriately configured values for start_key and end_key.
+
+        Refer to the view endpoint documentation for a complete description of the available query parameters and the format of the returned data.
+      operationId: partitionDocGetAll
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Partition name
+        in: path
+        name: partition
+        required: true
+        schema:
+          type: string
+      - description: Include conflicts information in response. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: conflicts
+        schema:
+          type: boolean
+      - description: Return the documents in descending order by key. Default is false.
+        in: query
+        name: descending
+        schema:
+          type: boolean
+      - description: Group the results using the reduce function to a group or single
+          row. Implies reduce is true and the maximum group_level. Default is false.
+        in: query
+        name: group
+        schema:
+          type: boolean
+      - description: Specify the group level to be used. Implies group is true.
+        in: query
+        name: group_level
+        schema:
+          type: integer
+      - description: Include the associated document with each row. Default is false.
+        in: query
+        name: include_docs
+        schema:
+          type: boolean
+      - description: Include the Base64-encoded content of attachments in the documents
+          that are included if include_docs is true. Ignored if include_docs isn’t
+          true. Default is false.
+        in: query
+        name: attachments
+        schema:
+          type: boolean
+      - description: Include encoding information in attachment stubs if include_docs
+          is true and the particular attachment is compressed. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: att_encoding_info
+        schema:
+          type: boolean
+      - description: Specifies whether the specified end key should be included in
+          the result. Default is true.
+        in: query
+        name: inclusive_end
+        schema:
+          type: boolean
+      - description: Limit the number of the returned documents to the specified number.
+        in: query
+        name: limit
+        schema:
+          type: integer
+      - description: Use the reduction function. Default is true when a reduce function
+          is defined.
+        in: query
+        name: reduce
+        schema:
+          type: boolean
+      - description: Skip this number of records before starting to return the results.
+          Default is 0.
+        in: query
+        name: skip
+        schema:
+          type: integer
+      - description: Sort returned rows (see Sorting Returned Rows). Setting this
+          to false offers a performance boost. The total_rows and offset fields are
+          not available when this is set to false. Default is true.
+        in: query
+        name: sorted
+        schema:
+          type: boolean
+      - description: Whether or not the view results should be returned from a stable
+          set of shards. Default is false.
+        in: query
+        name: stable
+        schema:
+          type: boolean
+      - description: |
+          Allow the results from a stale view to be used. Supported values: ok and update_after. ok is equivalent to stable=true&update=false. update_after is equivalent to stable=true&update=lazy. The default behavior is equivalent to stable=false&update=true. Note that this parameter is deprecated. Use stable and update instead. See Views Generation for more details.
+        in: query
+        name: stale
+        schema:
+          type: string
+      - description: Return records starting with the specified document ID. Ignored
+          if startkey is not set.
+        in: query
+        name: startkey_docid
+        schema:
+          type: string
+      - description: Alias for startkey_docid param
+        in: query
+        name: start_key_doc_id
+        schema:
+          type: string
+      - description: |
+          Whether or not the view in question should be updated prior to responding to the user. Supported values: true, false, lazy. Default is true.
+        in: query
+        name: update
+        schema:
+          type: string
+      - description: Whether to include in the response an update_seq value indicating
+          the sequence id of the database the view reflects. Default is false.
+        in: query
+        name: update_seq
+        schema:
+          type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+          description: Request completed successfully
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Requested database not found
+      summary: Executes the built-in _all_docs view
+      tags:
+      - Partition
+  /{db}/_partition/{partition}/_design/{ddoc}/_view/{view}:
+    get:
+      operationId: partitionDesignDocView
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Partition name
+        in: path
+        name: partition
+        required: true
+        schema:
+          type: string
+      - description: Design document id
+        in: path
+        name: ddoc
+        required: true
+        schema:
+          type: string
+      - description: View function name
+        in: path
+        name: view
+        required: true
+        schema:
+          type: string
+      - description: Include conflicts information in response. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: conflicts
+        schema:
+          type: boolean
+      - description: Return the documents in descending order by key. Default is false.
+        in: query
+        name: descending
+        schema:
+          type: boolean
+      - description: Stop returning records when the specified key is reached.
+        in: query
+        name: endkey
+        schema:
+          type: string
+      - description: Alias for endkey param
+        in: query
+        name: end_key
+        schema:
+          type: string
+      - description: Stop returning records when the specified document ID is reached.
+          Ignored if endkey is not set.
+        in: query
+        name: endkey_docid
+        schema:
+          type: string
+      - description: Alias for endkey_docid.
+        in: query
+        name: end_key_doc_id
+        schema:
+          type: string
+      - description: Group the results using the reduce function to a group or single
+          row. Implies reduce is true and the maximum group_level. Default is false.
+        in: query
+        name: group
+        schema:
+          type: boolean
+      - description: Specify the group level to be used. Implies group is true.
+        in: query
+        name: group_level
+        schema:
+          type: integer
+      - description: Include the associated document with each row. Default is false.
+        in: query
+        name: include_docs
+        schema:
+          type: boolean
+      - description: Include the Base64-encoded content of attachments in the documents
+          that are included if include_docs is true. Ignored if include_docs isn’t
+          true. Default is false.
+        in: query
+        name: attachments
+        schema:
+          type: boolean
+      - description: Include encoding information in attachment stubs if include_docs
+          is true and the particular attachment is compressed. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: att_encoding_info
+        schema:
+          type: boolean
+      - description: Specifies whether the specified end key should be included in
+          the result. Default is true.
+        in: query
+        name: inclusive_end
+        schema:
+          type: boolean
+      - description: Includes detailed information for all known document revisions.
+          Default is false
+        in: query
+        name: revs_info
+        schema:
+          type: boolean
+      - description: eturn only documents that match the specified key.
+        in: query
+        name: key
+        schema:
+          type: string
+      - description: Return only documents where the key matches one of the keys specified
+          in the array.
+        in: query
+        name: keys
+        schema:
+          type: string
+      - description: Limit the number of the returned documents to the specified number.
+        in: query
+        name: limit
+        schema:
+          type: integer
+      - description: Use the reduction function. Default is true when a reduce function
+          is defined.
+        in: query
+        name: reduce
+        schema:
+          type: boolean
+      - description: Skip this number of records before starting to return the results.
+          Default is 0.
+        in: query
+        name: skip
+        schema:
+          type: integer
+      - description: Sort returned rows (see Sorting Returned Rows). Setting this
+          to false offers a performance boost. The total_rows and offset fields are
+          not available when this is set to false. Default is true.
+        in: query
+        name: sorted
+        schema:
+          type: boolean
+      - description: Whether or not the view results should be returned from a stable
+          set of shards. Default is false.
+        in: query
+        name: stable
+        schema:
+          type: boolean
+      - description: |
+          Allow the results from a stale view to be used. Supported values: ok and update_after. ok is equivalent to stable=true&update=false. update_after is equivalent to stable=true&update=lazy. The default behavior is equivalent to stable=false&update=true. Note that this parameter is deprecated. Use stable and update instead. See Views Generation for more details.
+        in: query
+        name: stale
+        schema:
+          type: string
+      - description: Return records starting with the specified key.
+        in: query
+        name: startkey
+        schema:
+          type: string
+      - description: Alias for startkey.
+        in: query
+        name: start_key
+        schema:
+          type: string
+      - description: Return records starting with the specified document ID. Ignored
+          if startkey is not set.
+        in: query
+        name: startkey_docid
+        schema:
+          type: string
+      - description: Alias for startkey_docid param
+        in: query
+        name: start_key_doc_id
+        schema:
+          type: string
+      - description: |
+          Whether or not the view in question should be updated prior to responding to the user. Supported values: true, false, lazy. Default is true.
+        in: query
+        name: update
+        schema:
+          type: string
+      - description: Whether to include in the response an update_seq value indicating
+          the sequence id of the database the view reflects. Default is false.
+        in: query
+        name: update_seq
+        schema:
+          type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+          description: Request completed successfully
+          headers:
+            Transfer-Encoding:
+              description: chunked
+              schema:
+                type: string
+            ETag:
+              description: Response signature
+              schema:
+                type: string
+        "304":
+          content: {}
+          description: Document wasn’t modified since specified revision
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Read permission required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: "Specified database, design document or view is missed"
+      summary: Executes the specified view function from the specified design document.
+      tags:
+      - Partition
+    post:
+      operationId: partitionDesignDocViewPost
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Partition name
+        in: path
+        name: partition
+        required: true
+        schema:
+          type: string
+      - description: Design document id
+        in: path
+        name: ddoc
+        required: true
+        schema:
+          type: string
+      - description: View function name
+        in: path
+        name: view
+        required: true
+        schema:
+          type: string
+      - description: Include conflicts information in response. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: conflicts
+        schema:
+          type: boolean
+      - description: Return the documents in descending order by key. Default is false.
+        in: query
+        name: descending
+        schema:
+          type: boolean
+      - description: Stop returning records when the specified key is reached.
+        in: query
+        name: endkey
+        schema:
+          type: string
+      - description: Alias for endkey param
+        in: query
+        name: end_key
+        schema:
+          type: string
+      - description: Stop returning records when the specified document ID is reached.
+          Ignored if endkey is not set.
+        in: query
+        name: endkey_docid
+        schema:
+          type: string
+      - description: Alias for endkey_docid.
+        in: query
+        name: end_key_doc_id
+        schema:
+          type: string
+      - description: Group the results using the reduce function to a group or single
+          row. Implies reduce is true and the maximum group_level. Default is false.
+        in: query
+        name: group
+        schema:
+          type: boolean
+      - description: Specify the group level to be used. Implies group is true.
+        in: query
+        name: group_level
+        schema:
+          type: integer
+      - description: Include the associated document with each row. Default is false.
+        in: query
+        name: include_docs
+        schema:
+          type: boolean
+      - description: Include the Base64-encoded content of attachments in the documents
+          that are included if include_docs is true. Ignored if include_docs isn’t
+          true. Default is false.
+        in: query
+        name: attachments
+        schema:
+          type: boolean
+      - description: Include encoding information in attachment stubs if include_docs
+          is true and the particular attachment is compressed. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: att_encoding_info
+        schema:
+          type: boolean
+      - description: Specifies whether the specified end key should be included in
+          the result. Default is true.
+        in: query
+        name: inclusive_end
+        schema:
+          type: boolean
+      - description: Includes detailed information for all known document revisions.
+          Default is false
+        in: query
+        name: revs_info
+        schema:
+          type: boolean
+      - description: eturn only documents that match the specified key.
+        in: query
+        name: key
+        schema:
+          type: string
+      - description: Return only documents where the key matches one of the keys specified
+          in the array.
+        in: query
+        name: keys
+        schema:
+          type: string
+      - description: Limit the number of the returned documents to the specified number.
+        in: query
+        name: limit
+        schema:
+          type: integer
+      - description: Use the reduction function. Default is true when a reduce function
+          is defined.
+        in: query
+        name: reduce
+        schema:
+          type: boolean
+      - description: Skip this number of records before starting to return the results.
+          Default is 0.
+        in: query
+        name: skip
+        schema:
+          type: integer
+      - description: Sort returned rows (see Sorting Returned Rows). Setting this
+          to false offers a performance boost. The total_rows and offset fields are
+          not available when this is set to false. Default is true.
+        in: query
+        name: sorted
+        schema:
+          type: boolean
+      - description: Whether or not the view results should be returned from a stable
+          set of shards. Default is false.
+        in: query
+        name: stable
+        schema:
+          type: boolean
+      - description: |
+          Allow the results from a stale view to be used. Supported values: ok and update_after. ok is equivalent to stable=true&update=false. update_after is equivalent to stable=true&update=lazy. The default behavior is equivalent to stable=false&update=true. Note that this parameter is deprecated. Use stable and update instead. See Views Generation for more details.
+        in: query
+        name: stale
+        schema:
+          type: string
+      - description: Return records starting with the specified key.
+        in: query
+        name: startkey
+        schema:
+          type: string
+      - description: Alias for startkey.
+        in: query
+        name: start_key
+        schema:
+          type: string
+      - description: Return records starting with the specified document ID. Ignored
+          if startkey is not set.
+        in: query
+        name: startkey_docid
+        schema:
+          type: string
+      - description: Alias for startkey_docid param
+        in: query
+        name: start_key_doc_id
+        schema:
+          type: string
+      - description: |
+          Whether or not the view in question should be updated prior to responding to the user. Supported values: true, false, lazy. Default is true.
+        in: query
+        name: update
+        schema:
+          type: string
+      - description: Whether to include in the response an update_seq value indicating
+          the sequence id of the database the view reflects. Default is false.
+        in: query
+        name: update_seq
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Keys'
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/Keys'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+          description: Request completed successfully
+          headers:
+            Transfer-Encoding:
+              description: chunked
+              schema:
+                type: string
+            ETag:
+              description: Response signature
+              schema:
+                type: string
+        "304":
+          content: {}
+          description: Document wasn’t modified since specified revision
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Read permission required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: "Specified database, design document or view is missed"
+      summary: Executes the specified view function from the specified design document.
+      tags:
+      - Partition
+      x-codegen-request-body-name: body
+  /{db}/_partition/{partition}/_design/{ddoc}/_search/{index}:
+    get:
+      description: "*Warning*\nSearch endpoints require a running search plugin connected\
+        \ to each cluster node. See Search Plugin Installation for details.\n\n*Note*\n\
+        You must enable faceting before you can use the counts, drilldown, and ranges\
+        \ parameters.\n\n*Note*\nFaceting and grouping are not supported on partitioned\
+        \ searches, so the following query parameters should not be used on those\
+        \ requests: counts, drilldown, ranges, and group_field, group_limit, group_sort``.\n\
+        \n*Note*        \nDo not combine the bookmark and stale options. These options\
+        \ constrain the choice of shard replicas to use for the response. When used\
+        \ together, the options might cause problems when contact is attempted with\
+        \ replicas that are slow or not available.\n"
+      operationId: partitionDesignDocSearch
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Partition name
+        in: path
+        name: partition
+        required: true
+        schema:
+          type: string
+      - description: Design document id
+        in: path
+        name: ddoc
+        required: true
+        schema:
+          type: string
+      - description: Search index name
+        in: path
+        name: index
+        required: true
+        schema:
+          type: string
+      - description: "A bookmark received from a previous search. This parameter enables\
+          \ paging through the results. If there are no more results after the bookmark,\
+          \ you get a response with an empty rows array and the same bookmark, confirming\
+          \ the end of the result list."
+        in: query
+        name: bookmark
+        schema:
+          type: string
+      - description: An array of names of string fields for which counts are requested.
+          The response contains counts for each unique value of this field name among
+          the documents that match the search query. Faceting must be enabled for
+          this parameter to function.
+        in: query
+        name: counts
+        schema:
+          type: string
+      - description: This field can be used several times. Each use defines a pair
+          with a field name and a value. The search matches only documents containing
+          the value that was provided in the named field. It differs from using "fieldname:value"
+          in the q parameter only in that the values are not analyzed. Faceting must
+          be enabled for this parameter to function.
+        in: query
+        name: drilldown
+        schema:
+          type: string
+      - description: |
+          Field by which to group search matches. :query number group_limit: Maximum group count. This field can be used only if group_field is specified.
+        in: query
+        name: group_field
+        schema:
+          type: string
+      - description: This field defines the order of the groups in a search that uses
+          group_field. The default sort order is relevance.
+        in: query
+        name: group_sort
+        schema:
+          type: string
+      - description: "Specifies which fields to highlight. If specified, the result\
+          \ object contains a highlights field with an entry for each specified field."
+        in: query
+        name: highlight_fields
+        schema:
+          type: string
+      - description: A string that is inserted before the highlighted word in the
+          highlights output.
+        in: query
+        name: highlight_pre_tag
+        schema:
+          type: string
+      - description: A string that is inserted after the highlighted word in the highlights
+          output.
+        in: query
+        name: highlight_post_tag
+        schema:
+          type: string
+      - description: "Number of fragments that are returned in highlights. If the\
+          \ search term occurs less often than the number of fragments that are specified,\
+          \ longer fragments are returned."
+        in: query
+        name: highlight_number
+        schema:
+          type: integer
+      - description: Number of characters in each fragment for highlights.
+        in: query
+        name: highlight_size
+        schema:
+          type: integer
+      - description: Include the full content of the documents in the response.
+        in: query
+        name: include_docs
+        schema:
+          type: boolean
+      - description: |
+          A JSON array of field names to include in search results. Any fields that are included must be indexed with the store:true option. limit (number) – Limit the number of the returned documents to the specified number. For a grouped search, this parameter limits the number of documents per group.
+        in: query
+        name: include_fields
+        schema:
+          type: string
+      - description: "Limit the number of the returned documents to the specified\
+          \ number. For a grouped search, this parameter limits the number of documents\
+          \ per group."
+        in: query
+        name: limit
+        schema:
+          type: integer
+      - description: Alias for query.
+        in: query
+        name: q
+        schema:
+          type: string
+      - description: Required. The Lucene query string.
+        in: query
+        name: query
+        schema:
+          type: string
+      - description: "This field defines ranges for faceted, numeric search fields.\
+          \ The value is a JSON object where the fields names are faceted numeric\
+          \ search fields, and the values of the fields are JSON objects. The field\
+          \ names of the JSON objects are names for ranges. The values are strings\
+          \ that describe the range, for example “[0 TO 10]”."
+        in: query
+        name: range
+        schema:
+          type: string
+      - description: "Specifies the sort order of the results. In a grouped search\
+          \ (when group_field is used), this parameter specifies the sort order within\
+          \ a group. The default sort order is relevance. A JSON string of the form\
+          \ \"fieldname<type>\" or -fieldname<type> for descending order, where fieldname\
+          \ is the name of a string or number field, and type is either a number,\
+          \ a string, or a JSON array of strings. The type part is optional, and defaults\
+          \ to number. Some examples are \"foo\", \"-foo\", \"bar<string>\", \"-foo<number>\"\
+          \ and [\"-foo<number>\", \"bar<string>\"]. String fields that are used for\
+          \ sorting must not be analyzed fields. Fields that are used for sorting\
+          \ must be indexed by the same indexer that is used for the search query."
+        in: query
+        name: sort
+        schema:
+          type: string
+      - description: Set to ok to allow the use of an out-of-date index.
+        in: query
+        name: stale
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+          description: Request completed successfully
+          headers:
+            Transfer-Encoding:
+              description: chunked
+              schema:
+                type: string
+            ETag:
+              description: Response signature
+              schema:
+                type: string
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Read permission required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: "Specified database, design document or view is missed"
+      summary: Executes a search request against the named index in the specified
+        design document.
+      tags:
+      - Partition
+  /{db}/_design/{ddoc}:
+    delete:
+      operationId: designDocDelete
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Design document id
+        in: path
+        name: ddoc
+        required: true
+        schema:
+          type: string
+      - description: Document’s revision. Alternative to rev query parameter
+        in: header
+        name: If-Match
+        schema:
+          type: string
+      - description: Actual document’s revision
+        in: query
+        name: rev
+        schema:
+          type: string
+      - description: |
+          Stores document in batch mode Possible values: ok. Optional
+        in: query
+        name: batch
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+          description: Document successfully removed
+          headers:
+            ETag:
+              description: Double quoted document’s revision token
+              schema:
+                type: string
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+          description: "Request was accepted, but changes are not yet stored on disk"
+          headers:
+            ETag:
+              description: Double quoted document’s revision token
+              schema:
+                type: string
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request body or parameters
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Write privileges required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Specified database or document ID doesn’t exists
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Specified revision is not the latest for target document
+      summary: "Deletes the specified document from the database. You must supply\
+        \ the current (latest) revision, either by using the rev parameter to specify\
+        \ the revision."
+      tags:
+      - Design Documents
+    get:
+      description: |
+        Unless you request a specific revision, the latest revision of the document will always be returned.
+      operationId: designDocGet
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Design document id
+        in: path
+        name: ddoc
+        required: true
+        schema:
+          type: string
+      - description: Double quoted document’s revision token
+        in: header
+        name: If-None-Match
+        required: true
+        schema:
+          type: string
+      - description: Includes attachments bodies in response. Default is false
+        in: query
+        name: attachments
+        schema:
+          type: boolean
+      - description: Includes encoding information in attachment stubs if the particular
+          attachment is compressed. Default is false.
+        in: query
+        name: att_encoding_info
+        schema:
+          type: boolean
+      - description: Includes attachments only since specified revisions. Doesn’t
+          includes attachments for specified revisions. Optional
+        explode: true
+        in: query
+        name: atts_since
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Includes information about conflicts in document. Default is
+          false
+        in: query
+        name: conflicts
+        schema:
+          type: boolean
+      - description: Includes information about deleted conflicted revisions. Default
+          is false
+        in: query
+        name: deleted_conflicts
+        schema:
+          type: boolean
+      - description: "Forces retrieving latest “leaf” revision, no matter what rev\
+          \ was requested. Default is false"
+        in: query
+        name: latest
+        schema:
+          type: boolean
+      - description: Includes last update sequence for the document. Default is false
+        in: query
+        name: local_seq
+        schema:
+          type: boolean
+      - description: "Acts same as specifying all conflicts, deleted_conflicts and\
+          \ revs_info query parameters. Default is false"
+        in: query
+        name: meta
+        schema:
+          type: boolean
+      - description: "Retrieves documents of specified leaf revisions. Additionally,\
+          \ it accepts value as all to return all leaf revisions. Optional"
+        explode: true
+        in: query
+        name: open_revs
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Retrieves document of specified revision. Optional
+        in: query
+        name: rev
+        schema:
+          type: string
+      - description: Includes list of all known document revisions. Default is false
+        in: query
+        name: revs
+        schema:
+          type: boolean
+      - description: Includes detailed information for all known document revisions.
+          Default is false
+        in: query
+        name: revs_info
+        schema:
+          type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DesignDoc'
+            multipart/related:
+              schema:
+                $ref: '#/components/schemas/DesignDoc'
+            multipart/mixed:
+              schema:
+                $ref: '#/components/schemas/DesignDoc'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/DesignDoc'
+          description: Request completed successfully
+          headers:
+            Transfer-Encoding:
+              description: chunked. Available if requested with query parameter open_revs
+              schema:
+                type: string
+            ETag:
+              description: Double quoted document’s revision token
+              schema:
+                type: string
+        "304":
+          content: {}
+          description: Document wasn’t modified since specified revision
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            multipart/related:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            multipart/mixed:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: The format of the request or revision was invalid
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            multipart/related:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            multipart/mixed:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Read privilege required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            multipart/related:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            multipart/mixed:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Document not found
+      summary: Returns the contents of the design document specified with the name
+        of the design document and from the specified database from the URL.
+      tags:
+      - Design Documents
+    head:
+      operationId: designDocExists
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Design document id
+        in: path
+        name: ddoc
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content: {}
+          description: Document exists
+          headers:
+            ETag:
+              description: Double quoted document’s revision token
+              schema:
+                type: string
+            Content-Length:
+              description: Document size
+              schema:
+                type: integer
+        "304":
+          content: {}
+          description: Document wasn’t modified since specified revision
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Read privilege required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Document not found
+      summary: Returns the HTTP Headers containing a minimal amount of information
+        about the specified design document.
+      tags:
+      - Design Documents
+    put:
+      description: |
+        *Note*
+        that for filters, lists, shows and updates fields objects are mapping of function name to string function source code. For views mapping is the same except that values are objects with map and reduce (optional) keys which also contains functions source code.
+      operationId: designDocPut
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Design document id
+        in: path
+        name: ddoc
+        required: true
+        schema:
+          type: string
+      - description: Document’s revision. Alternative to rev query parameter or document
+          key. Optional
+        in: header
+        name: If-Match
+        schema:
+          type: string
+      - description: Document’s revision if updating an existing document. Alternative
+          to If-Match header or document key. Optional
+        in: query
+        name: rev
+        schema:
+          type: string
+      - description: Include conflicts information in response. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: conflicts
+        schema:
+          type: boolean
+      - description: Return the documents in descending order by key. Default is false.
+        in: query
+        name: descending
+        schema:
+          type: boolean
+      - description: Group the results using the reduce function to a group or single
+          row. Implies reduce is true and the maximum group_level. Default is false.
+        in: query
+        name: group
+        schema:
+          type: boolean
+      - description: Specify the group level to be used. Implies group is true.
+        in: query
+        name: group_level
+        schema:
+          type: integer
+      - description: Include the Base64-encoded content of attachments in the documents
+          that are included if include_docs is true. Ignored if include_docs isn’t
+          true. Default is false.
+        in: query
+        name: attachments
+        schema:
+          type: boolean
+      - description: Include encoding information in attachment stubs if include_docs
+          is true and the particular attachment is compressed. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: att_encoding_info
+        schema:
+          type: boolean
+      - description: Specifies whether the specified end key should be included in
+          the result. Default is true.
+        in: query
+        name: inclusive_end
+        schema:
+          type: boolean
+      - description: Limit the number of the returned documents to the specified number.
+        in: query
+        name: limit
+        schema:
+          type: integer
+      - description: Use the reduction function. Default is true when a reduce function
+          is defined.
+        in: query
+        name: reduce
+        schema:
+          type: boolean
+      - description: Skip this number of records before starting to return the results.
+          Default is 0.
+        in: query
+        name: skip
+        schema:
+          type: integer
+      - description: Sort returned rows (see Sorting Returned Rows). Setting this
+          to false offers a performance boost. The total_rows and offset fields are
+          not available when this is set to false. Default is true.
+        in: query
+        name: sorted
+        schema:
+          type: boolean
+      - description: Whether or not the view results should be returned from a stable
+          set of shards. Default is false.
+        in: query
+        name: stable
+        schema:
+          type: boolean
+      - description: |
+          Allow the results from a stale view to be used. Supported values: ok and update_after. ok is equivalent to stable=true&update=false. update_after is equivalent to stable=true&update=lazy. The default behavior is equivalent to stable=false&update=true. Note that this parameter is deprecated. Use stable and update instead. See Views Generation for more details.
+        in: query
+        name: stale
+        schema:
+          type: string
+      - description: Return records starting with the specified document ID. Ignored
+          if startkey is not set.
+        in: query
+        name: startkey_docid
+        schema:
+          type: string
+      - description: Alias for startkey_docid param
+        in: query
+        name: start_key_doc_id
+        schema:
+          type: string
+      - description: |
+          Whether or not the view in question should be updated prior to responding to the user. Supported values: true, false, lazy. Default is true.
+        in: query
+        name: update
+        schema:
+          type: string
+      - description: Whether to include in the response an update_seq value indicating
+          the sequence id of the database the view reflects. Default is false.
+        in: query
+        name: update_seq
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DesignDoc'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+          description: Document created and stored on disk
+          headers:
+            ETag:
+              description: Double quoted document’s revision token
+              schema:
+                type: string
+            Location:
+              description: Document URI
+              schema:
+                format: uri
+                type: string
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentOK'
+          description: "Document data accepted, but not yet stored on disk"
+          headers:
+            ETag:
+              description: Double quoted document’s revision token
+              schema:
+                type: string
+            Location:
+              description: Document URI
+              schema:
+                format: uri
+                type: string
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request body or parameters
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Write privileges required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Specified database or document ID doesn’t exists
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Document with the specified ID already exists or specified
+            revision is not latest for target document
+      summary: "The PUT method creates a new named design document, or creates a new\
+        \ revision of the existing design document."
+      tags:
+      - Design Documents
+      x-codegen-request-body-name: body
+  /{db}/_design/{ddoc}/_info:
+    head:
+      operationId: designDocInfo
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Design document id
+        in: path
+        name: ddoc
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_7'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_7'
+          description: DRequest completed successfully
+      summary: "Obtains information about the specified design document, including\
+        \ the index, index size and current status of the design document and associated\
+        \ index information."
+      tags:
+      - Design Documents
+  /{db}/_design/{ddoc}/_view/{view}:
+    get:
+      operationId: designDocView
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Design document id
+        in: path
+        name: ddoc
+        required: true
+        schema:
+          type: string
+      - description: View function name
+        in: path
+        name: view
+        required: true
+        schema:
+          type: string
+      - description: Include conflicts information in response. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: conflicts
+        schema:
+          type: boolean
+      - description: Return the documents in descending order by key. Default is false.
+        in: query
+        name: descending
+        schema:
+          type: boolean
+      - description: Stop returning records when the specified key is reached.
+        in: query
+        name: endkey
+        schema:
+          type: string
+      - description: Alias for endkey param
+        in: query
+        name: end_key
+        schema:
+          type: string
+      - description: Stop returning records when the specified document ID is reached.
+          Ignored if endkey is not set.
+        in: query
+        name: endkey_docid
+        schema:
+          type: string
+      - description: Alias for endkey_docid.
+        in: query
+        name: end_key_doc_id
+        schema:
+          type: string
+      - description: Group the results using the reduce function to a group or single
+          row. Implies reduce is true and the maximum group_level. Default is false.
+        in: query
+        name: group
+        schema:
+          type: boolean
+      - description: Specify the group level to be used. Implies group is true.
+        in: query
+        name: group_level
+        schema:
+          type: integer
+      - description: Include the associated document with each row. Default is false.
+        in: query
+        name: include_docs
+        schema:
+          type: boolean
+      - description: Include the Base64-encoded content of attachments in the documents
+          that are included if include_docs is true. Ignored if include_docs isn’t
+          true. Default is false.
+        in: query
+        name: attachments
+        schema:
+          type: boolean
+      - description: Include encoding information in attachment stubs if include_docs
+          is true and the particular attachment is compressed. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: att_encoding_info
+        schema:
+          type: boolean
+      - description: Specifies whether the specified end key should be included in
+          the result. Default is true.
+        in: query
+        name: inclusive_end
+        schema:
+          type: boolean
+      - description: Includes detailed information for all known document revisions.
+          Default is false
+        in: query
+        name: revs_info
+        schema:
+          type: boolean
+      - description: eturn only documents that match the specified key.
+        in: query
+        name: key
+        schema:
+          type: string
+      - description: Return only documents where the key matches one of the keys specified
+          in the array.
+        explode: true
+        in: query
+        name: keys
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Limit the number of the returned documents to the specified number.
+        in: query
+        name: limit
+        schema:
+          type: integer
+      - description: Use the reduction function. Default is true when a reduce function
+          is defined.
+        in: query
+        name: reduce
+        schema:
+          type: boolean
+      - description: Skip this number of records before starting to return the results.
+          Default is 0.
+        in: query
+        name: skip
+        schema:
+          type: integer
+      - description: Sort returned rows (see Sorting Returned Rows). Setting this
+          to false offers a performance boost. The total_rows and offset fields are
+          not available when this is set to false. Default is true.
+        in: query
+        name: sorted
+        schema:
+          type: boolean
+      - description: Whether or not the view results should be returned from a stable
+          set of shards. Default is false.
+        in: query
+        name: stable
+        schema:
+          type: boolean
+      - description: |
+          Allow the results from a stale view to be used. Supported values: ok and update_after. ok is equivalent to stable=true&update=false. update_after is equivalent to stable=true&update=lazy. The default behavior is equivalent to stable=false&update=true. Note that this parameter is deprecated. Use stable and update instead. See Views Generation for more details.
+        in: query
+        name: stale
+        schema:
+          type: string
+      - description: Return records starting with the specified key.
+        in: query
+        name: startkey
+        schema:
+          type: string
+      - description: Alias for startkey.
+        in: query
+        name: start_key
+        schema:
+          type: string
+      - description: Return records starting with the specified document ID. Ignored
+          if startkey is not set.
+        in: query
+        name: startkey_docid
+        schema:
+          type: string
+      - description: Alias for startkey_docid param
+        in: query
+        name: start_key_doc_id
+        schema:
+          type: string
+      - description: |
+          Whether or not the view in question should be updated prior to responding to the user. Supported values: true, false, lazy. Default is true.
+        in: query
+        name: update
+        schema:
+          type: string
+      - description: Whether to include in the response an update_seq value indicating
+          the sequence id of the database the view reflects. Default is false.
+        in: query
+        name: update_seq
+        schema:
+          type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+          description: Request completed successfully
+          headers:
+            Transfer-Encoding:
+              description: chunked
+              schema:
+                type: string
+            ETag:
+              description: Response signature
+              schema:
+                type: string
+        "304":
+          content: {}
+          description: Document wasn’t modified since specified revision
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Read permission required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: "Specified database, design document or view is missed"
+      summary: Executes the specified view function from the specified design document.
+      tags:
+      - Design Documents
+    post:
+      description: |
+        POST view functionality supports identical parameters and behavior as specified in the GET /{db}/_design/{ddoc}/_view/{view} API but allows for the query string parameters to be supplied as keys in a JSON object in the body of the POST request.
+      operationId: designDocViewPost
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Design document id
+        in: path
+        name: ddoc
+        required: true
+        schema:
+          type: string
+      - description: View function name
+        in: path
+        name: view
+        required: true
+        schema:
+          type: string
+      - description: Include conflicts information in response. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: conflicts
+        schema:
+          type: boolean
+      - description: Return the documents in descending order by key. Default is false.
+        in: query
+        name: descending
+        schema:
+          type: boolean
+      - description: Stop returning records when the specified key is reached.
+        in: query
+        name: endkey
+        schema:
+          type: string
+      - description: Alias for endkey param
+        in: query
+        name: end_key
+        schema:
+          type: string
+      - description: Stop returning records when the specified document ID is reached.
+          Ignored if endkey is not set.
+        in: query
+        name: endkey_docid
+        schema:
+          type: string
+      - description: Alias for endkey_docid.
+        in: query
+        name: end_key_doc_id
+        schema:
+          type: string
+      - description: Group the results using the reduce function to a group or single
+          row. Implies reduce is true and the maximum group_level. Default is false.
+        in: query
+        name: group
+        schema:
+          type: boolean
+      - description: Specify the group level to be used. Implies group is true.
+        in: query
+        name: group_level
+        schema:
+          type: integer
+      - description: Include the associated document with each row. Default is false.
+        in: query
+        name: include_docs
+        schema:
+          type: boolean
+      - description: Include the Base64-encoded content of attachments in the documents
+          that are included if include_docs is true. Ignored if include_docs isn’t
+          true. Default is false.
+        in: query
+        name: attachments
+        schema:
+          type: boolean
+      - description: Include encoding information in attachment stubs if include_docs
+          is true and the particular attachment is compressed. Ignored if include_docs
+          isn’t true. Default is false.
+        in: query
+        name: att_encoding_info
+        schema:
+          type: boolean
+      - description: Specifies whether the specified end key should be included in
+          the result. Default is true.
+        in: query
+        name: inclusive_end
+        schema:
+          type: boolean
+      - description: Includes detailed information for all known document revisions.
+          Default is false
+        in: query
+        name: revs_info
+        schema:
+          type: boolean
+      - description: eturn only documents that match the specified key.
+        in: query
+        name: key
+        schema:
+          type: string
+      - description: Return only documents where the key matches one of the keys specified
+          in the array.
+        explode: true
+        in: query
+        name: keys
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Limit the number of the returned documents to the specified number.
+        in: query
+        name: limit
+        schema:
+          type: integer
+      - description: Use the reduction function. Default is true when a reduce function
+          is defined.
+        in: query
+        name: reduce
+        schema:
+          type: boolean
+      - description: Skip this number of records before starting to return the results.
+          Default is 0.
+        in: query
+        name: skip
+        schema:
+          type: integer
+      - description: Sort returned rows (see Sorting Returned Rows). Setting this
+          to false offers a performance boost. The total_rows and offset fields are
+          not available when this is set to false. Default is true.
+        in: query
+        name: sorted
+        schema:
+          type: boolean
+      - description: Whether or not the view results should be returned from a stable
+          set of shards. Default is false.
+        in: query
+        name: stable
+        schema:
+          type: boolean
+      - description: |
+          Allow the results from a stale view to be used. Supported values: ok and update_after. ok is equivalent to stable=true&update=false. update_after is equivalent to stable=true&update=lazy. The default behavior is equivalent to stable=false&update=true. Note that this parameter is deprecated. Use stable and update instead. See Views Generation for more details.
+        in: query
+        name: stale
+        schema:
+          type: string
+      - description: Return records starting with the specified key.
+        in: query
+        name: startkey
+        schema:
+          type: string
+      - description: Alias for startkey.
+        in: query
+        name: start_key
+        schema:
+          type: string
+      - description: Return records starting with the specified document ID. Ignored
+          if startkey is not set.
+        in: query
+        name: startkey_docid
+        schema:
+          type: string
+      - description: Alias for startkey_docid param
+        in: query
+        name: start_key_doc_id
+        schema:
+          type: string
+      - description: |
+          Whether or not the view in question should be updated prior to responding to the user. Supported values: true, false, lazy. Default is true.
+        in: query
+        name: update
+        schema:
+          type: string
+      - description: Whether to include in the response an update_seq value indicating
+          the sequence id of the database the view reflects. Default is false.
+        in: query
+        name: update_seq
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Keys'
+          text/plain:
+            schema:
+              $ref: '#/components/schemas/Keys'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+          description: Request completed successfully
+          headers:
+            Transfer-Encoding:
+              description: chunked
+              schema:
+                type: string
+            ETag:
+              description: Response signature
+              schema:
+                type: string
+        "304":
+          content: {}
+          description: Document wasn’t modified since specified revision
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Read permission required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: "Specified database, design document or view is missed"
+      summary: Executes the specified view function from the specified design document.
+      tags:
+      - Design Documents
+      x-codegen-request-body-name: body
+  /{db}/_design/{ddoc}/_search/{index}:
+    get:
+      description: "*Warning*\nSearch endpoints require a running search plugin connected\
+        \ to each cluster node. See Search Plugin Installation for details.\n\n*Note*\n\
+        You must enable faceting before you can use the counts, drilldown, and ranges\
+        \ parameters.\n\n*Note*\nFaceting and grouping are not supported on partitioned\
+        \ searches, so the following query parameters should not be used on those\
+        \ requests: counts, drilldown, ranges, and group_field, group_limit, group_sort``.\n\
+        \n*Note*        \nDo not combine the bookmark and stale options. These options\
+        \ constrain the choice of shard replicas to use for the response. When used\
+        \ together, the options might cause problems when contact is attempted with\
+        \ replicas that are slow or not available.\n"
+      operationId: designDocSearch
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Design document id
+        in: path
+        name: ddoc
+        required: true
+        schema:
+          type: string
+      - description: Search index name
+        in: path
+        name: index
+        required: true
+        schema:
+          type: string
+      - description: "A bookmark received from a previous search. This parameter enables\
+          \ paging through the results. If there are no more results after the bookmark,\
+          \ you get a response with an empty rows array and the same bookmark, confirming\
+          \ the end of the result list."
+        in: query
+        name: bookmark
+        schema:
+          type: string
+      - description: An array of names of string fields for which counts are requested.
+          The response contains counts for each unique value of this field name among
+          the documents that match the search query. Faceting must be enabled for
+          this parameter to function.
+        in: query
+        name: counts
+        schema:
+          type: string
+      - description: This field can be used several times. Each use defines a pair
+          with a field name and a value. The search matches only documents containing
+          the value that was provided in the named field. It differs from using "fieldname:value"
+          in the q parameter only in that the values are not analyzed. Faceting must
+          be enabled for this parameter to function.
+        in: query
+        name: drilldown
+        schema:
+          type: string
+      - description: |
+          Field by which to group search matches. :query number group_limit: Maximum group count. This field can be used only if group_field is specified.
+        in: query
+        name: group_field
+        schema:
+          type: string
+      - description: This field defines the order of the groups in a search that uses
+          group_field. The default sort order is relevance.
+        in: query
+        name: group_sort
+        schema:
+          type: string
+      - description: "Specifies which fields to highlight. If specified, the result\
+          \ object contains a highlights field with an entry for each specified field."
+        in: query
+        name: highlight_fields
+        schema:
+          type: string
+      - description: A string that is inserted before the highlighted word in the
+          highlights output.
+        in: query
+        name: highlight_pre_tag
+        schema:
+          type: string
+      - description: A string that is inserted after the highlighted word in the highlights
+          output.
+        in: query
+        name: highlight_post_tag
+        schema:
+          type: string
+      - description: "Number of fragments that are returned in highlights. If the\
+          \ search term occurs less often than the number of fragments that are specified,\
+          \ longer fragments are returned."
+        in: query
+        name: highlight_number
+        schema:
+          type: integer
+      - description: Number of characters in each fragment for highlights.
+        in: query
+        name: highlight_size
+        schema:
+          type: integer
+      - description: Include the full content of the documents in the response.
+        in: query
+        name: include_docs
+        schema:
+          type: boolean
+      - description: |
+          A JSON array of field names to include in search results. Any fields that are included must be indexed with the store:true option. limit (number) – Limit the number of the returned documents to the specified number. For a grouped search, this parameter limits the number of documents per group.
+        in: query
+        name: include_fields
+        schema:
+          type: string
+      - description: "Limit the number of the returned documents to the specified\
+          \ number. For a grouped search, this parameter limits the number of documents\
+          \ per group."
+        in: query
+        name: limit
+        schema:
+          type: integer
+      - description: Alias for query.
+        in: query
+        name: q
+        schema:
+          type: string
+      - description: Required. The Lucene query string.
+        in: query
+        name: query
+        schema:
+          type: string
+      - description: "This field defines ranges for faceted, numeric search fields.\
+          \ The value is a JSON object where the fields names are faceted numeric\
+          \ search fields, and the values of the fields are JSON objects. The field\
+          \ names of the JSON objects are names for ranges. The values are strings\
+          \ that describe the range, for example “[0 TO 10]”."
+        in: query
+        name: range
+        schema:
+          type: string
+      - description: "Specifies the sort order of the results. In a grouped search\
+          \ (when group_field is used), this parameter specifies the sort order within\
+          \ a group. The default sort order is relevance. A JSON string of the form\
+          \ \"fieldname<type>\" or -fieldname<type> for descending order, where fieldname\
+          \ is the name of a string or number field, and type is either a number,\
+          \ a string, or a JSON array of strings. The type part is optional, and defaults\
+          \ to number. Some examples are \"foo\", \"-foo\", \"bar<string>\", \"-foo<number>\"\
+          \ and [\"-foo<number>\", \"bar<string>\"]. String fields that are used for\
+          \ sorting must not be analyzed fields. Fields that are used for sorting\
+          \ must be indexed by the same indexer that is used for the search query."
+        in: query
+        name: sort
+        schema:
+          type: string
+      - description: Set to ok to allow the use of an out-of-date index.
+        in: query
+        name: stale
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+          description: Request completed successfully
+          headers:
+            Transfer-Encoding:
+              description: chunked
+              schema:
+                type: string
+            ETag:
+              description: Response signature
+              schema:
+                type: string
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Read permission required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: "Specified database, design document or view is missed"
+      summary: Executes a search request against the named index in the specified
+        design document.
+      tags:
+      - Design Documents
+  /{db}/_design/{ddoc}/_search_info/{index}:
+    get:
+      description: |
+        *Warning*
+        Search endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.
+      operationId: designDocSearchInfo
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Design document id
+        in: path
+        name: ddoc
+        required: true
+        schema:
+          type: string
+      - description: Search index name
+        in: path
+        name: index
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_8'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_8'
+          description: Request completed successfully
+          headers:
+            Transfer-Encoding:
+              description: chunked
+              schema:
+                type: string
+            ETag:
+              description: Response signature
+              schema:
+                type: string
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Read permission required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: "Specified database, design document or view is missed"
+      summary: Executes a search request against the named index in the specified
+        design document.
+      tags:
+      - Design Documents
+  /{db}/_index/{designdoc}/json/{name}:
+    delete:
+      operationId: indexDelete
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Design document name
+        in: path
+        name: designdoc
+        required: true
+        schema:
+          type: string
+      - description: Search index name
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OK'
+          description: Success
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Writer permission required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Index not found
+      tags:
+      - Index
+components:
+  schemas:
+    SearchIndex:
+      example:
+        doc_count: 1
+        pending_seq: 0
+        committed_seq: 5
+        disk_size: 5
+        doc_del_count: 6
+      properties:
+        pending_seq:
+          type: integer
+        doc_del_count:
+          type: integer
+        doc_count:
+          type: integer
+        disk_size:
+          type: integer
+        committed_seq:
+          type: integer
+      type: object
+    ViewIndex:
+      example:
+        waiting_clients: 5
+        waiting_commit: true
+        purge_seq: 0
+        sizes:
+          disk: 1
+          external: 5
+          active: 6
+        compact_running: true
+        signature: signature
+        update_seq: update_seq
+        updater_running: true
+        language: language
+      properties:
+        compact_running:
+          description: Indicates whether a compaction routine is currently running
+            on the view
+          type: boolean
+        language:
+          description: Language for the defined views
+          type: string
+        purge_seq:
+          description: The purge sequence that has been processed
+          type: integer
+        signature:
+          description: MD5 signature of the views for the design document
+          type: string
+        sizes:
+          $ref: '#/components/schemas/ViewIndex_sizes'
+        update_seq:
+          description: The update sequence of the corresponding database that has
+            been indexed
+          type: string
+        updater_running:
+          description: Indicates if the view is currently being updated
+          type: boolean
+        waiting_clients:
+          description: Number of clients waiting on views from this design document
+          type: integer
+        waiting_commit:
+          description: Indicates if there are outstanding commits to the underlying
+            database that need to processed
+          type: boolean
+      type: object
+    DesignDoc:
+      example:
+        indexes: "{}"
+        options: "{}"
+        validate_doc_update: validate_doc_update
+        language: language
+        filters: "{}"
+        updates: "{}"
+        views: "{}"
+        autoupdate: true
+      properties:
+        language:
+          description: Defines Query Server to process design document functions
+          type: string
+        options:
+          description: View’s default options
+          properties: {}
+          type: object
+        filters:
+          description: Filter functions definition
+          properties: {}
+          type: object
+        updates:
+          description: Update functions definition
+          properties: {}
+          type: object
+        validate_doc_update:
+          description: Validate document update function source
+          type: string
+        views:
+          description: View functions definition.
+          properties: {}
+          type: object
+        indexes:
+          properties: {}
+          type: object
+        autoupdate:
+          description: Indicates whether to automatically build indexes defined in
+            this design document. Default is true.
+          type: boolean
+      type: object
+    Partition:
+      example:
+        doc_count: 0
+        partition: partition
+        db_name: db_name
+        sizes:
+          external: 5
+          active: 1
+        doc_del_count: 6
+      properties:
+        db_name:
+          type: string
+        doc_count:
+          type: integer
+        doc_del_count:
+          type: integer
+        partition:
+          type: string
+        sizes:
+          $ref: '#/components/schemas/Partition_sizes'
+      type: object
+    All:
+      properties:
+        docs:
+          items:
+            $ref: '#/components/schemas/BasicDoc'
+          type: array
+      type: object
+    Results:
+      example:
+        results:
+        - docs:
+          - ok: "{}"
+            error:
+              reason: reason
+              rev: rev
+              id: id
+              error: error
+          - ok: "{}"
+            error:
+              reason: reason
+              rev: rev
+              id: id
+              error: error
+          id: id
+        - docs:
+          - ok: "{}"
+            error:
+              reason: reason
+              rev: rev
+              id: id
+              error: error
+          - ok: "{}"
+            error:
+              reason: reason
+              rev: rev
+              id: id
+              error: error
+          id: id
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/Results_results'
+          type: array
+      type: object
+    Keys:
+      example:
+        keys:
+        - keys
+        - keys
+      properties:
+        keys:
+          items:
+            type: string
+          type: array
+      type: object
+    Pagination:
+      example:
+        offset: 0
+        total_rows: 6
+        update_seq: "{}"
+        rows:
+        - doc: "{}"
+          id: id
+          value: "{}"
+          key: key
+        - doc: "{}"
+          id: id
+          value: "{}"
+          key: key
+      properties:
+        offset:
+          description: Offset where the document list started.
+          type: integer
+        total_rows:
+          description: Number of documents in the database/view.
+          type: integer
+        rows:
+          description: Array of view row objects. By default the information returned
+            contains only the document ID and revision.
+          items:
+            $ref: '#/components/schemas/Row'
+          type: array
+        update_seq:
+          description: Current update sequence for the database.
+          properties: {}
+          type: object
+      type: object
+    Row:
+      example:
+        doc: "{}"
+        id: id
+        value: "{}"
+        key: key
+      properties:
+        id:
+          description: Document ID
+          type: string
+        key:
+          type: string
+        value:
+          type: object
+        doc:
+          type: object
+      type: object
+    Object:
+      type: object
+    Document:
+      type: object
+    Selector:
+      type: object
+    Sort:
+      type: object
+    BulkResponse:
+      allOf:
+      - $ref: '#/components/schemas/DocumentOK'
+      - $ref: '#/components/schemas/ErrorResponse'
+    DocumentOK:
+      allOf:
+      - $ref: '#/components/schemas/OK'
+      - $ref: '#/components/schemas/BasicDoc'
+    OK:
+      example:
+        ok: true
+      properties:
+        ok:
+          description: Operation status
+          type: boolean
+      type: object
+    ErrorResponse:
+      properties:
+        error:
+          description: Error type. Available if response code is 4xx
+          type: string
+        reason:
+          description: Error description. Available if response code is 4xx
+          type: string
+      type: object
+    ErrorBulkGetResponse:
+      example:
+        reason: reason
+        rev: rev
+        id: id
+        error: error
+      properties:
+        error:
+          description: Error type. Available if response code is 4xx
+          type: string
+        reason:
+          description: Error description. Available if response code is 4xx
+          type: string
+        id:
+          type: string
+        rev:
+          type: string
+      type: object
+    Database:
+      example:
+        instance_start_time: instance_start_time
+        cluster:
+          q: 6
+          r: 1
+          w: 5
+          "n": 0
+        doc_count: 2
+        db_name: db_name
+        purge_seq: purge_seq
+        sizes:
+          external: 3
+          file: 2
+          active: 9
+        compact_running: true
+        update_seq: update_seq
+        disk_format_version: 5
+        doc_del_count: 7
+        props:
+          partitioned: true
+      properties:
+        db_name:
+          description: The name of the database.
+          type: string
+        cluster:
+          $ref: '#/components/schemas/Database_cluster'
+        compact_running:
+          description: Set to true if the database compaction routine is operating
+            on this database.
+          type: boolean
+        disk_format_version:
+          description: The version of the physical format used for the data when it
+            is stored on disk.
+          type: integer
+        doc_count:
+          description: A count of the documents in the specified database.
+          type: integer
+        doc_del_count:
+          description: Number of deleted documents
+          type: integer
+        instance_start_time:
+          description: Always "0". (Returned for legacy reasons.)
+          type: string
+        purge_seq:
+          description: An opaque string that describes the purge state of the database.
+            Do not rely on this string for counting the number of purge operations.
+          type: string
+        sizes:
+          $ref: '#/components/schemas/Database_sizes'
+        update_seq:
+          description: Always "0". (Returned for legacy reasons.)
+          type: string
+        props:
+          $ref: '#/components/schemas/Database_props'
+      type: object
+    Server:
+      example:
+        vendor:
+          name: name
+          version: version
+        uuid: uuid
+        version: version
+        couchdb: couchdb
+      properties:
+        couchdb:
+          type: string
+        uuid:
+          format: uuidl
+          type: string
+        vendor:
+          $ref: '#/components/schemas/Server_vendor'
+        version:
+          type: string
+      type: object
+    Task:
+      example:
+        updated_on: updated_on
+        changes_done: 0
+        database: database
+        task: task
+        started_on: 1
+        progress: 6
+        pid: pid
+        total_changes: 5
+        type: type
+        status: status
+      properties:
+        changes_done:
+          description: Processed changes
+          type: integer
+        database:
+          description: Source database
+          type: string
+        pid:
+          description: Process ID
+          type: string
+        progress:
+          description: Current percentage progress
+          type: integer
+        started_on:
+          description: ask start time as unix timestamp
+          type: integer
+        status:
+          description: Task status message
+          type: string
+        task:
+          description: Task name
+          type: string
+        total_changes:
+          description: Total changes to process
+          type: integer
+        type:
+          description: Operation Type
+          type: string
+        updated_on:
+          description: Unix timestamp of last operation update
+          type: string
+      type: object
+    Cluster:
+      properties:
+        action:
+          enum:
+          - enable_single_node
+          - enable_cluster
+          - add_node
+          - finish_cluster
+          type: string
+        bind_address:
+          description: The IP address to which to bind the current node. The special
+            value 0.0.0.0 may be specified to bind to all interfaces on the host.
+            (enable_cluster and enable_single_node only)
+          type: string
+        username:
+          description: "The username of the server-level administrator to create.\
+            \ (enable_cluster and enable_single_node only), or the remote server’\
+            s administrator username (add_node)"
+          type: string
+        password:
+          description: "The password for the server-level administrator to create.\
+            \ (enable_cluster and enable_single_node only), or the remote server’\
+            s administrator username (add_node)"
+          type: string
+        port:
+          description: The TCP port to which to bind this node (enable_cluster and
+            enable_single_node only) or the TCP port to which to bind a remote node
+            (add_node only).
+          type: integer
+        node_count:
+          description: "The total number of nodes to be joined into the cluster, including\
+            \ this one. Used to determine the value of the cluster’s n, up to a maximum\
+            \ of 3. (enable_cluster only)"
+          type: integer
+        remote_node:
+          description: The IP address of the remote node to setup as part of this
+            cluster’s list of nodes. (enable_cluster only)
+          type: string
+        remote_current_user:
+          description: The username of the server-level administrator authorized on
+            the remote node. (enable_cluster only)
+          type: string
+        remote_current_password:
+          description: he password of the server-level administrator authorized on
+            the remote node. (enable_cluster only)
+          type: string
+        host:
+          description: The remote node IP of the node to add to the cluster. (add_node
+            only)
+          type: string
+        ensure_dbs_exist:
+          description: "List of system databases to ensure exist on the node/cluster.\
+            \ Defaults to [\"_users\",\"_replicator\"]."
+          items:
+            type: string
+          type: array
+      type: object
+    Replicate:
+      example:
+        cancel: true
+        filter: filter
+        continuous: true
+        create_target: true
+        doc_ids:
+        - doc_ids
+        - doc_ids
+        target_proxy: target_proxy
+        source:
+          headers:
+            Authorization: Authorization
+          url: https://openapi-generator.tech
+        create_target_params:
+          partitioned: true
+        source_proxy: source_proxy
+        target:
+          headers:
+            Authorization: Authorization
+          url: https://openapi-generator.tech
+      properties:
+        cancel:
+          description: Cancels the replication
+          type: boolean
+        continuous:
+          description: Configure the replication to be continuous
+          type: boolean
+        create_target:
+          description: Creates the target database. Required administrator’s privileges
+            on target server.
+          type: boolean
+        create_target_params:
+          $ref: '#/components/schemas/Replicate_create_target_params'
+        doc_ids:
+          description: Array of document IDs to be synchronized
+          items:
+            type: string
+          type: array
+        filter:
+          description: The name of a filter function.
+          type: string
+        source_proxy:
+          description: Address of a proxy server through which replication from the
+            source should occur (protocol can be “http” or “socks5”)
+          type: string
+        target_proxy:
+          description: Address of a proxy server through which replication to the
+            target should occur (protocol can be “http” or “socks5”)
+          type: string
+        source:
+          $ref: '#/components/schemas/Request'
+        target:
+          $ref: '#/components/schemas/Request'
+      type: object
+    Request:
+      example:
+        headers:
+          Authorization: Authorization
+        url: https://openapi-generator.tech
+      properties:
+        headers:
+          $ref: '#/components/schemas/Request_headers'
+        url:
+          format: uri
+          type: string
+      type: object
+    Replication:
+      allOf:
+      - $ref: '#/components/schemas/BasicDoc'
+      - $ref: '#/components/schemas/OK'
+    ReplicationHistory:
+      properties:
+        doc_write_failures:
+          description: Number of document write failures
+          type: integer
+        docs_read:
+          description: Number of documents read
+          type: integer
+        docs_written:
+          description: Number of documents written to target
+          type: integer
+        end_last_seq:
+          description: Last sequence number in changes stream
+          type: integer
+        end_time:
+          description: Date/Time replication operation completed in RFC 2822 format
+          format: RFC2822
+          type: string
+        missing_checked:
+          description: Number of missing documents checked
+          type: integer
+        missing_found:
+          description: Number of missing documents found
+          type: integer
+        recorded_seq:
+          description: Last recorded sequence number
+          type: integer
+        session_id:
+          description: Session ID for this replication operation
+          type: string
+        start_last_seq:
+          description: First sequence number in changes stream
+          type: integer
+        start_time:
+          description: Date/Time replication operation started in RFC 2822 format
+          format: RFC2822
+          type: string
+      type: object
+    Admins:
+      description: |
+        they have all the privileges of members plus the privileges: write (and edit) design documents, add/remove database admins and members and set the database revisions limit. They can not create a database nor delete a database.
+      example:
+        roles:
+        - roles
+        - roles
+        name:
+        - name
+        - name
+      properties:
+        name:
+          description: List of CouchDB user names
+          items:
+            type: string
+          type: array
+        roles:
+          description: List of users roles
+          items:
+            type: string
+          type: array
+      type: object
+    Members:
+      description: "they can read all types of documents from the DB, and they can\
+        \ write (and edit) documents to the DB except for design documents."
+      example:
+        roles:
+        - roles
+        - roles
+        name:
+        - name
+        - name
+      properties:
+        name:
+          description: List of CouchDB user names
+          items:
+            type: string
+          type: array
+        roles:
+          description: List of users roles
+          items:
+            type: string
+          type: array
+      type: object
+    BasicDoc:
+      properties:
+        id:
+          type: string
+        rev:
+          type: string
+      type: object
+    Indexes:
+      example:
+        indexes:
+        - def:
+            field:
+            - additionalProperties: additionalProperties
+            - additionalProperties: additionalProperties
+          name: name
+          ddoc: ddoc
+          type: type
+        - def:
+            field:
+            - additionalProperties: additionalProperties
+            - additionalProperties: additionalProperties
+          name: name
+          ddoc: ddoc
+          type: type
+        total_rows: 0.8008281904610115
+      properties:
+        total_rows:
+          type: number
+        indexes:
+          items:
+            $ref: '#/components/schemas/IndexDefinitions'
+          type: array
+      type: object
+    IndexDefinitions:
+      example:
+        def:
+          field:
+          - additionalProperties: additionalProperties
+          - additionalProperties: additionalProperties
+        name: name
+        ddoc: ddoc
+        type: type
+      properties:
+        ddoc:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        def:
+          $ref: '#/components/schemas/IndexDefinitions_def'
+      type: object
+    Index:
+      example:
+        name: name
+        partitioned: true
+        index:
+          additionalProperties: additionalProperties
+        ddoc: ddoc
+        type: json
+      properties:
+        ddoc:
+          description: "Name of the design document in which the index will be created.\
+            \ By default, each index will be created in its own design document. Indexes\
+            \ can be grouped into design documents for efficiency. However, a change\
+            \ to one index in a design document will invalidate all other indexes\
+            \ in the same document (similar to views). Optional"
+          type: string
+        name:
+          description: "Name of the index. If no name is provided, a name will be\
+            \ generated automatically. Optional"
+          type: string
+        type:
+          default: json
+          description: Defaults to json. Geospatial indexes will be supported in the
+            future. Optional Text indexes are supported via a third party library
+            Optional
+          enum:
+          - json
+          - text
+          type: string
+        partitioned:
+          description: "Determines whether a JSON index is partitioned or global.\
+            \ The default value of partitioned is the partitioned property of the\
+            \ database. To create a global index on a partitioned database, specify\
+            \ false for the \"partitioned\" field. If you specify true for the \"\
+            partitioned\" field on an unpartitioned database, an error occurs."
+          type: boolean
+        index:
+          $ref: '#/components/schemas/IndexDefinitions_def_field'
+      type: object
+    IndexResponse:
+      example:
+        result: created
+        name: name
+        id: id
+      properties:
+        result:
+          enum:
+          - created
+          - exists
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+      type: object
+    Query:
+      example:
+        use_index:
+        - use_index
+        - use_index
+        update: true
+        skip: 6.027456183070403
+        sort: "{}"
+        bookmark: bookmark
+        stale: stale
+        field:
+        - field
+        - field
+        stable: true
+        limit: 0.8008281904610115
+        name: name
+        execution_stats: true
+        selector: "{}"
+        conflitsc: true
+      properties:
+        limit:
+          description: Maximum number of results returned. Default is 25. Optional
+          type: number
+        skip:
+          description: "Skip the first ‘n’ results, where ‘n’ is the value specified.\
+            \ Optional"
+          type: number
+        name:
+          description: "Name of the index. If no name is provided, a name will be\
+            \ generated automatically. Optional"
+          type: string
+        sort:
+          type: object
+        field:
+          description: "Instruct a query to use a specific index. Specified either\
+            \ as \"<design_document>\" or [\"<design_document>\", \"<index_name>\"\
+            ]. Optional"
+          items:
+            type: string
+          type: array
+        use_index:
+          description: "JSON array specifying which fields of each object should be\
+            \ returned. If it is omitted, the entire object is returned. More information\
+            \ provided in the section on filtering fields. Optional"
+          items:
+            type: string
+          type: array
+        conflitsc:
+          description: "Include conflicted documents if true. Intended use is to easily\
+            \ find conflicted documents, without an index or view. Default is false.\
+            \ Optional"
+          type: boolean
+        bookmark:
+          description: |
+            A string that enables you to specify which page of results you require. Used for paging through result sets. Every query returns an opaque string under the bookmark key that can then be passed back in a query to get the next page of results. If any part of the selector query changes between requests, the results are undefined. Optional, default: null
+          type: string
+        update:
+          description: Whether to update the index prior to returning the result.
+            Default is true. Optional
+          type: boolean
+        stable:
+          description: Whether or not the view results should be returned from a “stable”
+            set of shards. Optional
+          type: boolean
+        stale:
+          description: |
+            Combination of update=false and stable=true options. Possible options: "ok", false (default). Optional Note that this parameter is deprecated. Use stable and update instead. See Views Generation for more details.
+          type: string
+        execution_stats:
+          description: |
+            Include execution statistics in the query response. Optional, default: false
+          type: boolean
+        selector:
+          type: object
+      type: object
+    inline_response_200:
+      example:
+        key: key
+        info:
+          instance_start_time: instance_start_time
+          cluster:
+            q: 6
+            r: 1
+            w: 5
+            "n": 0
+          doc_count: 2
+          db_name: db_name
+          purge_seq: purge_seq
+          sizes:
+            external: 3
+            file: 2
+            active: 9
+          compact_running: true
+          update_seq: update_seq
+          disk_format_version: 5
+          doc_del_count: 7
+          props:
+            partitioned: true
+      properties:
+        key:
+          type: string
+        info:
+          $ref: '#/components/schemas/Database'
+      type: object
+    inline_response_200_1:
+      example:
+        state: cluster_disabled
+      properties:
+        state:
+          description: Current state of the node and/or cluster (see below)
+          enum:
+          - cluster_disabled
+          - single_node_disabled
+          - single_node_enabled
+          - cluster_enabled
+          - cluster_finished
+          type: string
+      type: object
+    body:
+      properties:
+        action:
+          enum:
+          - enable_single_node
+          - enable_cluster
+          - add_node
+          - finish_cluster
+          type: string
+      type: object
+    inline_response_200_2:
+      example:
+        cluster_nodes:
+        - cluster_nodes
+        - cluster_nodes
+        all_nodes:
+        - all_nodes
+        - all_nodes
+      properties:
+        all_nodes:
+          items:
+            type: string
+          type: array
+        cluster_nodes:
+          items:
+            type: string
+          type: array
+      type: object
+    body_1:
+      properties:
+        field:
+          description: Type of analyzer
+          type: string
+        text:
+          description: Analyzer token you want to test
+          type: string
+      type: object
+    inline_response_200_3:
+      example:
+        tokens:
+        - tokens
+        - tokens
+      properties:
+        tokens:
+          items:
+            type: string
+          type: array
+      type: object
+    inline_response_200_4:
+      example:
+        status: status
+      properties:
+        status:
+          type: string
+      type: object
+    body_2:
+      properties:
+        docs:
+          items:
+            $ref: '#/components/schemas/BasicDoc'
+          type: array
+      type: object
+    body_3:
+      description: List of documents objects
+      properties:
+        docs:
+          items:
+            $ref: '#/components/schemas/Document'
+          type: array
+      type: object
+    body_4:
+      properties:
+        docs:
+          items:
+            $ref: '#/components/schemas/Keys'
+          type: array
+      type: object
+    inline_response_200_5:
+      example:
+        members:
+          roles:
+          - roles
+          - roles
+          name:
+          - name
+          - name
+        admins:
+          roles:
+          - roles
+          - roles
+          name:
+          - name
+          - name
+      properties:
+        admins:
+          $ref: '#/components/schemas/Admins'
+        members:
+          $ref: '#/components/schemas/Members'
+      type: object
+    body_5:
+      properties:
+        admins:
+          $ref: '#/components/schemas/Admins'
+        members:
+          $ref: '#/components/schemas/Members'
+      type: object
+    inline_response_200_6_execution_stats:
+      example:
+        total_keys_examined: 0.8008281904610115
+        total_quorum_docs_examined: 1.4658129805029452
+        execution_time_ms: 5.637376656633329
+        total_docs_examined: 6.027456183070403
+        results_returned: 5.962133916683182
+      properties:
+        total_keys_examined:
+          type: number
+        total_docs_examined:
+          type: number
+        total_quorum_docs_examined:
+          type: number
+        results_returned:
+          type: number
+        execution_time_ms:
+          type: number
+      type: object
+    inline_response_200_6:
+      example:
+        docs:
+        - null
+        - null
+        execution_stats:
+          total_keys_examined: 0.8008281904610115
+          total_quorum_docs_examined: 1.4658129805029452
+          execution_time_ms: 5.637376656633329
+          total_docs_examined: 6.027456183070403
+          results_returned: 5.962133916683182
+      properties:
+        docs:
+          items:
+            $ref: '#/components/schemas/Object'
+          type: array
+        execution_stats:
+          $ref: '#/components/schemas/inline_response_200_6_execution_stats'
+      type: object
+    inline_response_200_7:
+      example:
+        view_index:
+          waiting_clients: 5
+          waiting_commit: true
+          purge_seq: 0
+          sizes:
+            disk: 1
+            external: 5
+            active: 6
+          compact_running: true
+          signature: signature
+          update_seq: update_seq
+          updater_running: true
+          language: language
+        name: name
+      properties:
+        name:
+          type: string
+        view_index:
+          $ref: '#/components/schemas/ViewIndex'
+      type: object
+    inline_response_200_8:
+      example:
+        search_index:
+          doc_count: 1
+          pending_seq: 0
+          committed_seq: 5
+          disk_size: 5
+          doc_del_count: 6
+        name: name
+      properties:
+        name:
+          type: string
+        search_index:
+          $ref: '#/components/schemas/SearchIndex'
+      type: object
+    ViewIndex_sizes:
+      example:
+        disk: 1
+        external: 5
+        active: 6
+      properties:
+        active:
+          description: "The size of live data inside the view, in bytes"
+          type: integer
+        disk:
+          description: Size in bytes of the view as stored on disk
+          type: integer
+        external:
+          description: The uncompressed size of view contents in bytes
+          type: integer
+      type: object
+    Partition_sizes:
+      example:
+        external: 5
+        active: 1
+      properties:
+        active:
+          type: integer
+        external:
+          type: integer
+      type: object
+    Results_docs:
+      example:
+        ok: "{}"
+        error:
+          reason: reason
+          rev: rev
+          id: id
+          error: error
+      properties:
+        ok:
+          type: object
+        error:
+          $ref: '#/components/schemas/ErrorBulkGetResponse'
+      type: object
+    Results_results:
+      example:
+        docs:
+        - ok: "{}"
+          error:
+            reason: reason
+            rev: rev
+            id: id
+            error: error
+        - ok: "{}"
+          error:
+            reason: reason
+            rev: rev
+            id: id
+            error: error
+        id: id
+      properties:
+        id:
+          type: string
+        docs:
+          items:
+            $ref: '#/components/schemas/Results_docs'
+          type: array
+      type: object
+    Database_cluster:
+      example:
+        q: 6
+        r: 1
+        w: 5
+        "n": 0
+      properties:
+        "n":
+          description: Replicas. The number of copies of every document.
+          type: integer
+        q:
+          description: Shards. The number of range partitions.
+          type: integer
+        r:
+          description: Read quorum. The number of consistent copies of a document
+            that need to be read before a successful reply.
+          type: integer
+        w:
+          description: Write quorum. The number of copies of a document that need
+            to be written before a successful reply.
+          type: integer
+      type: object
+    Database_sizes:
+      example:
+        external: 3
+        file: 2
+        active: 9
+      properties:
+        active:
+          description: "The size of live data inside the database, in bytes."
+          type: integer
+        external:
+          description: The uncompressed size of database contents in bytes. sizes.file
+            (number) – The size of the database file on disk in bytes. Views indexes
+            are not included in the calculation.
+          type: integer
+        file:
+          description: An opaque string that describes the state of the database.
+            Do not rely on this string for counting the number of updates.
+          type: integer
+      type: object
+    Database_props:
+      example:
+        partitioned: true
+      properties:
+        partitioned:
+          description: "If present and true, this indicates that the database is partitioned."
+          type: boolean
+      type: object
+    Server_vendor:
+      example:
+        name: name
+        version: version
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+      type: object
+    Replicate_create_target_params:
+      example:
+        partitioned: true
+      properties:
+        partitioned:
+          type: boolean
+      type: object
+    Request_headers:
+      example:
+        Authorization: Authorization
+      properties:
+        Authorization:
+          type: string
+      type: object
+    IndexDefinitions_def_field:
+      example:
+        additionalProperties: additionalProperties
+      properties:
+        additionalProperties:
+          type: string
+      type: object
+    IndexDefinitions_def:
+      example:
+        field:
+        - additionalProperties: additionalProperties
+        - additionalProperties: additionalProperties
+      properties:
+        field:
+          items:
+            $ref: '#/components/schemas/IndexDefinitions_def_field'
+          type: array
+      type: object
+  securitySchemes:
+    BasicAuth:
+      scheme: basic
+      type: http
+    JwtAuth:
+      description: "JWT authentication enables CouchDB to use externally-generated\
+        \ JWT tokens instead of defining users or roles in the _users database.\n\n\
+        The JWT authentication handler requires that all JWT tokens are signed by\
+        \ a key that CouchDB has been configured to trust (there is no support for\
+        \ JWT’s “NONE” algorithm).\n\nAdditionally, CouchDB can be configured to reject\
+        \ JWT tokens that are missing a configurable set of claims (e.g, a CouchDB\
+        \ administrator could insist on the exp claim).\n\nAll claims presented in\
+        \ a JWT token are validated if presented, regardless of whether they are required.\n\
+        \nTwo sections of config exist to configure JWT authentication;\n\nThe required_claims\
+        \ config setting is a comma-separated list of additional mandatory JWT claims\
+        \ that must be present in any presented JWT token. A :code 400:Bad Request\
+        \ is sent if any are missing.\n\nThe alg claim is mandatory as it used to\
+        \ lookup the correct key for verifying the signature.\n\nThe sub claim is\
+        \ mandatory and is used as the CouchDB user’s name if the JWT token is valid.\n\
+        \nA private claim called _couchdb.roles is optional. If presented, as a JSON\
+        \ array of strings, it is used as the CouchDB user’s roles list as long as\
+        \ the JWT token is valid.      \n"
+      in: header
+      name: Authorization
+      type: apiKey
+x-original-swagger-version: "2.0"
