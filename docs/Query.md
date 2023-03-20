@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Limit** | Pointer to **float32** | Maximum number of results returned. Default is 25. Optional | [optional] 
-**Skip** | Pointer to **float32** | Skip the first ‘n’ results, where ‘n’ is the value specified. Optional | [optional] 
+**Limit** | Pointer to **int32** | Maximum number of results returned. Default is 25. Optional | [optional] 
+**Skip** | Pointer to **int32** | Skip the first ‘n’ results, where ‘n’ is the value specified. Optional | [optional] 
 **Name** | Pointer to **string** | Name of the index. If no name is provided, a name will be generated automatically. Optional | [optional] 
 **Sort** | Pointer to **map[string]interface{}** |  | [optional] 
 **Field** | Pointer to **[]string** | Instruct a query to use a specific index. Specified either as \&quot;&lt;design_document&gt;\&quot; or [\&quot;&lt;design_document&gt;\&quot;, \&quot;&lt;index_name&gt;\&quot;]. Optional | [optional] 
@@ -39,20 +39,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetLimit
 
-`func (o *Query) GetLimit() float32`
+`func (o *Query) GetLimit() int32`
 
 GetLimit returns the Limit field if non-nil, zero value otherwise.
 
 ### GetLimitOk
 
-`func (o *Query) GetLimitOk() (*float32, bool)`
+`func (o *Query) GetLimitOk() (*int32, bool)`
 
 GetLimitOk returns a tuple with the Limit field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetLimit
 
-`func (o *Query) SetLimit(v float32)`
+`func (o *Query) SetLimit(v int32)`
 
 SetLimit sets Limit field to given value.
 
@@ -64,20 +64,20 @@ HasLimit returns a boolean if a field has been set.
 
 ### GetSkip
 
-`func (o *Query) GetSkip() float32`
+`func (o *Query) GetSkip() int32`
 
 GetSkip returns the Skip field if non-nil, zero value otherwise.
 
 ### GetSkipOk
 
-`func (o *Query) GetSkipOk() (*float32, bool)`
+`func (o *Query) GetSkipOk() (*int32, bool)`
 
 GetSkipOk returns a tuple with the Skip field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetSkip
 
-`func (o *Query) SetSkip(v float32)`
+`func (o *Query) SetSkip(v int32)`
 
 SetSkip sets Skip field to given value.
 

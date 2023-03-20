@@ -5238,7 +5238,7 @@ components:
         - use_index
         - use_index
         update: true
-        skip: 6.027456183070403
+        skip: 6
         sort: "{}"
         bookmark: bookmark
         stale: stale
@@ -5246,7 +5246,7 @@ components:
         - field
         - field
         stable: true
-        limit: 0.8008281904610115
+        limit: 0
         name: name
         execution_stats: true
         selector: "{}"
@@ -5254,11 +5254,11 @@ components:
       properties:
         limit:
           description: Maximum number of results returned. Default is 25. Optional
-          type: number
+          type: integer
         skip:
           description: "Skip the first ‘n’ results, where ‘n’ is the value specified.\
             \ Optional"
-          type: number
+          type: integer
         name:
           description: "Name of the index. If no name is provided, a name will be\
             \ generated automatically. Optional"

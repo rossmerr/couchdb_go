@@ -5716,11 +5716,11 @@
       "type": "object",
       "properties": {
         "limit": {
-          "type": "number",
+          "type": "integer",
           "description": "Maximum number of results returned. Default is 25. Optional"
         },
         "skip": {
-          "type": "number",
+          "type": "integer",
           "description": "Skip the first ‘n’ results, where ‘n’ is the value specified. Optional"
         },
         "name": {

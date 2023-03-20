@@ -20,9 +20,9 @@ var _ MappedNullable = &Query{}
 // Query struct for Query
 type Query struct {
 	// Maximum number of results returned. Default is 25. Optional
-	Limit *float32 `json:"limit,omitempty"`
+	Limit *int32 `json:"limit,omitempty"`
 	// Skip the first ‘n’ results, where ‘n’ is the value specified. Optional
-	Skip *float32 `json:"skip,omitempty"`
+	Skip *int32 `json:"skip,omitempty"`
 	// Name of the index. If no name is provided, a name will be generated automatically. Optional
 	Name *string `json:"name,omitempty"`
 	Sort map[string]interface{} `json:"sort,omitempty"`
@@ -66,9 +66,9 @@ func NewQueryWithDefaults() *Query {
 }
 
 // GetLimit returns the Limit field value if set, zero value otherwise.
-func (o *Query) GetLimit() float32 {
+func (o *Query) GetLimit() int32 {
 	if o == nil || IsNil(o.Limit) {
-		var ret float32
+		var ret int32
 		return ret
 	}
 	return *o.Limit
@@ -76,7 +76,7 @@ func (o *Query) GetLimit() float32 {
 
 // GetLimitOk returns a tuple with the Limit field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Query) GetLimitOk() (*float32, bool) {
+func (o *Query) GetLimitOk() (*int32, bool) {
 	if o == nil || IsNil(o.Limit) {
 		return nil, false
 	}
@@ -92,15 +92,15 @@ func (o *Query) HasLimit() bool {
 	return false
 }
 
-// SetLimit gets a reference to the given float32 and assigns it to the Limit field.
-func (o *Query) SetLimit(v float32) {
+// SetLimit gets a reference to the given int32 and assigns it to the Limit field.
+func (o *Query) SetLimit(v int32) {
 	o.Limit = &v
 }
 
 // GetSkip returns the Skip field value if set, zero value otherwise.
-func (o *Query) GetSkip() float32 {
+func (o *Query) GetSkip() int32 {
 	if o == nil || IsNil(o.Skip) {
-		var ret float32
+		var ret int32
 		return ret
 	}
 	return *o.Skip
@@ -108,7 +108,7 @@ func (o *Query) GetSkip() float32 {
 
 // GetSkipOk returns a tuple with the Skip field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Query) GetSkipOk() (*float32, bool) {
+func (o *Query) GetSkipOk() (*int32, bool) {
 	if o == nil || IsNil(o.Skip) {
 		return nil, false
 	}
@@ -124,8 +124,8 @@ func (o *Query) HasSkip() bool {
 	return false
 }
 
-// SetSkip gets a reference to the given float32 and assigns it to the Skip field.
-func (o *Query) SetSkip(v float32) {
+// SetSkip gets a reference to the given int32 and assigns it to the Skip field.
+func (o *Query) SetSkip(v int32) {
 	o.Skip = &v
 }
 
