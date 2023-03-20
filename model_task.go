@@ -39,7 +39,10 @@ type Task struct {
 	Type *string `json:"type,omitempty"`
 	// Unix timestamp of last operation update
 	UpdatedOn *string `json:"updated_on,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Task Task
 
 // NewTask instantiates a new Task object
 // This constructor will assign default values to properties that have it defined,
@@ -418,7 +421,38 @@ func (o Task) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedOn) {
 		toSerialize["updated_on"] = o.UpdatedOn
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Task) UnmarshalJSON(bytes []byte) (err error) {
+	varTask := _Task{}
+
+	if err = json.Unmarshal(bytes, &varTask); err == nil {
+		*o = Task(varTask)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "changes_done")
+		delete(additionalProperties, "database")
+		delete(additionalProperties, "pid")
+		delete(additionalProperties, "progress")
+		delete(additionalProperties, "started_on")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "task")
+		delete(additionalProperties, "total_changes")
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "updated_on")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableTask struct {

@@ -25,7 +25,10 @@ type ViewIndexSizes struct {
 	Disk *int32 `json:"disk,omitempty"`
 	// The uncompressed size of view contents in bytes
 	External *int32 `json:"external,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ViewIndexSizes ViewIndexSizes
 
 // NewViewIndexSizes instantiates a new ViewIndexSizes object
 // This constructor will assign default values to properties that have it defined,
@@ -159,7 +162,31 @@ func (o ViewIndexSizes) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.External) {
 		toSerialize["external"] = o.External
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ViewIndexSizes) UnmarshalJSON(bytes []byte) (err error) {
+	varViewIndexSizes := _ViewIndexSizes{}
+
+	if err = json.Unmarshal(bytes, &varViewIndexSizes); err == nil {
+		*o = ViewIndexSizes(varViewIndexSizes)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "active")
+		delete(additionalProperties, "disk")
+		delete(additionalProperties, "external")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableViewIndexSizes struct {

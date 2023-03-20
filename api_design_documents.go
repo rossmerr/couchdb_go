@@ -21,12 +21,171 @@ import (
 )
 
 
+type DesignDocumentsApi interface {
+
+	/*
+	DesignDocDelete Deletes the specified document from the database. You must supply the current (latest) revision, either by using the rev parameter to specify the revision.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param ddoc Design document id
+	@return ApiDesignDocDeleteRequest
+	*/
+	DesignDocDelete(ctx context.Context, db string, ddoc string) ApiDesignDocDeleteRequest
+
+	// DesignDocDeleteExecute executes the request
+	//  @return DocumentOK
+	DesignDocDeleteExecute(r ApiDesignDocDeleteRequest) (*DocumentOK, *http.Response, error)
+
+	/*
+	DesignDocExists Returns the HTTP Headers containing a minimal amount of information about the specified design document.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param ddoc Design document id
+	@return ApiDesignDocExistsRequest
+	*/
+	DesignDocExists(ctx context.Context, db string, ddoc string) ApiDesignDocExistsRequest
+
+	// DesignDocExistsExecute executes the request
+	DesignDocExistsExecute(r ApiDesignDocExistsRequest) (*http.Response, error)
+
+	/*
+	DesignDocGet Returns the contents of the design document specified with the name of the design document and from the specified database from the URL.
+
+	Unless you request a specific revision, the latest revision of the document will always be returned.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param ddoc Design document id
+	@return ApiDesignDocGetRequest
+	*/
+	DesignDocGet(ctx context.Context, db string, ddoc string) ApiDesignDocGetRequest
+
+	// DesignDocGetExecute executes the request
+	//  @return DesignDoc
+	DesignDocGetExecute(r ApiDesignDocGetRequest) (*DesignDoc, *http.Response, error)
+
+	/*
+	DesignDocInfo Obtains information about the specified design document, including the index, index size and current status of the design document and associated index information.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param ddoc Design document id
+	@return ApiDesignDocInfoRequest
+	*/
+	DesignDocInfo(ctx context.Context, db string, ddoc string) ApiDesignDocInfoRequest
+
+	// DesignDocInfoExecute executes the request
+	//  @return InlineResponse2007
+	DesignDocInfoExecute(r ApiDesignDocInfoRequest) (*InlineResponse2007, *http.Response, error)
+
+	/*
+	DesignDocPut The PUT method creates a new named design document, or creates a new revision of the existing design document.
+
+	*Note*
+that for filters, lists, shows and updates fields objects are mapping of function name to string function source code. For views mapping is the same except that values are objects with map and reduce (optional) keys which also contains functions source code.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param ddoc Design document id
+	@return ApiDesignDocPutRequest
+	*/
+	DesignDocPut(ctx context.Context, db string, ddoc string) ApiDesignDocPutRequest
+
+	// DesignDocPutExecute executes the request
+	//  @return DocumentOK
+	DesignDocPutExecute(r ApiDesignDocPutRequest) (*DocumentOK, *http.Response, error)
+
+	/*
+	DesignDocSearch Executes a search request against the named index in the specified design document.
+
+	*Warning*
+Search endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.
+
+*Note*
+You must enable faceting before you can use the counts, drilldown, and ranges parameters.
+
+*Note*
+Faceting and grouping are not supported on partitioned searches, so the following query parameters should not be used on those requests: counts, drilldown, ranges, and group_field, group_limit, group_sort``.
+
+*Note*        
+Do not combine the bookmark and stale options. These options constrain the choice of shard replicas to use for the response. When used together, the options might cause problems when contact is attempted with replicas that are slow or not available.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param ddoc Design document id
+	@param index Search index name
+	@return ApiDesignDocSearchRequest
+	*/
+	DesignDocSearch(ctx context.Context, db string, ddoc string, index string) ApiDesignDocSearchRequest
+
+	// DesignDocSearchExecute executes the request
+	//  @return Pagination
+	DesignDocSearchExecute(r ApiDesignDocSearchRequest) (*Pagination, *http.Response, error)
+
+	/*
+	DesignDocSearchInfo Executes a search request against the named index in the specified design document.
+
+	*Warning*
+Search endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param ddoc Design document id
+	@param index Search index name
+	@return ApiDesignDocSearchInfoRequest
+	*/
+	DesignDocSearchInfo(ctx context.Context, db string, ddoc string, index string) ApiDesignDocSearchInfoRequest
+
+	// DesignDocSearchInfoExecute executes the request
+	//  @return InlineResponse2008
+	DesignDocSearchInfoExecute(r ApiDesignDocSearchInfoRequest) (*InlineResponse2008, *http.Response, error)
+
+	/*
+	DesignDocView Executes the specified view function from the specified design document.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param ddoc Design document id
+	@param view View function name
+	@return ApiDesignDocViewRequest
+	*/
+	DesignDocView(ctx context.Context, db string, ddoc string, view string) ApiDesignDocViewRequest
+
+	// DesignDocViewExecute executes the request
+	//  @return Pagination
+	DesignDocViewExecute(r ApiDesignDocViewRequest) (*Pagination, *http.Response, error)
+
+	/*
+	DesignDocViewPost Executes the specified view function from the specified design document.
+
+	POST view functionality supports identical parameters and behavior as specified in the GET /{db}/_design/{ddoc}/_view/{view} API but allows for the query string parameters to be supplied as keys in a JSON object in the body of the POST request.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param ddoc Design document id
+	@param view View function name
+	@return ApiDesignDocViewPostRequest
+	*/
+	DesignDocViewPost(ctx context.Context, db string, ddoc string, view string) ApiDesignDocViewPostRequest
+
+	// DesignDocViewPostExecute executes the request
+	//  @return Pagination
+	DesignDocViewPostExecute(r ApiDesignDocViewPostRequest) (*Pagination, *http.Response, error)
+}
+
 // DesignDocumentsApiService DesignDocumentsApi service
 type DesignDocumentsApiService service
 
 type ApiDesignDocDeleteRequest struct {
 	ctx context.Context
-	ApiService *DesignDocumentsApiService
+	ApiService DesignDocumentsApi
 	db string
 	ddoc string
 	ifMatch *string
@@ -204,7 +363,7 @@ func (a *DesignDocumentsApiService) DesignDocDeleteExecute(r ApiDesignDocDeleteR
 
 type ApiDesignDocExistsRequest struct {
 	ctx context.Context
-	ApiService *DesignDocumentsApiService
+	ApiService DesignDocumentsApi
 	db string
 	ddoc string
 }
@@ -319,7 +478,7 @@ func (a *DesignDocumentsApiService) DesignDocExistsExecute(r ApiDesignDocExistsR
 
 type ApiDesignDocGetRequest struct {
 	ctx context.Context
-	ApiService *DesignDocumentsApiService
+	ApiService DesignDocumentsApi
 	db string
 	ddoc string
 	ifNoneMatch *string
@@ -606,7 +765,7 @@ func (a *DesignDocumentsApiService) DesignDocGetExecute(r ApiDesignDocGetRequest
 
 type ApiDesignDocInfoRequest struct {
 	ctx context.Context
-	ApiService *DesignDocumentsApiService
+	ApiService DesignDocumentsApi
 	db string
 	ddoc string
 }
@@ -711,7 +870,7 @@ func (a *DesignDocumentsApiService) DesignDocInfoExecute(r ApiDesignDocInfoReque
 
 type ApiDesignDocPutRequest struct {
 	ctx context.Context
-	ApiService *DesignDocumentsApiService
+	ApiService DesignDocumentsApi
 	db string
 	ddoc string
 	body *DesignDoc
@@ -1064,7 +1223,7 @@ func (a *DesignDocumentsApiService) DesignDocPutExecute(r ApiDesignDocPutRequest
 
 type ApiDesignDocSearchRequest struct {
 	ctx context.Context
-	ApiService *DesignDocumentsApiService
+	ApiService DesignDocumentsApi
 	db string
 	ddoc string
 	index string
@@ -1398,7 +1557,7 @@ func (a *DesignDocumentsApiService) DesignDocSearchExecute(r ApiDesignDocSearchR
 
 type ApiDesignDocSearchInfoRequest struct {
 	ctx context.Context
-	ApiService *DesignDocumentsApiService
+	ApiService DesignDocumentsApi
 	db string
 	ddoc string
 	index string
@@ -1543,7 +1702,7 @@ func (a *DesignDocumentsApiService) DesignDocSearchInfoExecute(r ApiDesignDocSea
 
 type ApiDesignDocViewRequest struct {
 	ctx context.Context
-	ApiService *DesignDocumentsApiService
+	ApiService DesignDocumentsApi
 	db string
 	ddoc string
 	view string
@@ -1962,7 +2121,7 @@ func (a *DesignDocumentsApiService) DesignDocViewExecute(r ApiDesignDocViewReque
 
 type ApiDesignDocViewPostRequest struct {
 	ctx context.Context
-	ApiService *DesignDocumentsApiService
+	ApiService DesignDocumentsApi
 	db string
 	ddoc string
 	view string

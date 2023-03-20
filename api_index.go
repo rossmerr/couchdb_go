@@ -20,12 +20,92 @@ import (
 )
 
 
+type IndexApi interface {
+
+	/*
+	DbFindGet Finds the document.
+
+	Find documents using a declarative JSON querying syntax. Queries will use custom indexes, specified using the _index endpoint, if available. Otherwise, they use the built-in _all_docs index, which can be arbitrarily slow.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@return ApiDbFindGetRequest
+	*/
+	DbFindGet(ctx context.Context, db string) ApiDbFindGetRequest
+
+	// DbFindGetExecute executes the request
+	//  @return InlineResponse2006
+	DbFindGetExecute(r ApiDbFindGetRequest) (*InlineResponse2006, *http.Response, error)
+
+	/*
+	DbIndexGet Returns the current indexes object from the specified database.
+
+	When you make a GET request to /db/_index, you get a list of all indexes in the database. In addition to the information available through this API, indexes are also stored in design documents <index-functions>. Design documents are regular documents that have an ID starting with _design/. Design documents can be retrieved and modified in the same way as any other document, although this is not necessary when using Mango.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@return ApiDbIndexGetRequest
+	*/
+	DbIndexGet(ctx context.Context, db string) ApiDbIndexGetRequest
+
+	// DbIndexGetExecute executes the request
+	//  @return Indexes
+	DbIndexGetExecute(r ApiDbIndexGetRequest) (*Indexes, *http.Response, error)
+
+	/*
+	DbPartitionFindGet Finds the document.
+
+	Find documents using a declarative JSON querying syntax. Queries will use custom indexes, specified using the _index endpoint, if available. Otherwise, they use the built-in _all_docs index, which can be arbitrarily slow.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param partition Partition name
+	@return ApiDbPartitionFindGetRequest
+	*/
+	DbPartitionFindGet(ctx context.Context, db string, partition string) ApiDbPartitionFindGetRequest
+
+	// DbPartitionFindGetExecute executes the request
+	//  @return InlineResponse2006
+	DbPartitionFindGetExecute(r ApiDbPartitionFindGetRequest) (*InlineResponse2006, *http.Response, error)
+
+	/*
+	IndexDelete Method for IndexDelete
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param designdoc Design document name
+	@param name Search index name
+	@return ApiIndexDeleteRequest
+	*/
+	IndexDelete(ctx context.Context, db string, designdoc string, name string) ApiIndexDeleteRequest
+
+	// IndexDeleteExecute executes the request
+	//  @return OK
+	IndexDeleteExecute(r ApiIndexDeleteRequest) (*OK, *http.Response, error)
+
+	/*
+	SbIndexPost Sets the index for the given database.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@return ApiSbIndexPostRequest
+	*/
+	SbIndexPost(ctx context.Context, db string) ApiSbIndexPostRequest
+
+	// SbIndexPostExecute executes the request
+	//  @return IndexResponse
+	SbIndexPostExecute(r ApiSbIndexPostRequest) (*IndexResponse, *http.Response, error)
+}
+
 // IndexApiService IndexApi service
 type IndexApiService service
 
 type ApiDbFindGetRequest struct {
 	ctx context.Context
-	ApiService *IndexApiService
+	ApiService IndexApi
 	db string
 	body *Query
 }
@@ -172,7 +252,7 @@ func (a *IndexApiService) DbFindGetExecute(r ApiDbFindGetRequest) (*InlineRespon
 
 type ApiDbIndexGetRequest struct {
 	ctx context.Context
-	ApiService *IndexApiService
+	ApiService IndexApi
 	db string
 }
 
@@ -295,9 +375,160 @@ func (a *IndexApiService) DbIndexGetExecute(r ApiDbIndexGetRequest) (*Indexes, *
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiDbPartitionFindGetRequest struct {
+	ctx context.Context
+	ApiService IndexApi
+	db string
+	partition string
+	body *Query
+}
+
+func (r ApiDbPartitionFindGetRequest) Body(body Query) ApiDbPartitionFindGetRequest {
+	r.body = &body
+	return r
+}
+
+func (r ApiDbPartitionFindGetRequest) Execute() (*InlineResponse2006, *http.Response, error) {
+	return r.ApiService.DbPartitionFindGetExecute(r)
+}
+
+/*
+DbPartitionFindGet Finds the document.
+
+Find documents using a declarative JSON querying syntax. Queries will use custom indexes, specified using the _index endpoint, if available. Otherwise, they use the built-in _all_docs index, which can be arbitrarily slow.
+
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param db Database name
+ @param partition Partition name
+ @return ApiDbPartitionFindGetRequest
+*/
+func (a *IndexApiService) DbPartitionFindGet(ctx context.Context, db string, partition string) ApiDbPartitionFindGetRequest {
+	return ApiDbPartitionFindGetRequest{
+		ApiService: a,
+		ctx: ctx,
+		db: db,
+		partition: partition,
+	}
+}
+
+// Execute executes the request
+//  @return InlineResponse2006
+func (a *IndexApiService) DbPartitionFindGetExecute(r ApiDbPartitionFindGetRequest) (*InlineResponse2006, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *InlineResponse2006
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "IndexApiService.DbPartitionFindGet")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/{db}/_partition/{partition}/_find"
+	localVarPath = strings.Replace(localVarPath, "{"+"db"+"}", url.PathEscape(parameterValueToString(r.db, "db")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"partition"+"}", url.PathEscape(parameterValueToString(r.partition, "partition")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.body == nil {
+		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiIndexDeleteRequest struct {
 	ctx context.Context
-	ApiService *IndexApiService
+	ApiService IndexApi
 	db string
 	designdoc string
 	name string
@@ -438,7 +669,7 @@ func (a *IndexApiService) IndexDeleteExecute(r ApiIndexDeleteRequest) (*OK, *htt
 
 type ApiSbIndexPostRequest struct {
 	ctx context.Context
-	ApiService *IndexApiService
+	ApiService IndexApi
 	db string
 	body *Index
 }

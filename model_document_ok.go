@@ -23,7 +23,10 @@ type DocumentOK struct {
 	Ok *bool `json:"ok,omitempty"`
 	Id *string `json:"id,omitempty"`
 	Rev *string `json:"rev,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DocumentOK DocumentOK
 
 // NewDocumentOK instantiates a new DocumentOK object
 // This constructor will assign default values to properties that have it defined,
@@ -157,7 +160,31 @@ func (o DocumentOK) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Rev) {
 		toSerialize["rev"] = o.Rev
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DocumentOK) UnmarshalJSON(bytes []byte) (err error) {
+	varDocumentOK := _DocumentOK{}
+
+	if err = json.Unmarshal(bytes, &varDocumentOK); err == nil {
+		*o = DocumentOK(varDocumentOK)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "ok")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "rev")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDocumentOK struct {

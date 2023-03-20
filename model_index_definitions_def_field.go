@@ -20,7 +20,10 @@ var _ MappedNullable = &IndexDefinitionsDefField{}
 // IndexDefinitionsDefField struct for IndexDefinitionsDefField
 type IndexDefinitionsDefField struct {
 	AdditionalPropertiesField *string `json:"additionalProperties,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _IndexDefinitionsDefField IndexDefinitionsDefField
 
 // NewIndexDefinitionsDefField instantiates a new IndexDefinitionsDefField object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,29 @@ func (o IndexDefinitionsDefField) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.AdditionalPropertiesField) {
 		toSerialize["additionalProperties"] = o.AdditionalPropertiesField
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *IndexDefinitionsDefField) UnmarshalJSON(bytes []byte) (err error) {
+	varIndexDefinitionsDefField := _IndexDefinitionsDefField{}
+
+	if err = json.Unmarshal(bytes, &varIndexDefinitionsDefField); err == nil {
+		*o = IndexDefinitionsDefField(varIndexDefinitionsDefField)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "additionalProperties")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableIndexDefinitionsDefField struct {

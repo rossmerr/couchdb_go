@@ -28,7 +28,10 @@ type Index struct {
 	// Determines whether a JSON index is partitioned or global. The default value of partitioned is the partitioned property of the database. To create a global index on a partitioned database, specify false for the \"partitioned\" field. If you specify true for the \"partitioned\" field on an unpartitioned database, an error occurs.
 	Partitioned *bool `json:"partitioned,omitempty"`
 	Index *IndexDefinitionsDefField `json:"index,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Index Index
 
 // NewIndex instantiates a new Index object
 // This constructor will assign default values to properties that have it defined,
@@ -236,7 +239,33 @@ func (o Index) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Index) {
 		toSerialize["index"] = o.Index
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Index) UnmarshalJSON(bytes []byte) (err error) {
+	varIndex := _Index{}
+
+	if err = json.Unmarshal(bytes, &varIndex); err == nil {
+		*o = Index(varIndex)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "ddoc")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "partitioned")
+		delete(additionalProperties, "index")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableIndex struct {

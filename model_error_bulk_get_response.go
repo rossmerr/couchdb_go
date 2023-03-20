@@ -25,7 +25,10 @@ type ErrorBulkGetResponse struct {
 	Reason *string `json:"reason,omitempty"`
 	Id *string `json:"id,omitempty"`
 	Rev *string `json:"rev,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ErrorBulkGetResponse ErrorBulkGetResponse
 
 // NewErrorBulkGetResponse instantiates a new ErrorBulkGetResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -194,7 +197,32 @@ func (o ErrorBulkGetResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Rev) {
 		toSerialize["rev"] = o.Rev
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ErrorBulkGetResponse) UnmarshalJSON(bytes []byte) (err error) {
+	varErrorBulkGetResponse := _ErrorBulkGetResponse{}
+
+	if err = json.Unmarshal(bytes, &varErrorBulkGetResponse); err == nil {
+		*o = ErrorBulkGetResponse(varErrorBulkGetResponse)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "error")
+		delete(additionalProperties, "reason")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "rev")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableErrorBulkGetResponse struct {

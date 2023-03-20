@@ -21,7 +21,10 @@ var _ MappedNullable = &Indexes{}
 type Indexes struct {
 	TotalRows *float32 `json:"total_rows,omitempty"`
 	Indexes []IndexDefinitions `json:"indexes,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Indexes Indexes
 
 // NewIndexes instantiates a new Indexes object
 // This constructor will assign default values to properties that have it defined,
@@ -120,7 +123,30 @@ func (o Indexes) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Indexes) {
 		toSerialize["indexes"] = o.Indexes
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Indexes) UnmarshalJSON(bytes []byte) (err error) {
+	varIndexes := _Indexes{}
+
+	if err = json.Unmarshal(bytes, &varIndexes); err == nil {
+		*o = Indexes(varIndexes)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "total_rows")
+		delete(additionalProperties, "indexes")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableIndexes struct {

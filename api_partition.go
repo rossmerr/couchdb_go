@@ -20,12 +20,109 @@ import (
 )
 
 
+type PartitionApi interface {
+
+	/*
+	PartitionDesignDocSearch Executes a search request against the named index in the specified design document.
+
+	*Warning*
+Search endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.
+
+*Note*
+You must enable faceting before you can use the counts, drilldown, and ranges parameters.
+
+*Note*
+Faceting and grouping are not supported on partitioned searches, so the following query parameters should not be used on those requests: counts, drilldown, ranges, and group_field, group_limit, group_sort``.
+
+*Note*        
+Do not combine the bookmark and stale options. These options constrain the choice of shard replicas to use for the response. When used together, the options might cause problems when contact is attempted with replicas that are slow or not available.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param partition Partition name
+	@param ddoc Design document id
+	@param index Search index name
+	@return ApiPartitionDesignDocSearchRequest
+	*/
+	PartitionDesignDocSearch(ctx context.Context, db string, partition string, ddoc string, index string) ApiPartitionDesignDocSearchRequest
+
+	// PartitionDesignDocSearchExecute executes the request
+	//  @return Pagination
+	PartitionDesignDocSearchExecute(r ApiPartitionDesignDocSearchRequest) (*Pagination, *http.Response, error)
+
+	/*
+	PartitionDesignDocView Executes the specified view function from the specified design document.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param partition Partition name
+	@param ddoc Design document id
+	@param view View function name
+	@return ApiPartitionDesignDocViewRequest
+	*/
+	PartitionDesignDocView(ctx context.Context, db string, partition string, ddoc string, view string) ApiPartitionDesignDocViewRequest
+
+	// PartitionDesignDocViewExecute executes the request
+	//  @return Pagination
+	PartitionDesignDocViewExecute(r ApiPartitionDesignDocViewRequest) (*Pagination, *http.Response, error)
+
+	/*
+	PartitionDesignDocViewPost Executes the specified view function from the specified design document.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param partition Partition name
+	@param ddoc Design document id
+	@param view View function name
+	@return ApiPartitionDesignDocViewPostRequest
+	*/
+	PartitionDesignDocViewPost(ctx context.Context, db string, partition string, ddoc string, view string) ApiPartitionDesignDocViewPostRequest
+
+	// PartitionDesignDocViewPostExecute executes the request
+	//  @return Pagination
+	PartitionDesignDocViewPostExecute(r ApiPartitionDesignDocViewPostRequest) (*Pagination, *http.Response, error)
+
+	/*
+	PartitionDocGetAll Executes the built-in _all_docs view
+
+	This endpoint is a convenience endpoint for automatically setting bounds on the provided partition range. Similar results can be had by using the global /db/_all_docs endpoint with appropriately configured values for start_key and end_key.
+
+Refer to the view endpoint documentation for a complete description of the available query parameters and the format of the returned data.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param partition Partition name
+	@return ApiPartitionDocGetAllRequest
+	*/
+	PartitionDocGetAll(ctx context.Context, db string, partition string) ApiPartitionDocGetAllRequest
+
+	// PartitionDocGetAllExecute executes the request
+	//  @return Pagination
+	PartitionDocGetAllExecute(r ApiPartitionDocGetAllRequest) (*Pagination, *http.Response, error)
+
+	/*
+	PartitionInfo This endpoint returns information describing the provided partition. It includes document and deleted document counts along with external and active data sizes.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param partition Partition name
+	@return ApiPartitionInfoRequest
+	*/
+	PartitionInfo(ctx context.Context, db string, partition string) ApiPartitionInfoRequest
+
+	// PartitionInfoExecute executes the request
+	//  @return Partition
+	PartitionInfoExecute(r ApiPartitionInfoRequest) (*Partition, *http.Response, error)
+}
+
 // PartitionApiService PartitionApi service
 type PartitionApiService service
 
 type ApiPartitionDesignDocSearchRequest struct {
 	ctx context.Context
-	ApiService *PartitionApiService
+	ApiService PartitionApi
 	db string
 	partition string
 	ddoc string
@@ -363,7 +460,7 @@ func (a *PartitionApiService) PartitionDesignDocSearchExecute(r ApiPartitionDesi
 
 type ApiPartitionDesignDocViewRequest struct {
 	ctx context.Context
-	ApiService *PartitionApiService
+	ApiService PartitionApi
 	db string
 	partition string
 	ddoc string
@@ -778,7 +875,7 @@ func (a *PartitionApiService) PartitionDesignDocViewExecute(r ApiPartitionDesign
 
 type ApiPartitionDesignDocViewPostRequest struct {
 	ctx context.Context
-	ApiService *PartitionApiService
+	ApiService PartitionApi
 	db string
 	partition string
 	ddoc string
@@ -1204,7 +1301,7 @@ func (a *PartitionApiService) PartitionDesignDocViewPostExecute(r ApiPartitionDe
 
 type ApiPartitionDocGetAllRequest struct {
 	ctx context.Context
-	ApiService *PartitionApiService
+	ApiService PartitionApi
 	db string
 	partition string
 	conflicts *bool
@@ -1504,7 +1601,7 @@ func (a *PartitionApiService) PartitionDocGetAllExecute(r ApiPartitionDocGetAllR
 
 type ApiPartitionInfoRequest struct {
 	ctx context.Context
-	ApiService *PartitionApiService
+	ApiService PartitionApi
 	db string
 	partition string
 }

@@ -20,7 +20,10 @@ var _ MappedNullable = &All{}
 // All struct for All
 type All struct {
 	Docs []BasicDoc `json:"docs,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _All All
 
 // NewAll instantiates a new All object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,29 @@ func (o All) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Docs) {
 		toSerialize["docs"] = o.Docs
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *All) UnmarshalJSON(bytes []byte) (err error) {
+	varAll := _All{}
+
+	if err = json.Unmarshal(bytes, &varAll); err == nil {
+		*o = All(varAll)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "docs")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAll struct {

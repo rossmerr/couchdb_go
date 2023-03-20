@@ -21,7 +21,10 @@ var _ MappedNullable = &InlineResponse2002{}
 type InlineResponse2002 struct {
 	AllNodes []string `json:"all_nodes,omitempty"`
 	ClusterNodes []string `json:"cluster_nodes,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InlineResponse2002 InlineResponse2002
 
 // NewInlineResponse2002 instantiates a new InlineResponse2002 object
 // This constructor will assign default values to properties that have it defined,
@@ -120,7 +123,30 @@ func (o InlineResponse2002) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ClusterNodes) {
 		toSerialize["cluster_nodes"] = o.ClusterNodes
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InlineResponse2002) UnmarshalJSON(bytes []byte) (err error) {
+	varInlineResponse2002 := _InlineResponse2002{}
+
+	if err = json.Unmarshal(bytes, &varInlineResponse2002); err == nil {
+		*o = InlineResponse2002(varInlineResponse2002)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "all_nodes")
+		delete(additionalProperties, "cluster_nodes")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInlineResponse2002 struct {

@@ -23,7 +23,10 @@ type Admins struct {
 	Name []string `json:"name,omitempty"`
 	// List of users roles
 	Roles []string `json:"roles,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Admins Admins
 
 // NewAdmins instantiates a new Admins object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,30 @@ func (o Admins) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Roles) {
 		toSerialize["roles"] = o.Roles
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Admins) UnmarshalJSON(bytes []byte) (err error) {
+	varAdmins := _Admins{}
+
+	if err = json.Unmarshal(bytes, &varAdmins); err == nil {
+		*o = Admins(varAdmins)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "roles")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableAdmins struct {

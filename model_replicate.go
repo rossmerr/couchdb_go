@@ -36,7 +36,10 @@ type Replicate struct {
 	TargetProxy *string `json:"target_proxy,omitempty"`
 	Source *Request `json:"source,omitempty"`
 	Target *Request `json:"target,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Replicate Replicate
 
 // NewReplicate instantiates a new Replicate object
 // This constructor will assign default values to properties that have it defined,
@@ -415,7 +418,38 @@ func (o Replicate) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Target) {
 		toSerialize["target"] = o.Target
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Replicate) UnmarshalJSON(bytes []byte) (err error) {
+	varReplicate := _Replicate{}
+
+	if err = json.Unmarshal(bytes, &varReplicate); err == nil {
+		*o = Replicate(varReplicate)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "cancel")
+		delete(additionalProperties, "continuous")
+		delete(additionalProperties, "create_target")
+		delete(additionalProperties, "create_target_params")
+		delete(additionalProperties, "doc_ids")
+		delete(additionalProperties, "filter")
+		delete(additionalProperties, "source_proxy")
+		delete(additionalProperties, "target_proxy")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "target")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReplicate struct {

@@ -22,7 +22,10 @@ type IndexResponse struct {
 	Result *string `json:"result,omitempty"`
 	Id *string `json:"id,omitempty"`
 	Name *string `json:"name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _IndexResponse IndexResponse
 
 // NewIndexResponse instantiates a new IndexResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -156,7 +159,31 @@ func (o IndexResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Name) {
 		toSerialize["name"] = o.Name
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *IndexResponse) UnmarshalJSON(bytes []byte) (err error) {
+	varIndexResponse := _IndexResponse{}
+
+	if err = json.Unmarshal(bytes, &varIndexResponse); err == nil {
+		*o = IndexResponse(varIndexResponse)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableIndexResponse struct {

@@ -40,7 +40,10 @@ type Cluster struct {
 	Host *string `json:"host,omitempty"`
 	// List of system databases to ensure exist on the node/cluster. Defaults to [\"_users\",\"_replicator\"].
 	EnsureDbsExist []string `json:"ensure_dbs_exist,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Cluster Cluster
 
 // NewCluster instantiates a new Cluster object
 // This constructor will assign default values to properties that have it defined,
@@ -454,7 +457,39 @@ func (o Cluster) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.EnsureDbsExist) {
 		toSerialize["ensure_dbs_exist"] = o.EnsureDbsExist
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Cluster) UnmarshalJSON(bytes []byte) (err error) {
+	varCluster := _Cluster{}
+
+	if err = json.Unmarshal(bytes, &varCluster); err == nil {
+		*o = Cluster(varCluster)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "action")
+		delete(additionalProperties, "bind_address")
+		delete(additionalProperties, "username")
+		delete(additionalProperties, "password")
+		delete(additionalProperties, "port")
+		delete(additionalProperties, "node_count")
+		delete(additionalProperties, "remote_node")
+		delete(additionalProperties, "remote_current_user")
+		delete(additionalProperties, "remote_current_password")
+		delete(additionalProperties, "host")
+		delete(additionalProperties, "ensure_dbs_exist")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableCluster struct {

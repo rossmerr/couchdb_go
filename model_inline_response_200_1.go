@@ -21,7 +21,10 @@ var _ MappedNullable = &InlineResponse2001{}
 type InlineResponse2001 struct {
 	// Current state of the node and/or cluster (see below)
 	State *string `json:"state,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InlineResponse2001 InlineResponse2001
 
 // NewInlineResponse2001 instantiates a new InlineResponse2001 object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,29 @@ func (o InlineResponse2001) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.State) {
 		toSerialize["state"] = o.State
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InlineResponse2001) UnmarshalJSON(bytes []byte) (err error) {
+	varInlineResponse2001 := _InlineResponse2001{}
+
+	if err = json.Unmarshal(bytes, &varInlineResponse2001); err == nil {
+		*o = InlineResponse2001(varInlineResponse2001)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "state")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInlineResponse2001 struct {

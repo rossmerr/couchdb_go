@@ -21,7 +21,10 @@ var _ MappedNullable = &DatabaseProps{}
 type DatabaseProps struct {
 	// If present and true, this indicates that the database is partitioned.
 	Partitioned *bool `json:"partitioned,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DatabaseProps DatabaseProps
 
 // NewDatabaseProps instantiates a new DatabaseProps object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,29 @@ func (o DatabaseProps) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Partitioned) {
 		toSerialize["partitioned"] = o.Partitioned
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DatabaseProps) UnmarshalJSON(bytes []byte) (err error) {
+	varDatabaseProps := _DatabaseProps{}
+
+	if err = json.Unmarshal(bytes, &varDatabaseProps); err == nil {
+		*o = DatabaseProps(varDatabaseProps)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "partitioned")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDatabaseProps struct {

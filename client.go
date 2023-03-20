@@ -49,17 +49,17 @@ type APIClient struct {
 
 	// API Services
 
-	DatabaseApi *DatabaseApiService
+	DatabaseApi DatabaseApi
 
-	DesignDocumentsApi *DesignDocumentsApiService
+	DesignDocumentsApi DesignDocumentsApi
 
-	DocumentApi *DocumentApiService
+	DocumentApi DocumentApi
 
-	IndexApi *IndexApiService
+	IndexApi IndexApi
 
-	PartitionApi *PartitionApiService
+	PartitionApi PartitionApi
 
-	ServerApi *ServerApiService
+	ServerApi ServerApi
 }
 
 type service struct {

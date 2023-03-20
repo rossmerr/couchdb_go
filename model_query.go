@@ -43,7 +43,10 @@ type Query struct {
 	// Include execution statistics in the query response. Optional, default: false 
 	ExecutionStats *bool `json:"execution_stats,omitempty"`
 	Selector map[string]interface{} `json:"selector,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Query Query
 
 // NewQuery instantiates a new Query object
 // This constructor will assign default values to properties that have it defined,
@@ -527,7 +530,41 @@ func (o Query) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Selector) {
 		toSerialize["selector"] = o.Selector
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Query) UnmarshalJSON(bytes []byte) (err error) {
+	varQuery := _Query{}
+
+	if err = json.Unmarshal(bytes, &varQuery); err == nil {
+		*o = Query(varQuery)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "skip")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "sort")
+		delete(additionalProperties, "field")
+		delete(additionalProperties, "use_index")
+		delete(additionalProperties, "conflitsc")
+		delete(additionalProperties, "bookmark")
+		delete(additionalProperties, "update")
+		delete(additionalProperties, "stable")
+		delete(additionalProperties, "stale")
+		delete(additionalProperties, "execution_stats")
+		delete(additionalProperties, "selector")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableQuery struct {

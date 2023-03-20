@@ -21,7 +21,10 @@ var _ MappedNullable = &BasicDoc{}
 type BasicDoc struct {
 	Id *string `json:"id,omitempty"`
 	Rev *string `json:"rev,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _BasicDoc BasicDoc
 
 // NewBasicDoc instantiates a new BasicDoc object
 // This constructor will assign default values to properties that have it defined,
@@ -120,7 +123,30 @@ func (o BasicDoc) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Rev) {
 		toSerialize["rev"] = o.Rev
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *BasicDoc) UnmarshalJSON(bytes []byte) (err error) {
+	varBasicDoc := _BasicDoc{}
+
+	if err = json.Unmarshal(bytes, &varBasicDoc); err == nil {
+		*o = BasicDoc(varBasicDoc)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "rev")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBasicDoc struct {

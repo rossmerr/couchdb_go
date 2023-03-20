@@ -24,7 +24,10 @@ type Partition struct {
 	DocDelCount *int32 `json:"doc_del_count,omitempty"`
 	Partition *string `json:"partition,omitempty"`
 	Sizes *PartitionSizes `json:"sizes,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Partition Partition
 
 // NewPartition instantiates a new Partition object
 // This constructor will assign default values to properties that have it defined,
@@ -228,7 +231,33 @@ func (o Partition) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Sizes) {
 		toSerialize["sizes"] = o.Sizes
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Partition) UnmarshalJSON(bytes []byte) (err error) {
+	varPartition := _Partition{}
+
+	if err = json.Unmarshal(bytes, &varPartition); err == nil {
+		*o = Partition(varPartition)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "db_name")
+		delete(additionalProperties, "doc_count")
+		delete(additionalProperties, "doc_del_count")
+		delete(additionalProperties, "partition")
+		delete(additionalProperties, "sizes")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePartition struct {

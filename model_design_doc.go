@@ -34,7 +34,10 @@ type DesignDoc struct {
 	Indexes map[string]interface{} `json:"indexes,omitempty"`
 	// Indicates whether to automatically build indexes defined in this design document. Default is true.
 	Autoupdate *bool `json:"autoupdate,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DesignDoc DesignDoc
 
 // NewDesignDoc instantiates a new DesignDoc object
 // This constructor will assign default values to properties that have it defined,
@@ -343,7 +346,36 @@ func (o DesignDoc) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Autoupdate) {
 		toSerialize["autoupdate"] = o.Autoupdate
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DesignDoc) UnmarshalJSON(bytes []byte) (err error) {
+	varDesignDoc := _DesignDoc{}
+
+	if err = json.Unmarshal(bytes, &varDesignDoc); err == nil {
+		*o = DesignDoc(varDesignDoc)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "language")
+		delete(additionalProperties, "options")
+		delete(additionalProperties, "filters")
+		delete(additionalProperties, "updates")
+		delete(additionalProperties, "validate_doc_update")
+		delete(additionalProperties, "views")
+		delete(additionalProperties, "indexes")
+		delete(additionalProperties, "autoupdate")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDesignDoc struct {

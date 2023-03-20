@@ -21,12 +21,114 @@ import (
 )
 
 
+type DocumentApi interface {
+
+	/*
+	DocDelete Marks the specified document as deleted by adding a field _deleted with the value true.
+
+	Documents with this field will not be returned within requests anymore, but stay in the database. 
+You must supply the current (latest) revision, either by using the rev parameter or by using the
+If-Match header to specify the revision.
+
+*Notes*
+CouchDB doesn’t completely delete the specified document. Instead, it leaves a tombstone with very 
+basic information about the document. The tombstone is required so that the delete action can be 
+replicated across databases.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param docid DDocument ID
+	@return ApiDocDeleteRequest
+	*/
+	DocDelete(ctx context.Context, db string, docid string) ApiDocDeleteRequest
+
+	// DocDeleteExecute executes the request
+	//  @return DocumentOK
+	DocDeleteExecute(r ApiDocDeleteRequest) (*DocumentOK, *http.Response, error)
+
+	/*
+	DocGet Returns document by the specified docid from the specified db. Unless you request a specific revision, the latest revision of the document will always be returned.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param docid DDocument ID
+	@return ApiDocGetRequest
+	*/
+	DocGet(ctx context.Context, db string, docid string) ApiDocGetRequest
+
+	// DocGetExecute executes the request
+	//  @return map[string]interface{}
+	DocGetExecute(r ApiDocGetRequest) (map[string]interface{}, *http.Response, error)
+
+	/*
+	DocInfo Returns the HTTP Headers containing a minimal amount of information about the specified document.
+
+	The method supports the same query arguments as the GET /{db}/{docid} method, 
+but only the header information (including document size, and the revision as an ETag), is returned.
+
+The ETag header shows the current revision for the requested document, and the Content-Length 
+specifies the length of the data, if the document were requested in full.
+
+Adding any of the query arguments (see GET /{db}/{docid}), then the resulting HTTP Headers 
+will correspond to what would be returned.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param docid DDocument ID
+	@return ApiDocInfoRequest
+	*/
+	DocInfo(ctx context.Context, db string, docid string) ApiDocInfoRequest
+
+	// DocInfoExecute executes the request
+	DocInfoExecute(r ApiDocInfoRequest) (*http.Response, error)
+
+	/*
+	DocPut The PUT method creates a new named document, or creates a new revision of the existing document. Unlike the POST /{db}, you must specify the document ID in the request URL.
+
+	When updating an existing document, the current document revision must be included in the document 
+(i.e. the request body), as the rev query parameter, or in the If-Match request header.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@param docid DDocument ID
+	@return ApiDocPutRequest
+	*/
+	DocPut(ctx context.Context, db string, docid string) ApiDocPutRequest
+
+	// DocPutExecute executes the request
+	//  @return DocumentOK
+	DocPutExecute(r ApiDocPutRequest) (*DocumentOK, *http.Response, error)
+
+	/*
+	Post Creates a new document in the specified database, using the supplied JSON document structure.
+
+	If the JSON structure includes the _id field, then the document will be created with the 
+specified document ID.
+
+If the _id field is not specified, a new unique ID will be generated, following whatever 
+UUID algorithm is configured for that server.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@return ApiPostRequest
+	*/
+	Post(ctx context.Context, db string) ApiPostRequest
+
+	// PostExecute executes the request
+	//  @return DocumentOK
+	PostExecute(r ApiPostRequest) (*DocumentOK, *http.Response, error)
+}
+
 // DocumentApiService DocumentApi service
 type DocumentApiService service
 
 type ApiDocDeleteRequest struct {
 	ctx context.Context
-	ApiService *DocumentApiService
+	ApiService DocumentApi
 	db string
 	docid string
 	ifMatch *string
@@ -214,7 +316,7 @@ func (a *DocumentApiService) DocDeleteExecute(r ApiDocDeleteRequest) (*DocumentO
 
 type ApiDocGetRequest struct {
 	ctx context.Context
-	ApiService *DocumentApiService
+	ApiService DocumentApi
 	db string
 	docid string
 	ifNoneMatch *string
@@ -498,7 +600,7 @@ func (a *DocumentApiService) DocGetExecute(r ApiDocGetRequest) (map[string]inter
 
 type ApiDocInfoRequest struct {
 	ctx context.Context
-	ApiService *DocumentApiService
+	ApiService DocumentApi
 	db string
 	docid string
 }
@@ -623,7 +725,7 @@ func (a *DocumentApiService) DocInfoExecute(r ApiDocInfoRequest) (*http.Response
 
 type ApiDocPutRequest struct {
 	ctx context.Context
-	ApiService *DocumentApiService
+	ApiService DocumentApi
 	db string
 	docid string
 	body *map[string]interface{}
@@ -826,7 +928,7 @@ func (a *DocumentApiService) DocPutExecute(r ApiDocPutRequest) (*DocumentOK, *ht
 
 type ApiPostRequest struct {
 	ctx context.Context
-	ApiService *DocumentApiService
+	ApiService DocumentApi
 	db string
 	body *map[string]interface{}
 	batch *string

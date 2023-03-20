@@ -21,7 +21,10 @@ var _ MappedNullable = &Request{}
 type Request struct {
 	Headers *RequestHeaders `json:"headers,omitempty"`
 	Url *string `json:"url,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Request Request
 
 // NewRequest instantiates a new Request object
 // This constructor will assign default values to properties that have it defined,
@@ -120,7 +123,30 @@ func (o Request) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Url) {
 		toSerialize["url"] = o.Url
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Request) UnmarshalJSON(bytes []byte) (err error) {
+	varRequest := _Request{}
+
+	if err = json.Unmarshal(bytes, &varRequest); err == nil {
+		*o = Request(varRequest)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "headers")
+		delete(additionalProperties, "url")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableRequest struct {

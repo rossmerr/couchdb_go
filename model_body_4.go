@@ -20,7 +20,10 @@ var _ MappedNullable = &Body4{}
 // Body4 struct for Body4
 type Body4 struct {
 	Docs []Keys `json:"docs,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Body4 Body4
 
 // NewBody4 instantiates a new Body4 object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,29 @@ func (o Body4) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Docs) {
 		toSerialize["docs"] = o.Docs
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Body4) UnmarshalJSON(bytes []byte) (err error) {
+	varBody4 := _Body4{}
+
+	if err = json.Unmarshal(bytes, &varBody4); err == nil {
+		*o = Body4(varBody4)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "docs")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBody4 struct {

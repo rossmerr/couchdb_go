@@ -21,7 +21,10 @@ var _ MappedNullable = &OK{}
 type OK struct {
 	// Operation status
 	Ok *bool `json:"ok,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _OK OK
 
 // NewOK instantiates a new OK object
 // This constructor will assign default values to properties that have it defined,
@@ -85,7 +88,29 @@ func (o OK) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Ok) {
 		toSerialize["ok"] = o.Ok
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *OK) UnmarshalJSON(bytes []byte) (err error) {
+	varOK := _OK{}
+
+	if err = json.Unmarshal(bytes, &varOK); err == nil {
+		*o = OK(varOK)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "ok")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableOK struct {

@@ -21,7 +21,10 @@ var _ MappedNullable = &Body5{}
 type Body5 struct {
 	Admins *Admins `json:"admins,omitempty"`
 	Members *Members `json:"members,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Body5 Body5
 
 // NewBody5 instantiates a new Body5 object
 // This constructor will assign default values to properties that have it defined,
@@ -120,7 +123,30 @@ func (o Body5) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Members) {
 		toSerialize["members"] = o.Members
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Body5) UnmarshalJSON(bytes []byte) (err error) {
+	varBody5 := _Body5{}
+
+	if err = json.Unmarshal(bytes, &varBody5); err == nil {
+		*o = Body5(varBody5)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "admins")
+		delete(additionalProperties, "members")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBody5 struct {

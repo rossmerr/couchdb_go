@@ -38,7 +38,10 @@ type Database struct {
 	// Always \"0\". (Returned for legacy reasons.)
 	UpdateSeq *string `json:"update_seq,omitempty"`
 	Props *DatabaseProps `json:"props,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Database Database
 
 // NewDatabase instantiates a new Database object
 // This constructor will assign default values to properties that have it defined,
@@ -452,7 +455,39 @@ func (o Database) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Props) {
 		toSerialize["props"] = o.Props
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Database) UnmarshalJSON(bytes []byte) (err error) {
+	varDatabase := _Database{}
+
+	if err = json.Unmarshal(bytes, &varDatabase); err == nil {
+		*o = Database(varDatabase)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "db_name")
+		delete(additionalProperties, "cluster")
+		delete(additionalProperties, "compact_running")
+		delete(additionalProperties, "disk_format_version")
+		delete(additionalProperties, "doc_count")
+		delete(additionalProperties, "doc_del_count")
+		delete(additionalProperties, "instance_start_time")
+		delete(additionalProperties, "purge_seq")
+		delete(additionalProperties, "sizes")
+		delete(additionalProperties, "update_seq")
+		delete(additionalProperties, "props")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDatabase struct {

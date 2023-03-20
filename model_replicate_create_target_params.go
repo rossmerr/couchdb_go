@@ -20,7 +20,10 @@ var _ MappedNullable = &ReplicateCreateTargetParams{}
 // ReplicateCreateTargetParams struct for ReplicateCreateTargetParams
 type ReplicateCreateTargetParams struct {
 	Partitioned *bool `json:"partitioned,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReplicateCreateTargetParams ReplicateCreateTargetParams
 
 // NewReplicateCreateTargetParams instantiates a new ReplicateCreateTargetParams object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,29 @@ func (o ReplicateCreateTargetParams) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Partitioned) {
 		toSerialize["partitioned"] = o.Partitioned
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReplicateCreateTargetParams) UnmarshalJSON(bytes []byte) (err error) {
+	varReplicateCreateTargetParams := _ReplicateCreateTargetParams{}
+
+	if err = json.Unmarshal(bytes, &varReplicateCreateTargetParams); err == nil {
+		*o = ReplicateCreateTargetParams(varReplicateCreateTargetParams)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "partitioned")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReplicateCreateTargetParams struct {

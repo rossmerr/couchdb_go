@@ -19,12 +19,154 @@ import (
 )
 
 
+type ServerApi interface {
+
+	/*
+	ActiveTasks List of running tasks, including the task type, name, status and process ID.
+
+	The result is a JSON array of the currently running tasks, with each task being described with a single object. Depending on operation type set of response object fields might be different.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiActiveTasksRequest
+	*/
+	ActiveTasks(ctx context.Context) ApiActiveTasksRequest
+
+	// ActiveTasksExecute executes the request
+	//  @return []Task
+	ActiveTasksExecute(r ApiActiveTasksRequest) ([]Task, *http.Response, error)
+
+	/*
+	AllDBs Returns a list of all the databases in the CouchDB instance.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiAllDBsRequest
+	*/
+	AllDBs(ctx context.Context) ApiAllDBsRequest
+
+	// AllDBsExecute executes the request
+	//  @return []string
+	AllDBsExecute(r ApiAllDBsRequest) ([]string, *http.Response, error)
+
+	/*
+	ClusterSetupGet Returns the status of the node or cluster, per the cluster setup wizard.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiClusterSetupGetRequest
+	*/
+	ClusterSetupGet(ctx context.Context) ApiClusterSetupGetRequest
+
+	// ClusterSetupGetExecute executes the request
+	//  @return InlineResponse2001
+	ClusterSetupGetExecute(r ApiClusterSetupGetRequest) (*InlineResponse2001, *http.Response, error)
+
+	/*
+	ClusterSetupPost Configure a node as a single (standalone) node, as part of a cluster, or finalise a cluster.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiClusterSetupPostRequest
+	*/
+	ClusterSetupPost(ctx context.Context) ApiClusterSetupPostRequest
+
+	// ClusterSetupPostExecute executes the request
+	//  @return OK
+	ClusterSetupPostExecute(r ApiClusterSetupPostRequest) (*OK, *http.Response, error)
+
+	/*
+	DBsInfo Returns information of a list of the specified databases in the CouchDB instance.
+
+	This enables you to request information about multiple databases in a single request, in place of multiple GET /{db} requests.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiDBsInfoRequest
+	*/
+	DBsInfo(ctx context.Context) ApiDBsInfoRequest
+
+	// DBsInfoExecute executes the request
+	//  @return []InlineResponse200
+	DBsInfoExecute(r ApiDBsInfoRequest) ([]InlineResponse200, *http.Response, error)
+
+	/*
+	Membership Displays the nodes that are part of the cluster as cluster_nodes.
+
+	The field all_nodes displays all nodes this node knows about, including the ones that are part of the cluster. The endpoint is useful when setting up a cluster, see Node Management
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiMembershipRequest
+	*/
+	Membership(ctx context.Context) ApiMembershipRequest
+
+	// MembershipExecute executes the request
+	//  @return InlineResponse2002
+	MembershipExecute(r ApiMembershipRequest) (*InlineResponse2002, *http.Response, error)
+
+	/*
+	MetaInformation Accessing the root of a CouchDB instance returns meta information about the instance.
+
+	The response is a JSON structure containing information about the server, including a welcome message and the version of the server.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiMetaInformationRequest
+	*/
+	MetaInformation(ctx context.Context) ApiMetaInformationRequest
+
+	// MetaInformationExecute executes the request
+	//  @return []Server
+	MetaInformationExecute(r ApiMetaInformationRequest) ([]Server, *http.Response, error)
+
+	/*
+	Replication Request, configure, or stop, a replication operation.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiReplicationRequest
+	*/
+	Replication(ctx context.Context) ApiReplicationRequest
+
+	// ReplicationExecute executes the request
+	//  @return Replication
+	ReplicationExecute(r ApiReplicationRequest) (*Replication, *http.Response, error)
+
+	/*
+	SearchAnalyze Tests the results of Lucene analyzer tokenization on sample text.
+
+	*Warning*
+Search endpoints require a running search plugin connected to each cluster node. See Search Plugin Installation for details.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiSearchAnalyzeRequest
+	*/
+	SearchAnalyze(ctx context.Context) ApiSearchAnalyzeRequest
+
+	// SearchAnalyzeExecute executes the request
+	//  @return InlineResponse2003
+	SearchAnalyzeExecute(r ApiSearchAnalyzeRequest) (*InlineResponse2003, *http.Response, error)
+
+	/*
+	Up Confirms that the server is up, running, and ready to respond to requests.
+
+	If maintenance_mode is true or nolb, the endpoint will return a 404 response.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiUpRequest
+	*/
+	Up(ctx context.Context) ApiUpRequest
+
+	// UpExecute executes the request
+	//  @return InlineResponse2004
+	UpExecute(r ApiUpRequest) (*InlineResponse2004, *http.Response, error)
+}
+
 // ServerApiService ServerApi service
 type ServerApiService service
 
 type ApiActiveTasksRequest struct {
 	ctx context.Context
-	ApiService *ServerApiService
+	ApiService ServerApi
 }
 
 func (r ApiActiveTasksRequest) Execute() ([]Task, *http.Response, error) {
@@ -134,7 +276,7 @@ func (a *ServerApiService) ActiveTasksExecute(r ApiActiveTasksRequest) ([]Task, 
 
 type ApiAllDBsRequest struct {
 	ctx context.Context
-	ApiService *ServerApiService
+	ApiService ServerApi
 	descending *bool
 	endkey *string
 	endKey *string
@@ -301,7 +443,7 @@ func (a *ServerApiService) AllDBsExecute(r ApiAllDBsRequest) ([]string, *http.Re
 
 type ApiClusterSetupGetRequest struct {
 	ctx context.Context
-	ApiService *ServerApiService
+	ApiService ServerApi
 }
 
 func (r ApiClusterSetupGetRequest) Execute() (*InlineResponse2001, *http.Response, error) {
@@ -408,7 +550,7 @@ func (a *ServerApiService) ClusterSetupGetExecute(r ApiClusterSetupGetRequest) (
 
 type ApiClusterSetupPostRequest struct {
 	ctx context.Context
-	ApiService *ServerApiService
+	ApiService ServerApi
 	body *Body
 }
 
@@ -537,7 +679,7 @@ func (a *ServerApiService) ClusterSetupPostExecute(r ApiClusterSetupPostRequest)
 
 type ApiDBsInfoRequest struct {
 	ctx context.Context
-	ApiService *ServerApiService
+	ApiService ServerApi
 	body *Keys
 }
 
@@ -658,7 +800,7 @@ func (a *ServerApiService) DBsInfoExecute(r ApiDBsInfoRequest) ([]InlineResponse
 
 type ApiMembershipRequest struct {
 	ctx context.Context
-	ApiService *ServerApiService
+	ApiService ServerApi
 }
 
 func (r ApiMembershipRequest) Execute() (*InlineResponse2002, *http.Response, error) {
@@ -758,7 +900,7 @@ func (a *ServerApiService) MembershipExecute(r ApiMembershipRequest) (*InlineRes
 
 type ApiMetaInformationRequest struct {
 	ctx context.Context
-	ApiService *ServerApiService
+	ApiService ServerApi
 }
 
 func (r ApiMetaInformationRequest) Execute() ([]Server, *http.Response, error) {
@@ -858,7 +1000,7 @@ func (a *ServerApiService) MetaInformationExecute(r ApiMetaInformationRequest) (
 
 type ApiReplicationRequest struct {
 	ctx context.Context
-	ApiService *ServerApiService
+	ApiService ServerApi
 	body *Replicate
 }
 
@@ -1009,7 +1151,7 @@ func (a *ServerApiService) ReplicationExecute(r ApiReplicationRequest) (*Replica
 
 type ApiSearchAnalyzeRequest struct {
 	ctx context.Context
-	ApiService *ServerApiService
+	ApiService ServerApi
 	body *Body1
 }
 
@@ -1142,7 +1284,7 @@ func (a *ServerApiService) SearchAnalyzeExecute(r ApiSearchAnalyzeRequest) (*Inl
 
 type ApiUpRequest struct {
 	ctx context.Context
-	ApiService *ServerApiService
+	ApiService ServerApi
 }
 
 func (r ApiUpRequest) Execute() (*InlineResponse2004, *http.Response, error) {

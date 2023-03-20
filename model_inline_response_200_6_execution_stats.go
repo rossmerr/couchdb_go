@@ -24,7 +24,10 @@ type InlineResponse2006ExecutionStats struct {
 	TotalQuorumDocsExamined *float32 `json:"total_quorum_docs_examined,omitempty"`
 	ResultsReturned *float32 `json:"results_returned,omitempty"`
 	ExecutionTimeMs *float32 `json:"execution_time_ms,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _InlineResponse2006ExecutionStats InlineResponse2006ExecutionStats
 
 // NewInlineResponse2006ExecutionStats instantiates a new InlineResponse2006ExecutionStats object
 // This constructor will assign default values to properties that have it defined,
@@ -228,7 +231,33 @@ func (o InlineResponse2006ExecutionStats) ToMap() (map[string]interface{}, error
 	if !IsNil(o.ExecutionTimeMs) {
 		toSerialize["execution_time_ms"] = o.ExecutionTimeMs
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *InlineResponse2006ExecutionStats) UnmarshalJSON(bytes []byte) (err error) {
+	varInlineResponse2006ExecutionStats := _InlineResponse2006ExecutionStats{}
+
+	if err = json.Unmarshal(bytes, &varInlineResponse2006ExecutionStats); err == nil {
+		*o = InlineResponse2006ExecutionStats(varInlineResponse2006ExecutionStats)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "total_keys_examined")
+		delete(additionalProperties, "total_docs_examined")
+		delete(additionalProperties, "total_quorum_docs_examined")
+		delete(additionalProperties, "results_returned")
+		delete(additionalProperties, "execution_time_ms")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableInlineResponse2006ExecutionStats struct {

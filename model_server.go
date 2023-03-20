@@ -23,7 +23,10 @@ type Server struct {
 	Uuid *string `json:"uuid,omitempty"`
 	Vendor *ServerVendor `json:"vendor,omitempty"`
 	Version *string `json:"version,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Server Server
 
 // NewServer instantiates a new Server object
 // This constructor will assign default values to properties that have it defined,
@@ -192,7 +195,32 @@ func (o Server) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Version) {
 		toSerialize["version"] = o.Version
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Server) UnmarshalJSON(bytes []byte) (err error) {
+	varServer := _Server{}
+
+	if err = json.Unmarshal(bytes, &varServer); err == nil {
+		*o = Server(varServer)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "couchdb")
+		delete(additionalProperties, "uuid")
+		delete(additionalProperties, "vendor")
+		delete(additionalProperties, "version")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableServer struct {

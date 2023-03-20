@@ -41,7 +41,10 @@ type ReplicationHistory struct {
 	StartLastSeq *int32 `json:"start_last_seq,omitempty"`
 	// Date/Time replication operation started in RFC 2822 format
 	StartTime *string `json:"start_time,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ReplicationHistory ReplicationHistory
 
 // NewReplicationHistory instantiates a new ReplicationHistory object
 // This constructor will assign default values to properties that have it defined,
@@ -455,7 +458,39 @@ func (o ReplicationHistory) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.StartTime) {
 		toSerialize["start_time"] = o.StartTime
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ReplicationHistory) UnmarshalJSON(bytes []byte) (err error) {
+	varReplicationHistory := _ReplicationHistory{}
+
+	if err = json.Unmarshal(bytes, &varReplicationHistory); err == nil {
+		*o = ReplicationHistory(varReplicationHistory)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "doc_write_failures")
+		delete(additionalProperties, "docs_read")
+		delete(additionalProperties, "docs_written")
+		delete(additionalProperties, "end_last_seq")
+		delete(additionalProperties, "end_time")
+		delete(additionalProperties, "missing_checked")
+		delete(additionalProperties, "missing_found")
+		delete(additionalProperties, "recorded_seq")
+		delete(additionalProperties, "session_id")
+		delete(additionalProperties, "start_last_seq")
+		delete(additionalProperties, "start_time")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReplicationHistory struct {

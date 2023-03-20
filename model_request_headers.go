@@ -20,7 +20,10 @@ var _ MappedNullable = &RequestHeaders{}
 // RequestHeaders struct for RequestHeaders
 type RequestHeaders struct {
 	Authorization *string `json:"Authorization,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _RequestHeaders RequestHeaders
 
 // NewRequestHeaders instantiates a new RequestHeaders object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,29 @@ func (o RequestHeaders) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Authorization) {
 		toSerialize["Authorization"] = o.Authorization
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *RequestHeaders) UnmarshalJSON(bytes []byte) (err error) {
+	varRequestHeaders := _RequestHeaders{}
+
+	if err = json.Unmarshal(bytes, &varRequestHeaders); err == nil {
+		*o = RequestHeaders(varRequestHeaders)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "Authorization")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableRequestHeaders struct {

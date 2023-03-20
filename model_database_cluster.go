@@ -27,7 +27,10 @@ type DatabaseCluster struct {
 	R *int32 `json:"r,omitempty"`
 	// Write quorum. The number of copies of a document that need to be written before a successful reply.
 	W *int32 `json:"w,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DatabaseCluster DatabaseCluster
 
 // NewDatabaseCluster instantiates a new DatabaseCluster object
 // This constructor will assign default values to properties that have it defined,
@@ -196,7 +199,32 @@ func (o DatabaseCluster) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.W) {
 		toSerialize["w"] = o.W
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DatabaseCluster) UnmarshalJSON(bytes []byte) (err error) {
+	varDatabaseCluster := _DatabaseCluster{}
+
+	if err = json.Unmarshal(bytes, &varDatabaseCluster); err == nil {
+		*o = DatabaseCluster(varDatabaseCluster)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "n")
+		delete(additionalProperties, "q")
+		delete(additionalProperties, "r")
+		delete(additionalProperties, "w")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDatabaseCluster struct {

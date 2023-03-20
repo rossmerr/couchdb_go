@@ -21,7 +21,10 @@ var _ MappedNullable = &ServerVendor{}
 type ServerVendor struct {
 	Name *string `json:"name,omitempty"`
 	Version *string `json:"version,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ServerVendor ServerVendor
 
 // NewServerVendor instantiates a new ServerVendor object
 // This constructor will assign default values to properties that have it defined,
@@ -120,7 +123,30 @@ func (o ServerVendor) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Version) {
 		toSerialize["version"] = o.Version
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ServerVendor) UnmarshalJSON(bytes []byte) (err error) {
+	varServerVendor := _ServerVendor{}
+
+	if err = json.Unmarshal(bytes, &varServerVendor); err == nil {
+		*o = ServerVendor(varServerVendor)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "version")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableServerVendor struct {

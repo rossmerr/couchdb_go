@@ -24,7 +24,10 @@ type Row struct {
 	Key *string `json:"key,omitempty"`
 	Value map[string]interface{} `json:"value,omitempty"`
 	Doc map[string]interface{} `json:"doc,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Row Row
 
 // NewRow instantiates a new Row object
 // This constructor will assign default values to properties that have it defined,
@@ -193,7 +196,32 @@ func (o Row) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Doc) {
 		toSerialize["doc"] = o.Doc
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Row) UnmarshalJSON(bytes []byte) (err error) {
+	varRow := _Row{}
+
+	if err = json.Unmarshal(bytes, &varRow); err == nil {
+		*o = Row(varRow)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "key")
+		delete(additionalProperties, "value")
+		delete(additionalProperties, "doc")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableRow struct {

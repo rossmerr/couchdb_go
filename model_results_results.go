@@ -21,7 +21,10 @@ var _ MappedNullable = &ResultsResults{}
 type ResultsResults struct {
 	Id *string `json:"id,omitempty"`
 	Docs []ResultsDocs `json:"docs,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ResultsResults ResultsResults
 
 // NewResultsResults instantiates a new ResultsResults object
 // This constructor will assign default values to properties that have it defined,
@@ -120,7 +123,30 @@ func (o ResultsResults) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Docs) {
 		toSerialize["docs"] = o.Docs
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ResultsResults) UnmarshalJSON(bytes []byte) (err error) {
+	varResultsResults := _ResultsResults{}
+
+	if err = json.Unmarshal(bytes, &varResultsResults); err == nil {
+		*o = ResultsResults(varResultsResults)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "docs")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableResultsResults struct {

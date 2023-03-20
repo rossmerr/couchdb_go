@@ -36,7 +36,10 @@ type ViewIndex struct {
 	WaitingClients *int32 `json:"waiting_clients,omitempty"`
 	// Indicates if there are outstanding commits to the underlying database that need to processed
 	WaitingCommit *bool `json:"waiting_commit,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ViewIndex ViewIndex
 
 // NewViewIndex instantiates a new ViewIndex object
 // This constructor will assign default values to properties that have it defined,
@@ -380,7 +383,37 @@ func (o ViewIndex) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.WaitingCommit) {
 		toSerialize["waiting_commit"] = o.WaitingCommit
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ViewIndex) UnmarshalJSON(bytes []byte) (err error) {
+	varViewIndex := _ViewIndex{}
+
+	if err = json.Unmarshal(bytes, &varViewIndex); err == nil {
+		*o = ViewIndex(varViewIndex)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "compact_running")
+		delete(additionalProperties, "language")
+		delete(additionalProperties, "purge_seq")
+		delete(additionalProperties, "signature")
+		delete(additionalProperties, "sizes")
+		delete(additionalProperties, "update_seq")
+		delete(additionalProperties, "updater_running")
+		delete(additionalProperties, "waiting_clients")
+		delete(additionalProperties, "waiting_commit")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableViewIndex struct {

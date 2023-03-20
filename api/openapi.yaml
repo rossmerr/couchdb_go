@@ -2217,6 +2217,60 @@ paths:
       tags:
       - Index
       x-codegen-request-body-name: body
+  /{db}/_partition/{partition}/_find:
+    post:
+      description: |
+        Find documents using a declarative JSON querying syntax. Queries will use custom indexes, specified using the _index endpoint, if available. Otherwise, they use the built-in _all_docs index, which can be arbitrarily slow.
+      operationId: dbPartitionFindGet
+      parameters:
+      - description: Database name
+        in: path
+        name: db
+        required: true
+        schema:
+          pattern: "^[a-z][a-z0-9_$()+/-]*$"
+          type: string
+      - description: Partition name
+        in: path
+        name: partition
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Query'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_6'
+          description: Request completed successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Read permission required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Requested database not found
+      summary: Finds the document.
+      tags:
+      - Index
+      x-codegen-request-body-name: body
   /{db}/_partition/{partition}:
     get:
       operationId: partitionInfo

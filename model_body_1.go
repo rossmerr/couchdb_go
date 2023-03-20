@@ -23,7 +23,10 @@ type Body1 struct {
 	Field *string `json:"field,omitempty"`
 	// Analyzer token you want to test
 	Text *string `json:"text,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Body1 Body1
 
 // NewBody1 instantiates a new Body1 object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,30 @@ func (o Body1) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Text) {
 		toSerialize["text"] = o.Text
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Body1) UnmarshalJSON(bytes []byte) (err error) {
+	varBody1 := _Body1{}
+
+	if err = json.Unmarshal(bytes, &varBody1); err == nil {
+		*o = Body1(varBody1)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "field")
+		delete(additionalProperties, "text")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBody1 struct {

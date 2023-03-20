@@ -23,7 +23,10 @@ type Replication struct {
 	Rev *string `json:"rev,omitempty"`
 	// Operation status
 	Ok *bool `json:"ok,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Replication Replication
 
 // NewReplication instantiates a new Replication object
 // This constructor will assign default values to properties that have it defined,
@@ -157,7 +160,31 @@ func (o Replication) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Ok) {
 		toSerialize["ok"] = o.Ok
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Replication) UnmarshalJSON(bytes []byte) (err error) {
+	varReplication := _Replication{}
+
+	if err = json.Unmarshal(bytes, &varReplication); err == nil {
+		*o = Replication(varReplication)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "rev")
+		delete(additionalProperties, "ok")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableReplication struct {

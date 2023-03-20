@@ -23,7 +23,10 @@ type Members struct {
 	Name []string `json:"name,omitempty"`
 	// List of users roles
 	Roles []string `json:"roles,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Members Members
 
 // NewMembers instantiates a new Members object
 // This constructor will assign default values to properties that have it defined,
@@ -122,7 +125,30 @@ func (o Members) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Roles) {
 		toSerialize["roles"] = o.Roles
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Members) UnmarshalJSON(bytes []byte) (err error) {
+	varMembers := _Members{}
+
+	if err = json.Unmarshal(bytes, &varMembers); err == nil {
+		*o = Members(varMembers)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "roles")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableMembers struct {

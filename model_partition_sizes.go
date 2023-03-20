@@ -21,7 +21,10 @@ var _ MappedNullable = &PartitionSizes{}
 type PartitionSizes struct {
 	Active *int32 `json:"active,omitempty"`
 	External *int32 `json:"external,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _PartitionSizes PartitionSizes
 
 // NewPartitionSizes instantiates a new PartitionSizes object
 // This constructor will assign default values to properties that have it defined,
@@ -120,7 +123,30 @@ func (o PartitionSizes) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.External) {
 		toSerialize["external"] = o.External
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *PartitionSizes) UnmarshalJSON(bytes []byte) (err error) {
+	varPartitionSizes := _PartitionSizes{}
+
+	if err = json.Unmarshal(bytes, &varPartitionSizes); err == nil {
+		*o = PartitionSizes(varPartitionSizes)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "active")
+		delete(additionalProperties, "external")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullablePartitionSizes struct {

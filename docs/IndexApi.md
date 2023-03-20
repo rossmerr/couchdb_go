@@ -6,6 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**DbFindGet**](IndexApi.md#DbFindGet) | **Post** /{db}/_find | Finds the document.
 [**DbIndexGet**](IndexApi.md#DbIndexGet) | **Get** /{db}/_index | Returns the current indexes object from the specified database.
+[**DbPartitionFindGet**](IndexApi.md#DbPartitionFindGet) | **Post** /{db}/_partition/{partition}/_find | Finds the document.
 [**IndexDelete**](IndexApi.md#IndexDelete) | **Delete** /{db}/_index/{designdoc}/json/{name} | 
 [**SbIndexPost**](IndexApi.md#SbIndexPost) | **Post** /{db}/_index | Sets the index for the given database.
 
@@ -147,6 +148,81 @@ No authorization required
 
 - **Content-Type**: Not defined
 - **Accept**: application/json, text/plan
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## DbPartitionFindGet
+
+> InlineResponse2006 DbPartitionFindGet(ctx, db, partition).Body(body).Execute()
+
+Finds the document.
+
+
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+    db := "db_example" // string | Database name
+    partition := "partition_example" // string | Partition name
+    body := *openapiclient.NewQuery() // Query | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.IndexApi.DbPartitionFindGet(context.Background(), db, partition).Body(body).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `IndexApi.DbPartitionFindGet``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `DbPartitionFindGet`: InlineResponse2006
+    fmt.Fprintf(os.Stdout, "Response from `IndexApi.DbPartitionFindGet`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**db** | **string** | Database name | 
+**partition** | **string** | Partition name | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDbPartitionFindGetRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+ **body** | [**Query**](Query.md) |  | 
+
+### Return type
+
+[**InlineResponse2006**](InlineResponse2006.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
 [[Back to Model list]](../README.md#documentation-for-models)

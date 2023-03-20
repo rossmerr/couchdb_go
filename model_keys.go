@@ -20,7 +20,10 @@ var _ MappedNullable = &Keys{}
 // Keys struct for Keys
 type Keys struct {
 	Keys []string `json:"keys,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _Keys Keys
 
 // NewKeys instantiates a new Keys object
 // This constructor will assign default values to properties that have it defined,
@@ -84,7 +87,29 @@ func (o Keys) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Keys) {
 		toSerialize["keys"] = o.Keys
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *Keys) UnmarshalJSON(bytes []byte) (err error) {
+	varKeys := _Keys{}
+
+	if err = json.Unmarshal(bytes, &varKeys); err == nil {
+		*o = Keys(varKeys)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "keys")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableKeys struct {

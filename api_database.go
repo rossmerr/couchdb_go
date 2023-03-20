@@ -21,12 +21,247 @@ import (
 )
 
 
+type DatabaseApi interface {
+
+	/*
+	BulkDocs The bulk document API allows you to create and update multiple documents at the same time within a single request.
+
+	The basic operation is similar to creating or updating a single document, except that you batch the document structure and information.
+
+When creating new documents the document ID (_id) is optional.
+
+For updating existing documents, you must provide the document ID, revision information (_rev), and new document values.
+
+In case of batch deleting documents all fields as document ID, revision information and deletion status (_deleted) are required.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@return ApiBulkDocsRequest
+	*/
+	BulkDocs(ctx context.Context, db string) ApiBulkDocsRequest
+
+	// BulkDocsExecute executes the request
+	//  @return []BulkResponse
+	BulkDocsExecute(r ApiBulkDocsRequest) ([]BulkResponse, *http.Response, error)
+
+	/*
+	BulkGet This method can be called to query several documents in bulk.
+
+	It is well suited for fetching a specific revision of documents, as replicators do for example, or for getting revision history.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@return ApiBulkGetRequest
+	*/
+	BulkGet(ctx context.Context, db string) ApiBulkGetRequest
+
+	// BulkGetExecute executes the request
+	//  @return Results
+	BulkGetExecute(r ApiBulkGetRequest) (*Results, *http.Response, error)
+
+	/*
+	DbSecurityGet Returns the current security object from the specified database.
+
+	The security object consists of two compulsory elements, admins and members, which are used to specify the list of users and/or roles that have admin and members rights to the database respectively:
+
+  - members: they can read all types of documents from the DB, and they can write (and edit) documents to the DB except for design documents.
+  - admins: they have all the privileges of members plus the privileges: write (and edit) design documents, add/remove database admins and members and set the database revisions limit. They can not create a database nor delete a database.
+
+Both members and admins objects contain two array-typed fields:
+
+  - names: List of CouchDB user names
+  - roles: List of users roles
+
+Any additional fields in the security object are optional. The entire security object is made available to validation and other internal functions so that the database can control and limit functionality.
+
+If both the names and roles fields of either the admins or members properties are empty arrays, or are not existent, it means the database has no admins or members.
+
+Having no admins, only server admins (with the reserved _admin role) are able to update design document and make other admin level changes.
+
+Having no members, any user can write regular documents (any non-design document) and read documents from the database.
+
+If there are any member names or roles defined for a database, then only authenticated users having a matching name or role are allowed to read documents from the database (or do a GET /{db} call).
+
+*Note*
+If the security object for a database has never been set, then the value returned will be empty.
+
+Also note, that security objects are not regular versioned documents (that is, they are not under MVCC rules). This is a design choice to speed up authorization checks (avoids traversing a database’s documents B-Tree).
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@return ApiDbSecurityGetRequest
+	*/
+	DbSecurityGet(ctx context.Context, db string) ApiDbSecurityGetRequest
+
+	// DbSecurityGetExecute executes the request
+	//  @return InlineResponse2005
+	DbSecurityGetExecute(r ApiDbSecurityGetRequest) (*InlineResponse2005, *http.Response, error)
+
+	/*
+	Delete Deletes the specified database, and all the documents and attachments contained within it.
+
+	*Note*
+To avoid deleting a database, CouchDB will respond with the HTTP status code 400 when the request 
+URL includes a ?rev= parameter. This suggests that one wants to delete a document but forgot to add 
+the document id to the URL.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@return ApiDeleteRequest
+	*/
+	Delete(ctx context.Context, db string) ApiDeleteRequest
+
+	// DeleteExecute executes the request
+	//  @return OK
+	DeleteExecute(r ApiDeleteRequest) (*OK, *http.Response, error)
+
+	/*
+	DesignDocAllGet Returns a JSON structure of all of the design documents in a given database.
+
+	The information is returned as a JSON structure containing meta information about the return structure, including a list of all design documents and basic contents, consisting the ID, revision and key. The key is the design document’s _id.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@return ApiDesignDocAllGetRequest
+	*/
+	DesignDocAllGet(ctx context.Context, db string) ApiDesignDocAllGetRequest
+
+	// DesignDocAllGetExecute executes the request
+	//  @return Pagination
+	DesignDocAllGetExecute(r ApiDesignDocAllGetRequest) (*Pagination, *http.Response, error)
+
+	/*
+	DesignDocAllPost POST _design_docs functionality supports identical parameters and behavior as specified in the GET /{db}/_design_docs
+
+	API but allows for the query string parameters to be supplied as keys in a JSON object in the body of the POST request.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@return ApiDesignDocAllPostRequest
+	*/
+	DesignDocAllPost(ctx context.Context, db string) ApiDesignDocAllPostRequest
+
+	// DesignDocAllPostExecute executes the request
+	//  @return Pagination
+	DesignDocAllPostExecute(r ApiDesignDocAllPostRequest) (*Pagination, *http.Response, error)
+
+	/*
+	DocGetAll Executes the built-in _all_docs view
+
+	returning all of the documents in the database. With the exception of the URL parameters 
+(described below), this endpoint works identically to any other view. Refer to the view endpoint 
+documentation for a complete description of the available query parameters and the format of 
+the returned data.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@return ApiDocGetAllRequest
+	*/
+	DocGetAll(ctx context.Context, db string) ApiDocGetAllRequest
+
+	// DocGetAllExecute executes the request
+	//  @return Pagination
+	DocGetAllExecute(r ApiDocGetAllRequest) (*Pagination, *http.Response, error)
+
+	/*
+	DocPostAll Executes the built-in _all_docs view
+
+	POST _all_docs functionality supports identical parameters and behavior as specified in the 
+GET /{db}/_all_docs API but allows for the query string parameters to be supplied as keys in a 
+JSON object in the body of the POST request.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@return ApiDocPostAllRequest
+	*/
+	DocPostAll(ctx context.Context, db string) ApiDocPostAllRequest
+
+	// DocPostAllExecute executes the request
+	//  @return Pagination
+	DocPostAllExecute(r ApiDocPostAllRequest) (*Pagination, *http.Response, error)
+
+	/*
+	Exists Returns the HTTP Headers containing a minimal amount of information about the specified database.
+
+	Since the response body is empty, using the HEAD method is a lightweight way to check if the database exists already or not.
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@return ApiExistsRequest
+	*/
+	Exists(ctx context.Context, db string) ApiExistsRequest
+
+	// ExistsExecute executes the request
+	ExistsExecute(r ApiExistsRequest) (*http.Response, error)
+
+	/*
+	Get Gets information about the specified database.
+
+	By passing in the appropriate options, you can search for
+available inventory in the system
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@return ApiGetRequest
+	*/
+	Get(ctx context.Context, db string) ApiGetRequest
+
+	// GetExecute executes the request
+	//  @return Database
+	GetExecute(r ApiGetRequest) (*Database, *http.Response, error)
+
+	/*
+	Put Creates a new database.
+
+	The database name {db} must be composed by following next rules:
+Name must begin with a lowercase letter (a-z)
+* Lowercase characters (a-z)
+* Digits (0-9)
+* Any of the characters _, $, (, ), +, -, and /.
+
+If you’re familiar with Regular Expressions, the rules above could be written as 
+
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@return ApiPutRequest
+	*/
+	Put(ctx context.Context, db string) ApiPutRequest
+
+	// PutExecute executes the request
+	//  @return OK
+	PutExecute(r ApiPutRequest) (*OK, *http.Response, error)
+
+	/*
+	SbSecurityPut Sets the security object for the given database.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param db Database name
+	@return ApiSbSecurityPutRequest
+	*/
+	SbSecurityPut(ctx context.Context, db string) ApiSbSecurityPutRequest
+
+	// SbSecurityPutExecute executes the request
+	//  @return OK
+	SbSecurityPutExecute(r ApiSbSecurityPutRequest) (*OK, *http.Response, error)
+}
+
 // DatabaseApiService DatabaseApi service
 type DatabaseApiService service
 
 type ApiBulkDocsRequest struct {
 	ctx context.Context
-	ApiService *DatabaseApiService
+	ApiService DatabaseApi
 	db string
 	body *Body3
 }
@@ -168,7 +403,7 @@ func (a *DatabaseApiService) BulkDocsExecute(r ApiBulkDocsRequest) ([]BulkRespon
 
 type ApiBulkGetRequest struct {
 	ctx context.Context
-	ApiService *DatabaseApiService
+	ApiService DatabaseApi
 	db string
 	body *Body2
 	revs *bool
@@ -337,7 +572,7 @@ func (a *DatabaseApiService) BulkGetExecute(r ApiBulkGetRequest) (*Results, *htt
 
 type ApiDbSecurityGetRequest struct {
 	ctx context.Context
-	ApiService *DatabaseApiService
+	ApiService DatabaseApi
 	db string
 }
 
@@ -464,7 +699,7 @@ func (a *DatabaseApiService) DbSecurityGetExecute(r ApiDbSecurityGetRequest) (*I
 
 type ApiDeleteRequest struct {
 	ctx context.Context
-	ApiService *DatabaseApiService
+	ApiService DatabaseApi
 	db string
 }
 
@@ -603,7 +838,7 @@ func (a *DatabaseApiService) DeleteExecute(r ApiDeleteRequest) (*OK, *http.Respo
 
 type ApiDesignDocAllGetRequest struct {
 	ctx context.Context
-	ApiService *DatabaseApiService
+	ApiService DatabaseApi
 	db string
 	conflicts *bool
 	descending *bool
@@ -887,7 +1122,7 @@ func (a *DatabaseApiService) DesignDocAllGetExecute(r ApiDesignDocAllGetRequest)
 
 type ApiDesignDocAllPostRequest struct {
 	ctx context.Context
-	ApiService *DatabaseApiService
+	ApiService DatabaseApi
 	db string
 	body *Body4
 	conflicts *bool
@@ -1182,7 +1417,7 @@ func (a *DatabaseApiService) DesignDocAllPostExecute(r ApiDesignDocAllPostReques
 
 type ApiDocGetAllRequest struct {
 	ctx context.Context
-	ApiService *DatabaseApiService
+	ApiService DatabaseApi
 	db string
 	conflicts *bool
 	descending *bool
@@ -1577,7 +1812,7 @@ func (a *DatabaseApiService) DocGetAllExecute(r ApiDocGetAllRequest) (*Paginatio
 
 type ApiDocPostAllRequest struct {
 	ctx context.Context
-	ApiService *DatabaseApiService
+	ApiService DatabaseApi
 	db string
 	body *Keys
 	conflicts *bool
@@ -1982,7 +2217,7 @@ func (a *DatabaseApiService) DocPostAllExecute(r ApiDocPostAllRequest) (*Paginat
 
 type ApiExistsRequest struct {
 	ctx context.Context
-	ApiService *DatabaseApiService
+	ApiService DatabaseApi
 	db string
 }
 
@@ -2085,7 +2320,7 @@ func (a *DatabaseApiService) ExistsExecute(r ApiExistsRequest) (*http.Response, 
 
 type ApiGetRequest struct {
 	ctx context.Context
-	ApiService *DatabaseApiService
+	ApiService DatabaseApi
 	db string
 }
 
@@ -2200,7 +2435,7 @@ func (a *DatabaseApiService) GetExecute(r ApiGetRequest) (*Database, *http.Respo
 
 type ApiPutRequest struct {
 	ctx context.Context
-	ApiService *DatabaseApiService
+	ApiService DatabaseApi
 	db string
 	q *int32
 	n *int32
@@ -2372,7 +2607,7 @@ func (a *DatabaseApiService) PutExecute(r ApiPutRequest) (*OK, *http.Response, e
 
 type ApiSbSecurityPutRequest struct {
 	ctx context.Context
-	ApiService *DatabaseApiService
+	ApiService DatabaseApi
 	db string
 	body *Body5
 }

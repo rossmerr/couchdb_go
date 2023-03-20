@@ -2444,6 +2444,73 @@
         }
       }
     },
+    "/{db}/_partition/{partition}/_find": {
+      "post": {
+        "tags": [
+          "Index"
+        ],
+        "summary": "Finds the document.",
+        "description": "Find documents using a declarative JSON querying syntax. Queries will use custom indexes, specified using the _index endpoint, if available. Otherwise, they use the built-in _all_docs index, which can be arbitrarily slow.\n",
+        "operationId": "dbPartitionFindGet",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "db",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_$()+/-]*$"
+          },
+          {
+            "name": "partition",
+            "in": "path",
+            "description": "Partition name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Query"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request completed successfully",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_6"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Read permission required",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Requested database not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
     "/{db}/_partition/{partition}": {
       "get": {
         "tags": [

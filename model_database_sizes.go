@@ -25,7 +25,10 @@ type DatabaseSizes struct {
 	External *int32 `json:"external,omitempty"`
 	// An opaque string that describes the state of the database. Do not rely on this string for counting the number of updates.
 	File *int32 `json:"file,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DatabaseSizes DatabaseSizes
 
 // NewDatabaseSizes instantiates a new DatabaseSizes object
 // This constructor will assign default values to properties that have it defined,
@@ -159,7 +162,31 @@ func (o DatabaseSizes) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.File) {
 		toSerialize["file"] = o.File
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DatabaseSizes) UnmarshalJSON(bytes []byte) (err error) {
+	varDatabaseSizes := _DatabaseSizes{}
+
+	if err = json.Unmarshal(bytes, &varDatabaseSizes); err == nil {
+		*o = DatabaseSizes(varDatabaseSizes)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "active")
+		delete(additionalProperties, "external")
+		delete(additionalProperties, "file")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDatabaseSizes struct {

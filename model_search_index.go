@@ -24,7 +24,10 @@ type SearchIndex struct {
 	DocCount *int32 `json:"doc_count,omitempty"`
 	DiskSize *int32 `json:"disk_size,omitempty"`
 	CommittedSeq *int32 `json:"committed_seq,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _SearchIndex SearchIndex
 
 // NewSearchIndex instantiates a new SearchIndex object
 // This constructor will assign default values to properties that have it defined,
@@ -228,7 +231,33 @@ func (o SearchIndex) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.CommittedSeq) {
 		toSerialize["committed_seq"] = o.CommittedSeq
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *SearchIndex) UnmarshalJSON(bytes []byte) (err error) {
+	varSearchIndex := _SearchIndex{}
+
+	if err = json.Unmarshal(bytes, &varSearchIndex); err == nil {
+		*o = SearchIndex(varSearchIndex)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "pending_seq")
+		delete(additionalProperties, "doc_del_count")
+		delete(additionalProperties, "doc_count")
+		delete(additionalProperties, "disk_size")
+		delete(additionalProperties, "committed_seq")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSearchIndex struct {

@@ -23,7 +23,10 @@ type IndexDefinitions struct {
 	Name *string `json:"name,omitempty"`
 	Type *string `json:"type,omitempty"`
 	Def *IndexDefinitionsDef `json:"def,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _IndexDefinitions IndexDefinitions
 
 // NewIndexDefinitions instantiates a new IndexDefinitions object
 // This constructor will assign default values to properties that have it defined,
@@ -192,7 +195,32 @@ func (o IndexDefinitions) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Def) {
 		toSerialize["def"] = o.Def
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *IndexDefinitions) UnmarshalJSON(bytes []byte) (err error) {
+	varIndexDefinitions := _IndexDefinitions{}
+
+	if err = json.Unmarshal(bytes, &varIndexDefinitions); err == nil {
+		*o = IndexDefinitions(varIndexDefinitions)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "ddoc")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "def")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableIndexDefinitions struct {

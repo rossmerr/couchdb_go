@@ -27,7 +27,10 @@ type BulkResponse struct {
 	Error *string `json:"error,omitempty"`
 	// Error description. Available if response code is 4xx
 	Reason *string `json:"reason,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _BulkResponse BulkResponse
 
 // NewBulkResponse instantiates a new BulkResponse object
 // This constructor will assign default values to properties that have it defined,
@@ -231,7 +234,33 @@ func (o BulkResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Reason) {
 		toSerialize["reason"] = o.Reason
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *BulkResponse) UnmarshalJSON(bytes []byte) (err error) {
+	varBulkResponse := _BulkResponse{}
+
+	if err = json.Unmarshal(bytes, &varBulkResponse); err == nil {
+		*o = BulkResponse(varBulkResponse)
+	}
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "ok")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "rev")
+		delete(additionalProperties, "error")
+		delete(additionalProperties, "reason")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableBulkResponse struct {
