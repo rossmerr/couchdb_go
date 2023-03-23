@@ -107,9 +107,9 @@ Class | Method | HTTP request | Description
 *DocumentApi* | [**DocInfo**](docs/DocumentApi.md#docinfo) | **Head** /{db}/{docid} | Returns the HTTP Headers containing a minimal amount of information about the specified document.
 *DocumentApi* | [**DocPut**](docs/DocumentApi.md#docput) | **Put** /{db}/{docid} | The PUT method creates a new named document, or creates a new revision of the existing document. Unlike the POST /{db}, you must specify the document ID in the request URL.
 *DocumentApi* | [**Post**](docs/DocumentApi.md#post) | **Post** /{db} | Creates a new document in the specified database, using the supplied JSON document structure.
-*IndexApi* | [**DbFindGet**](docs/IndexApi.md#dbfindget) | **Post** /{db}/_find | Finds the document.
+*IndexApi* | [**DbFindPost**](docs/IndexApi.md#dbfindpost) | **Post** /{db}/_find | Finds the document.
 *IndexApi* | [**DbIndexGet**](docs/IndexApi.md#dbindexget) | **Get** /{db}/_index | Returns the current indexes object from the specified database.
-*IndexApi* | [**DbPartitionFindGet**](docs/IndexApi.md#dbpartitionfindget) | **Post** /{db}/_partition/{partition}/_find | Finds the document.
+*IndexApi* | [**DbPartitionFindPost**](docs/IndexApi.md#dbpartitionfindpost) | **Post** /{db}/_partition/{partition}/_find | Finds the document.
 *IndexApi* | [**IndexDelete**](docs/IndexApi.md#indexdelete) | **Delete** /{db}/_index/{designdoc}/json/{name} | 
 *IndexApi* | [**SbIndexPost**](docs/IndexApi.md#sbindexpost) | **Post** /{db}/_index | Sets the index for the given database.
 *PartitionApi* | [**PartitionDesignDocSearch**](docs/PartitionApi.md#partitiondesigndocsearch) | **Get** /{db}/_partition/{partition}/_design/{ddoc}/_search/{index} | Executes a search request against the named index in the specified design document.

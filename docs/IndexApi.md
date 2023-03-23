@@ -4,17 +4,17 @@ All URIs are relative to *https://virtserver.swaggerhub.com/RossMerr/CouchDB/4.0
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**DbFindGet**](IndexApi.md#DbFindGet) | **Post** /{db}/_find | Finds the document.
+[**DbFindPost**](IndexApi.md#DbFindPost) | **Post** /{db}/_find | Finds the document.
 [**DbIndexGet**](IndexApi.md#DbIndexGet) | **Get** /{db}/_index | Returns the current indexes object from the specified database.
-[**DbPartitionFindGet**](IndexApi.md#DbPartitionFindGet) | **Post** /{db}/_partition/{partition}/_find | Finds the document.
+[**DbPartitionFindPost**](IndexApi.md#DbPartitionFindPost) | **Post** /{db}/_partition/{partition}/_find | Finds the document.
 [**IndexDelete**](IndexApi.md#IndexDelete) | **Delete** /{db}/_index/{designdoc}/json/{name} | 
 [**SbIndexPost**](IndexApi.md#SbIndexPost) | **Post** /{db}/_index | Sets the index for the given database.
 
 
 
-## DbFindGet
+## DbFindPost
 
-> InlineResponse2006 DbFindGet(ctx, db).Body(body).Execute()
+> InlineResponse2006 DbFindPost(ctx, db).Body(body).Execute()
 
 Finds the document.
 
@@ -38,13 +38,13 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.IndexApi.DbFindGet(context.Background(), db).Body(body).Execute()
+    resp, r, err := apiClient.IndexApi.DbFindPost(context.Background(), db).Body(body).Execute()
     if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `IndexApi.DbFindGet``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Error when calling `IndexApi.DbFindPost``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `DbFindGet`: InlineResponse2006
-    fmt.Fprintf(os.Stdout, "Response from `IndexApi.DbFindGet`: %v\n", resp)
+    // response from `DbFindPost`: InlineResponse2006
+    fmt.Fprintf(os.Stdout, "Response from `IndexApi.DbFindPost`: %v\n", resp)
 }
 ```
 
@@ -58,7 +58,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiDbFindGetRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiDbFindPostRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -154,9 +154,9 @@ No authorization required
 [[Back to README]](../README.md)
 
 
-## DbPartitionFindGet
+## DbPartitionFindPost
 
-> InlineResponse2006 DbPartitionFindGet(ctx, db, partition).Body(body).Execute()
+> InlineResponse2006 DbPartitionFindPost(ctx, db, partition).Body(body).Execute()
 
 Finds the document.
 
@@ -181,13 +181,13 @@ func main() {
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.IndexApi.DbPartitionFindGet(context.Background(), db, partition).Body(body).Execute()
+    resp, r, err := apiClient.IndexApi.DbPartitionFindPost(context.Background(), db, partition).Body(body).Execute()
     if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `IndexApi.DbPartitionFindGet``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Error when calling `IndexApi.DbPartitionFindPost``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `DbPartitionFindGet`: InlineResponse2006
-    fmt.Fprintf(os.Stdout, "Response from `IndexApi.DbPartitionFindGet`: %v\n", resp)
+    // response from `DbPartitionFindPost`: InlineResponse2006
+    fmt.Fprintf(os.Stdout, "Response from `IndexApi.DbPartitionFindPost`: %v\n", resp)
 }
 ```
 
@@ -202,7 +202,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiDbPartitionFindGetRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiDbPartitionFindPostRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes

@@ -23,20 +23,20 @@ import (
 type IndexApi interface {
 
 	/*
-	DbFindGet Finds the document.
+	DbFindPost Finds the document.
 
 	Find documents using a declarative JSON querying syntax. Queries will use custom indexes, specified using the _index endpoint, if available. Otherwise, they use the built-in _all_docs index, which can be arbitrarily slow.
 
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param db Database name
-	@return ApiDbFindGetRequest
+	@return ApiDbFindPostRequest
 	*/
-	DbFindGet(ctx context.Context, db string) ApiDbFindGetRequest
+	DbFindPost(ctx context.Context, db string) ApiDbFindPostRequest
 
-	// DbFindGetExecute executes the request
+	// DbFindPostExecute executes the request
 	//  @return InlineResponse2006
-	DbFindGetExecute(r ApiDbFindGetRequest) (*InlineResponse2006, *http.Response, error)
+	DbFindPostExecute(r ApiDbFindPostRequest) (*InlineResponse2006, *http.Response, error)
 
 	/*
 	DbIndexGet Returns the current indexes object from the specified database.
@@ -55,7 +55,7 @@ type IndexApi interface {
 	DbIndexGetExecute(r ApiDbIndexGetRequest) (*Indexes, *http.Response, error)
 
 	/*
-	DbPartitionFindGet Finds the document.
+	DbPartitionFindPost Finds the document.
 
 	Find documents using a declarative JSON querying syntax. Queries will use custom indexes, specified using the _index endpoint, if available. Otherwise, they use the built-in _all_docs index, which can be arbitrarily slow.
 
@@ -63,13 +63,13 @@ type IndexApi interface {
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param db Database name
 	@param partition Partition name
-	@return ApiDbPartitionFindGetRequest
+	@return ApiDbPartitionFindPostRequest
 	*/
-	DbPartitionFindGet(ctx context.Context, db string, partition string) ApiDbPartitionFindGetRequest
+	DbPartitionFindPost(ctx context.Context, db string, partition string) ApiDbPartitionFindPostRequest
 
-	// DbPartitionFindGetExecute executes the request
+	// DbPartitionFindPostExecute executes the request
 	//  @return InlineResponse2006
-	DbPartitionFindGetExecute(r ApiDbPartitionFindGetRequest) (*InlineResponse2006, *http.Response, error)
+	DbPartitionFindPostExecute(r ApiDbPartitionFindPostRequest) (*InlineResponse2006, *http.Response, error)
 
 	/*
 	IndexDelete Method for IndexDelete
@@ -103,34 +103,34 @@ type IndexApi interface {
 // IndexApiService IndexApi service
 type IndexApiService service
 
-type ApiDbFindGetRequest struct {
+type ApiDbFindPostRequest struct {
 	ctx context.Context
 	ApiService IndexApi
 	db string
 	body *Query
 }
 
-func (r ApiDbFindGetRequest) Body(body Query) ApiDbFindGetRequest {
+func (r ApiDbFindPostRequest) Body(body Query) ApiDbFindPostRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiDbFindGetRequest) Execute() (*InlineResponse2006, *http.Response, error) {
-	return r.ApiService.DbFindGetExecute(r)
+func (r ApiDbFindPostRequest) Execute() (*InlineResponse2006, *http.Response, error) {
+	return r.ApiService.DbFindPostExecute(r)
 }
 
 /*
-DbFindGet Finds the document.
+DbFindPost Finds the document.
 
 Find documents using a declarative JSON querying syntax. Queries will use custom indexes, specified using the _index endpoint, if available. Otherwise, they use the built-in _all_docs index, which can be arbitrarily slow.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param db Database name
- @return ApiDbFindGetRequest
+ @return ApiDbFindPostRequest
 */
-func (a *IndexApiService) DbFindGet(ctx context.Context, db string) ApiDbFindGetRequest {
-	return ApiDbFindGetRequest{
+func (a *IndexApiService) DbFindPost(ctx context.Context, db string) ApiDbFindPostRequest {
+	return ApiDbFindPostRequest{
 		ApiService: a,
 		ctx: ctx,
 		db: db,
@@ -139,7 +139,7 @@ func (a *IndexApiService) DbFindGet(ctx context.Context, db string) ApiDbFindGet
 
 // Execute executes the request
 //  @return InlineResponse2006
-func (a *IndexApiService) DbFindGetExecute(r ApiDbFindGetRequest) (*InlineResponse2006, *http.Response, error) {
+func (a *IndexApiService) DbFindPostExecute(r ApiDbFindPostRequest) (*InlineResponse2006, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -147,7 +147,7 @@ func (a *IndexApiService) DbFindGetExecute(r ApiDbFindGetRequest) (*InlineRespon
 		localVarReturnValue  *InlineResponse2006
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "IndexApiService.DbFindGet")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "IndexApiService.DbFindPost")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -375,7 +375,7 @@ func (a *IndexApiService) DbIndexGetExecute(r ApiDbIndexGetRequest) (*Indexes, *
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiDbPartitionFindGetRequest struct {
+type ApiDbPartitionFindPostRequest struct {
 	ctx context.Context
 	ApiService IndexApi
 	db string
@@ -383,17 +383,17 @@ type ApiDbPartitionFindGetRequest struct {
 	body *Query
 }
 
-func (r ApiDbPartitionFindGetRequest) Body(body Query) ApiDbPartitionFindGetRequest {
+func (r ApiDbPartitionFindPostRequest) Body(body Query) ApiDbPartitionFindPostRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiDbPartitionFindGetRequest) Execute() (*InlineResponse2006, *http.Response, error) {
-	return r.ApiService.DbPartitionFindGetExecute(r)
+func (r ApiDbPartitionFindPostRequest) Execute() (*InlineResponse2006, *http.Response, error) {
+	return r.ApiService.DbPartitionFindPostExecute(r)
 }
 
 /*
-DbPartitionFindGet Finds the document.
+DbPartitionFindPost Finds the document.
 
 Find documents using a declarative JSON querying syntax. Queries will use custom indexes, specified using the _index endpoint, if available. Otherwise, they use the built-in _all_docs index, which can be arbitrarily slow.
 
@@ -401,10 +401,10 @@ Find documents using a declarative JSON querying syntax. Queries will use custom
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param db Database name
  @param partition Partition name
- @return ApiDbPartitionFindGetRequest
+ @return ApiDbPartitionFindPostRequest
 */
-func (a *IndexApiService) DbPartitionFindGet(ctx context.Context, db string, partition string) ApiDbPartitionFindGetRequest {
-	return ApiDbPartitionFindGetRequest{
+func (a *IndexApiService) DbPartitionFindPost(ctx context.Context, db string, partition string) ApiDbPartitionFindPostRequest {
+	return ApiDbPartitionFindPostRequest{
 		ApiService: a,
 		ctx: ctx,
 		db: db,
@@ -414,7 +414,7 @@ func (a *IndexApiService) DbPartitionFindGet(ctx context.Context, db string, par
 
 // Execute executes the request
 //  @return InlineResponse2006
-func (a *IndexApiService) DbPartitionFindGetExecute(r ApiDbPartitionFindGetRequest) (*InlineResponse2006, *http.Response, error) {
+func (a *IndexApiService) DbPartitionFindPostExecute(r ApiDbPartitionFindPostRequest) (*InlineResponse2006, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -422,7 +422,7 @@ func (a *IndexApiService) DbPartitionFindGetExecute(r ApiDbPartitionFindGetReque
 		localVarReturnValue  *InlineResponse2006
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "IndexApiService.DbPartitionFindGet")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "IndexApiService.DbPartitionFindPost")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}

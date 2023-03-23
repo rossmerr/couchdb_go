@@ -2391,7 +2391,7 @@
         ],
         "summary": "Finds the document.",
         "description": "Find documents using a declarative JSON querying syntax. Queries will use custom indexes, specified using the _index endpoint, if available. Otherwise, they use the built-in _all_docs index, which can be arbitrarily slow.\n",
-        "operationId": "dbFindGet",
+        "operationId": "dbFindPost",
         "consumes": [
           "application/json"
         ],
@@ -2451,7 +2451,7 @@
         ],
         "summary": "Finds the document.",
         "description": "Find documents using a declarative JSON querying syntax. Queries will use custom indexes, specified using the _index endpoint, if available. Otherwise, they use the built-in _all_docs index, which can be arbitrarily slow.\n",
-        "operationId": "dbPartitionFindGet",
+        "operationId": "dbPartitionFindPost",
         "consumes": [
           "application/json"
         ],
