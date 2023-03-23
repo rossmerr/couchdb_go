@@ -1,6 +1,3 @@
-module github.com/GIT_USER_ID/GIT_REPO_ID
+module github.com/rossmerr/couchdb_go
 
 go 1.18
-
-require (
-)
